@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: -apple-system, 'system-ui', 'Segoe UI', Roboto, Oxygen-Sans,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+#root {
+  overflow: hidden;
+}
+
+a {
+  text-decoration: none;
+}
