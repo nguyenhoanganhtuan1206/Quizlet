@@ -1,0 +1,23 @@
+.login_break-line {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    content: '';
+    background-color: var(--color-white-gray);
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 0.1rem;
+    z-index: 1;
+  }
+
+  p {
+    background-color: white;
+    color: var(--color-gray);
+    font-weight: 500;
+    font-size: 1.5rem;
+    padding: 0 2rem;
+    z-index: 10;
+  }
+}

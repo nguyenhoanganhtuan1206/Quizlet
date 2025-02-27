@@ -4,8 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "var(--color-primary)",
-        primary_sub: "var(--color-primary-sub)"
+        primary: 'var(--color-primary)',
+        primary_sub: 'var(--color-primary-sub)',
+      },
+      fontFamily: {
+        hurme: ["HurmeGeometricSans", "sans-serif"],
       },
     },
   },

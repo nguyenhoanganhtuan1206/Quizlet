@@ -1,7 +1,21 @@
-import "./App.scss";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import './App.scss';
+import AuthPage from './pages/auth/AuthPage';
 
 function App() {
-  return <div className="text-primary bg-primary">Hello World</div>;
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      children: [
+        {
+          path: '/login',
+          element: <AuthPage />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router}></RouterProvider>;
 }
 
 export default App;

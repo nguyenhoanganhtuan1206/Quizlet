@@ -1,0 +1,27 @@
+@mixin underline-animation(
+  $top,
+  $left,
+  $height,
+  $width,
+  $background-color,
+  $timeSpeed
+) {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: '';
+    top: $top;
+    left: 0;
+    height: $height;
+    width: $width;
+    border-radius: 5px;
+    background-color: $background-color;
+    transition: all $timeSpeed ease-in-out;
+  }
+
+  @content;
+}
+
+@mixin hover-underline-animation {
+}
