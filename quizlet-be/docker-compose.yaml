@@ -1,0 +1,15 @@
+services:
+  fitness_db:
+    container_name: quizlet_db
+    image: postgres:17
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
+    volumes:
+      - quizlet_db:/var/lib/postgresql/data
+
+volumes:
+  quizlet_db:
+    driver: local
