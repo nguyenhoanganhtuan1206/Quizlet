@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class QuizletApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GymManagementApplication.class, args);
+		SpringApplication.run(QuizletApplication.class, args);
 	}
 
 }
