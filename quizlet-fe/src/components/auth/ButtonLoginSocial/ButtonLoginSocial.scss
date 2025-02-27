@@ -1,0 +1,10 @@
+.login__social-btn {
+  font-size: 1.6rem;
+  color: var(--color-gray);
+  transition: background-color 0.13s linear;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--ref-color-twilight200);
+  }
+}
