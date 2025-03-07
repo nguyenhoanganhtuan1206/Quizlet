@@ -5,41 +5,52 @@ import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
 import com.quizlet_be.quizlet.persistent.roles.RoleEntity;
 import com.quizlet_be.quizlet.persistent.users.UserEntity;
 import com.quizlet_be.quizlet.repositories.users.UserRepository;
-import com.quizlet_be.quizlet.services.AbstractUserService;
+import com.quizlet_be.quizlet.services.auths.JwtTokenService;
 import com.quizlet_be.quizlet.services.roles.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
+import static com.quizlet_be.quizlet.services.users.UserError.supplyUserNotFound;
+import static java.time.Instant.now;
+
 @Service
-public class UserService extends AbstractUserService {
+@RequiredArgsConstructor
+public class UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private RoleService roleService;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        super(userRepository);
+    private final PasswordEncoder passwordEncoder;
+
+    private final JwtTokenService jwtTokenService;
+
+    private final RoleService roleService;
+
+    public UserEntity findByEmail(final String email) {
+        return userRepository.findByEmail(email).orElseThrow(supplyUserNotFound("Email", email));
     }
 
     public void createNewUser(UserSignUpDTO userRequest) {
-        try {
-            final RoleEntity role = roleService.findByName("USER");
+        final RoleEntity role = roleService.findByName("USER");
 
-            final UserEntity newUser = UserEntity.builder()
-                    .fullName(userRequest.getFullName())
-                    .address(userRequest.getAddress())
-                    .password(passwordEncoder.encode(userRequest.getPassword()))
+        final UserEntity newUser = UserEntity.builder()
+                .fullName(userRequest.getFullName())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
+                .createdAt(now())
+                .roleId(role.getId())
+                .build();
 
-                    .build();
-        } catch (Exception ex) {
-        }
+        userRepository.save(newUser);
     }
 
-    public void login(final AuthRequest authRequest) {
-        UserEntity userFound = findByEmail(authRequest.getEmail());
+    public String login(final AuthRequest authRequest) {
+        final UserEntity userFound = findByEmail(authRequest.getEmail());
 
-        if (passwordEncoder.matches(authRequest.getPassword(), userFound.getPassword())) {
-            System.out.println("HELLO WORLD!");
+        if (!passwordEncoder.matches(authRequest.getPassword(), userFound.getPassword())) {
+            throw supplyBadRequestException("Your email or password is incorrect! Please try again").get();
         }
+
+        return jwtTokenService.generateToken(userFound);
     }
 }

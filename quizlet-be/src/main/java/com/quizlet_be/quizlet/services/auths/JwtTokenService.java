@@ -25,6 +25,7 @@ public class JwtTokenService {
 
     private final String CLAIM_ROLES = "roles";
     private final String CLAIM_USER_ID = "user_id";
+    private final String CLAIM_USER_EMAIL = "email";
 
     @Autowired
     private final JwtProperties jwtProperties;
@@ -61,16 +62,19 @@ public class JwtTokenService {
         }
     }
 
-    private String generateToken(final UserEntity user) {
+    public String generateToken(final UserEntity user) {
         Map<String, Object> claims = new HashMap<>();
+
+        // Put anything you want to contain in the token
         claims.put(CLAIM_USER_ID, user.getId());
+        claims.put(CLAIM_USER_EMAIL, user.getEmail());
         claims.put(CLAIM_ROLES, String.join(","));
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
-                .signWith(SignatureAlgorithm.ES256, jwtProperties.getSecret())
+                .signWith(SignatureAlgorithm.ES512, jwtProperties.getSecret())
                 .setClaims(claims)
                 .compact();
     }

@@ -1,40 +1,36 @@
-package com.quizlet_be.quizlet.persistent.users;
+package com.quizlet_be.quizlet.persistent.folders;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "folders")
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+public class FolderEntity {
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private String fullName;
+    private String name;
 
-    private String email;
-
-    private String password;
-
-    private String codeResetPassword;
-
-    private Instant lastSendResetPasswordAt;
+    private String description;
 
     private Instant createdAt;
 
-    private boolean accountDisabled;
+    private Instant updatedAt;
 
-    private Integer roleId;
+    private UUID userId;
 }

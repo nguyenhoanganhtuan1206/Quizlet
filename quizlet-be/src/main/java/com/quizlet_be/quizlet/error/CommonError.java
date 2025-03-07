@@ -11,6 +11,10 @@ public class CommonError {
         return () -> new NotFoundException(message, args);
     }
 
+    public static Supplier<BadRequestException> supplyBadRequestException(String message, Object... args) {
+        return () -> new BadRequestException(message, args);
+    }
+
     public static Supplier<UnauthorizedException> supplyUnauthorizedException(String message, Object... args) {
         return () -> new UnauthorizedException(message, args);
     }
