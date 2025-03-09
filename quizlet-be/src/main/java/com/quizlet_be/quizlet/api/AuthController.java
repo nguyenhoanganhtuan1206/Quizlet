@@ -18,8 +18,8 @@ public class AuthController {
     private final UserService userServices;
 
     @PostMapping("signup")
-    public UserDTO signUp(final @RequestBody UserSignUpDTO userSignUpDTO) {
-        return null;
+    public void signUp(final @RequestBody UserSignUpDTO userSignUpDTO) {
+        userServices.createNewUser(userSignUpDTO);
     }
 
     @PostMapping("login")

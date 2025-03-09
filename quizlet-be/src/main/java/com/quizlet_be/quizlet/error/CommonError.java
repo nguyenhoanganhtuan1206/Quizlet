@@ -22,4 +22,8 @@ public class CommonError {
     public static Supplier<AccessDeniedException> supplyAccessDeniedException(String message, Object... args) {
         return () -> new AccessDeniedException(message, args);
     }
+
+    public static Supplier<ConflictException> supplyConflictException(String message, Object... args) {
+        return () -> new ConflictException(message, args);
+    }
 }

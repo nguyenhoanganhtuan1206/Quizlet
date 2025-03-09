@@ -28,8 +28,4 @@ public class UserSignUpDTO {
 //    @NotBlank(message = "Address cannot be empty")
 //    @Size(min = 3, message = "Address is invalid")
     private String address;
-
-    public String getEmail() {
-        return this.email;
-    }
 }

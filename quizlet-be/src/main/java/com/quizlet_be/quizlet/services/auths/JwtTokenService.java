@@ -1,7 +1,9 @@
 package com.quizlet_be.quizlet.services.auths;
 
 import com.quizlet_be.quizlet.properties.JwtProperties;
-import com.quizlet_be.quizlet.persistent.users.UserEntity;
+import com.quizlet_be.quizlet.services.users.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 
 import java.util.*;
 
@@ -62,7 +62,7 @@ public class JwtTokenService {
         }
     }
 
-    public String generateToken(final UserEntity user) {
+    public String generateToken(final User user) {
         Map<String, Object> claims = new HashMap<>();
 
         // Put anything you want to contain in the token

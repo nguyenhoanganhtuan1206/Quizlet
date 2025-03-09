@@ -1,7 +1,9 @@
 package com.quizlet_be.quizlet.error;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+@AllArgsConstructor
 public class DomainException extends RuntimeException {
 
     private final HttpStatus httpStatus;
