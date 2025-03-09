@@ -1,15 +1,16 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import './App.scss';
-import AuthPage from './pages/auth/AuthPage';
+import "./App.scss";
+import AuthPage from "./pages/auth/AuthPage";
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: "/",
+      element: <AuthPage />,
       children: [
         {
-          path: '/login',
+          path: "/login",
           element: <AuthPage />,
         },
       ],

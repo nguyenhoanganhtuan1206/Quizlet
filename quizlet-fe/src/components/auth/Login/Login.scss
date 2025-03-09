@@ -3,7 +3,7 @@
 
   &::before {
     position: absolute;
-    content: '';
+    content: "";
     background-color: var(--color-white-gray);
     top: 50%;
     left: 0;
@@ -19,5 +19,15 @@
     font-size: 1.5rem;
     padding: 0 2rem;
     z-index: 10;
+  }
+}
+
+// Display error section
+.form__input-error {
+  opacity: 0;
+  transition: all 0.25s ease-in-out;
+
+  &.active {
+    opacity: 1;
   }
 }

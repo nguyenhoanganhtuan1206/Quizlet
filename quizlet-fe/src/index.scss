@@ -1,4 +1,4 @@
-@import './shared/sass/main';
+@use "./shared/sass/main" as *;
 
 @tailwind base;
 @tailwind components;

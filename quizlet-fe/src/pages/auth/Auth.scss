@@ -1,4 +1,5 @@
-@import '../../shared/sass/base/utilites';
+@use "../../shared/sass/base/utilities" as *;
+
 $topPosition: 8%;
 $leftPosition: 10%;
 $bottomPosition: 8%;
@@ -22,14 +23,6 @@ $bottomPosition: 8%;
     bottom: $bottomPosition;
     left: $leftPosition;
   }
-}
-
-.auth__right-image {
-  height: 100%;
-  width: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 // Left
