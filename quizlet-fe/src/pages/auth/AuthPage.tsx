@@ -4,16 +4,32 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import Login from "../../components/auth/Login";
 import Button from "../../shared/FormFields/Button";
+import { useState } from "react";
+import Register from "../../components/auth/Register";
 
 export interface FormLoginValues {
   email: string;
   password: string;
 }
 
+export interface FormRegisterValues {
+  email: string;
+  username: string;
+  password: string;
+}
+
 export default function AuthPage() {
   const methods = useForm<FormLoginValues>();
+  const [isLoginPage, setIsLoginPage] = useState(true);
 
-  const onSubmit: SubmitHandler<FormLoginValues> = (data) => {
+  const handleSwitchAuthPage = () => {
+    methods.reset();
+    setIsLoginPage(!isLoginPage);
+  };
+
+  const onSubmit: SubmitHandler<FormLoginValues | FormRegisterValues> = (
+    data
+  ) => {
     console.log("data", data);
   };
 
@@ -34,15 +50,29 @@ export default function AuthPage() {
       <div className="grid-cols-6">
         <div className="auth__left">
           <div className="auth__left-tab-list flex">
-            <div className="auth__left-tab-item mr-12">Sign Up</div>
+            <div
+              onClick={handleSwitchAuthPage}
+              className={`auth__left-tab-item mr-12 ${
+                !isLoginPage && "active"
+              }`}
+            >
+              Sign Up
+            </div>
 
-            <div className="auth__left-tab-item active">Log in</div>
+            <div
+              onClick={handleSwitchAuthPage}
+              className={`auth__left-tab-item ${isLoginPage && "active"}`}
+            >
+              Log in
+            </div>
           </div>
 
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
-              <Login />
+              {/* Switch components */}
+              {isLoginPage ? <Login /> : <Register />}
 
+              {/* Display Error */}
               {methods.formState.isSubmitted && !methods.formState.isValid && (
                 <div className="mt-5">
                   <div
@@ -55,13 +85,20 @@ export default function AuthPage() {
                   </div>
                 </div>
               )}
+              {/* Display Error */}
+
+              <Button variant="primary" type="submit" className="mt-8">
+                {isLoginPage ? "Log in" : "Sign Up"}
+              </Button>
 
               <Button
-                variant={{ primary: true }}
-                type="submit"
-                className="mt-5"
+                variant="borderOnly"
+                onClick={handleSwitchAuthPage}
+                className="mt-5 text-gray-500"
               >
-                Submit
+                {isLoginPage
+                  ? "New to Quizlet? Create an account"
+                  : "Already have an account? Log in"}
               </Button>
             </form>
           </FormProvider>

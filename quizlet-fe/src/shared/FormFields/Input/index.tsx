@@ -36,7 +36,7 @@ export default function Input<T extends FieldValues>({
       control={control}
       name={name}
       rules={rules}
-      render={({ field: { onChange }, fieldState: { error, invalid } }) => {
+      render={({ field: { onChange } }) => {
         return (
           <div className="relative [&:not(:first-child)]:mt-5">
             {label && (

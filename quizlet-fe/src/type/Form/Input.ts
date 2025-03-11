@@ -1,4 +1,4 @@
-import { Control, FieldValues, Path } from "react-hook-form";
+import { Control, FieldValues, Path, RegisterOptions } from "react-hook-form";
 
 type InputType = "text" | "password" | "textarea";
 
@@ -7,15 +7,16 @@ interface ValidationObject {
   message: string;
 }
 
-type ValidationType = string | number | ValidationObject;
+export type ValidationType = string | number | ValidationObject;
 
 export interface InputProps<T extends FieldValues> {
-  name: Path<T>;
+  name: keyof T;
   control: Control<T>;
   type: InputType;
   placeholder?: string;
   label?: string;
   isError?: boolean;
   className?: string;
-  rules?: Record<string, ValidationType>;
+  // rules?: Record<string, ValidationType>;
+  rules?: RegisterOptions<T, keyof T>;
 }

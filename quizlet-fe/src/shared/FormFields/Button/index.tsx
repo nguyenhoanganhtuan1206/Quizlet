@@ -6,37 +6,36 @@ import React from "react";
 
 type ButtonType = "submit" | "button" | "reset";
 
-interface ButtonVariants {
-  rounded?: boolean;
-  primary?: boolean;
-  borderOnly?: boolean;
-}
+type ButtonVariants = "primary" | "borderOnly";
 
-interface ButtonProps<T> {
+interface ButtonProps {
   variant: ButtonVariants;
   children: ReactPropsChildren;
   type?: ButtonType;
   className?: string;
   path?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   onSubmit?: React.FormEventHandler<HTMLButtonElement>;
   disabled?: boolean;
 }
 
-export default function Button<T>({
+export default function Button({
   variant,
   type = "button",
   path,
+  onClick,
   onSubmit,
   className,
   children,
   disabled,
-}: Readonly<ButtonProps<T>>) {
+}: Readonly<ButtonProps>) {
   const buttonClassnames = classnames(
-    "flex items-center justify-center rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 w-full cursor-pointer",
+    "flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 w-full cursor-pointer transition-all duration-300",
     {
-      "bg-primary text-white": variant.primary,
-      "bg-transparent text-primary": variant.borderOnly,
-      "rounded-xl": variant.rounded,
+      "bg-primary text-white hover:bg-[var(--color-primary-sub)] hover:text-white":
+        variant === "primary",
+      "bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white":
+        variant === "borderOnly",
     },
     className
   );
@@ -44,7 +43,8 @@ export default function Button<T>({
   return (
     <button
       disabled={disabled}
-      onClick={onSubmit}
+      onClick={onClick}
+      onSubmit={onSubmit}
       type={type}
       className={buttonClassnames}
     >
