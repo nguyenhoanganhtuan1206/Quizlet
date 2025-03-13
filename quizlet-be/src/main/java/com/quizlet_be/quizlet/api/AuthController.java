@@ -1,6 +1,7 @@
 package com.quizlet_be.quizlet.api;
 
 import com.quizlet_be.quizlet.dto.auths.AuthRequest;
+import com.quizlet_be.quizlet.dto.auths.AuthResponseDTO;
 import com.quizlet_be.quizlet.dto.users.UserDTO;
 import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
 import com.quizlet_be.quizlet.services.users.UserService;
@@ -23,7 +24,9 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String login(final @RequestBody AuthRequest authRequest) {
-        return userServices.login(authRequest);
+    public AuthResponseDTO login(final @RequestBody AuthRequest authRequest) {
+        return AuthResponseDTO.builder()
+                .token(userServices.login(authRequest))
+                .build();
     }
 }
