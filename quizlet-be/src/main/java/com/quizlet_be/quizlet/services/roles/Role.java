@@ -1,12 +1,12 @@
 package com.quizlet_be.quizlet.services.roles;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
+@NoArgsConstructor
 public class Role {
 
     private Integer id;

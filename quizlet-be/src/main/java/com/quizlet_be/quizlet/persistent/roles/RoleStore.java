@@ -13,6 +13,11 @@ public class RoleStore {
 
     private final RoleRepository roleRepository;
 
+    public Optional<Role> findById(final Integer id) {
+        return roleRepository.findById(id)
+                .map(RoleEntityMapper::toRole);
+    }
+
     public Optional<Role> findByName(final String name) {
         return roleRepository.findByName(name).map(RoleEntityMapper::toRole);
     }

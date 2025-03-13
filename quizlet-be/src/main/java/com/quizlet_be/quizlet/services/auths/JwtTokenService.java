@@ -1,6 +1,8 @@
 package com.quizlet_be.quizlet.services.auths;
 
 import com.quizlet_be.quizlet.properties.JwtProperties;
+import com.quizlet_be.quizlet.services.roles.Role;
+import com.quizlet_be.quizlet.services.roles.RoleService;
 import com.quizlet_be.quizlet.services.users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -26,6 +28,8 @@ public class JwtTokenService {
     private final String CLAIM_ROLES = "roles";
     private final String CLAIM_USER_ID = "user_id";
     private final String CLAIM_USER_EMAIL = "email";
+
+    private final RoleService roleService;
 
     @Autowired
     private final JwtProperties jwtProperties;
@@ -64,17 +68,18 @@ public class JwtTokenService {
 
     public String generateToken(final User user) {
         Map<String, Object> claims = new HashMap<>();
+        final Role currentRole = roleService.findById(user.getRoleId());
 
         // Put anything you want to contain in the token
         claims.put(CLAIM_USER_ID, user.getId());
         claims.put(CLAIM_USER_EMAIL, user.getEmail());
-        claims.put(CLAIM_ROLES, String.join(","));
+        claims.put(CLAIM_ROLES, currentRole.getName());
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
-                .signWith(SignatureAlgorithm.ES512, jwtProperties.getSecret())
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret()) // HS256
                 .setClaims(claims)
                 .compact();
     }
