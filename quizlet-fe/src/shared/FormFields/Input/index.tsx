@@ -1,12 +1,12 @@
-import "./Input.scss";
+import './Input.scss';
 
-import classNames from "classnames";
-import { useState } from "react";
-import { Controller, FieldValues } from "react-hook-form";
+import classNames from 'classnames';
+import { useState } from 'react';
+import { Controller, FieldValues } from 'react-hook-form';
 
-import { FaEyeSlash } from "react-icons/fa";
-import { FaRegEye } from "react-icons/fa6";
-import { InputProps } from "../../../type/Form/Input";
+import { FaEyeSlash } from 'react-icons/fa';
+import { FaRegEye } from 'react-icons/fa6';
+import { InputProps } from '../../../type/Form/Input';
 
 export default function Input<T extends FieldValues>({
   name,
@@ -14,18 +14,17 @@ export default function Input<T extends FieldValues>({
   type,
   className,
   label,
-  rules,
-}: InputProps<T>) {
+}: Readonly<InputProps<T>>) {
   const [isShowPassword, setIsShowPassword] = useState(false);
 
   const inputClassName = classNames(
-    "border border-gray-400 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] outline-none focus:border-blue-500",
+    'border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] outline-none focus:border-blue-500',
     className
   );
 
   const showInputType = () => {
-    if (type === "password") {
-      return isShowPassword ? "text" : "password";
+    if (type === 'password') {
+      return isShowPassword ? 'text' : 'password';
     }
 
     return type;
@@ -35,7 +34,6 @@ export default function Input<T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      rules={rules}
       render={({ field: { onChange } }) => {
         return (
           <div className="relative [&:not(:first-child)]:mt-5">
@@ -55,10 +53,10 @@ export default function Input<T extends FieldValues>({
                 type={showInputType()}
                 onChange={onChange}
               />
-              {type === "password" && (
+              {type === 'password' && (
                 <div
                   onClick={() => setIsShowPassword(!isShowPassword)}
-                  className="absolute top-[50%] right-0 translate-x-[-50%] translate-y-[-50%] text-[1.5rem] cursor-pointer p-2"
+                  className="absolute top-[50%] right-0 translate-x-[-50%] translate-y-[-50%] text-[1.7rem] cursor-pointer p-2"
                 >
                   {!isShowPassword ? <FaEyeSlash /> : <FaRegEye />}
                 </div>

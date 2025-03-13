@@ -1,52 +1,58 @@
-import "./Login.scss";
+import './Login.scss';
 
-import ButtonLoginSocial from "../ButtonLoginSocial";
-import Input from "../../../shared/FormFields/Input";
-import { useFormContext } from "react-hook-form";
-import { FormLoginValues } from "../../../pages/auth/AuthPage";
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
+
+import Input from '../../../shared/FormFields/Input';
+import ButtonLoginSocial from '../ButtonLoginSocial';
+import Button from '../../../shared/FormFields/Button';
 
 export default function Login() {
-  const { control } = useFormContext<FormLoginValues>();
+  const { control, formState, handleSubmit } = useForm<FormLoginValues>({
+    resolver: zodResolver(loginSchemas),
+  });
+
+  const onSubmit: SubmitHandler<FormLoginValues> = (data) => {
+    console.log('data', data);
+  };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <ButtonLoginSocial />
 
-      <div className="my-10 flex justify-center login_break-line">
+      <div className="my-10 flex justify-center login_break-line before:bg-gray-300">
         <p>or email</p>
       </div>
 
-      <Input
-        control={control}
-        name="email"
-        type="text"
-        label="Email"
-        rules={{
-          required: "Your email cannot be empty",
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "Invalid email address",
-          },
-        }}
-      />
+      <Input control={control} name="email" type="text" label="Email" />
 
       <Input
         control={control}
         name="password"
         type="password"
         label="Password"
-        rules={{
-          required: "Your password cannot be empty",
-          min: {
-            value: 5,
-            message: "Your password must be at least 5 characters",
-          },
-          max: {
-            value: 150,
-            message: "Your password cannot larger than 150 characters",
-          },
-        }}
       />
-    </div>
+
+      {/* Display Error */}
+      {formState.isSubmitted && !formState.isValid && (
+        <div className="mt-5">
+          <div
+            className={`form__input-error ${'active'} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
+          >
+            <span className="text-[1.4rem] font-bold text-[var(--ref-color-error)]">
+              {formState.errors.email?.message ??
+                formState.errors.password?.message}
+            </span>
+          </div>
+        </div>
+      )}
+      {/* Display Error */}
+
+      <Button variant="primary" type="submit" className="mt-8">
+        Log in
+      </Button>
+    </form>
   );
 }
