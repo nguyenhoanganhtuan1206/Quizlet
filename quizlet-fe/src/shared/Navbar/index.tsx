@@ -15,7 +15,7 @@ function Navbar() {
           <span>Home</span>
         </NavbarLinkItem>
 
-        <NavbarLinkItem path="/">
+        <NavbarLinkItem path="/libraries">
           <FaRegFolderOpen className="navbar-icon" />
           <span>Your library</span>
         </NavbarLinkItem>

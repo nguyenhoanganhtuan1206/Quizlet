@@ -2,7 +2,6 @@ package com.quizlet_be.quizlet.api;
 
 import com.quizlet_be.quizlet.dto.auths.AuthRequest;
 import com.quizlet_be.quizlet.dto.auths.AuthResponseDTO;
-import com.quizlet_be.quizlet.dto.users.UserDTO;
 import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
 import com.quizlet_be.quizlet.services.users.UserService;
 import lombok.RequiredArgsConstructor;

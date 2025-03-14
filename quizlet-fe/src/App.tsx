@@ -15,6 +15,10 @@ function App() {
           path: '/',
           element: <HomePage />,
         },
+        {
+          path: '/libraries',
+          element: <HomePage />,
+        },
       ],
     },
     {

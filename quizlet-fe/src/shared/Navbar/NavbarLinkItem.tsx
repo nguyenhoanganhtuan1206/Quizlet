@@ -1,12 +1,12 @@
 import './NavbarLinkItem.scss';
 
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { ReactNode } from 'react';
 import classNames from 'classnames';
 
 type NavbarLinkItemProps = {
-  path: string;
-  activeItem?: boolean;
+  path?: string;
+  active?: boolean;
   className?: string;
   children: ReactNode;
 };
@@ -14,7 +14,7 @@ type NavbarLinkItemProps = {
 const NavbarLinkItem = ({
   path,
   className,
-  activeItem,
+  active,
   children,
 }: NavbarLinkItemProps) => {
   const initialClassName = classNames(
@@ -23,9 +23,14 @@ const NavbarLinkItem = ({
   );
 
   return (
-    <Link className={initialClassName} to={path}>
+    <NavLink
+      to={path}
+      className={({ isActive }) =>
+        classNames(initialClassName, { active: isActive })
+      }
+    >
       {children}
-    </Link>
+    </NavLink>
   );
 };
 
