@@ -1,0 +1,6 @@
+.navbar__link-item {
+  &.active {
+    color: var(--ref-color-twilight300);
+    background-color: var(--color-text-blacklight);
+  }
+}

@@ -1,15 +1,15 @@
-import classnames from "classnames";
+import classnames from 'classnames';
 
-import { ReactPropsChildren } from "../../../type/ReactPropsChildren";
-import { SubmitHandler } from "react-hook-form";
-import React from "react";
+import { ReactPropsChildren } from '../../../type/ReactPropsChildren';
+import { SubmitHandler } from 'react-hook-form';
+import React from 'react';
 
-type ButtonType = "submit" | "button" | "reset";
+type ButtonType = 'submit' | 'button' | 'reset';
 
-type ButtonVariants = "primary" | "borderOnly";
+type ButtonVariants = 'primary' | 'borderOnly';
 
 interface ButtonProps {
-  variant: ButtonVariants;
+  variant?: ButtonVariants;
   children: ReactPropsChildren;
   type?: ButtonType;
   className?: string;
@@ -21,7 +21,7 @@ interface ButtonProps {
 
 export default function Button({
   variant,
-  type = "button",
+  type = 'button',
   path,
   onClick,
   onSubmit,
@@ -30,12 +30,12 @@ export default function Button({
   disabled,
 }: Readonly<ButtonProps>) {
   const buttonClassnames = classnames(
-    "flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 w-full cursor-pointer transition-all duration-300",
+    'flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 w-full cursor-pointer transition-all duration-300',
     {
-      "bg-primary text-white hover:bg-[var(--color-primary-sub)] hover:text-white":
-        variant === "primary",
-      "bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white":
-        variant === "borderOnly",
+      'bg-primary text-white hover:bg-[var(--color-primary-sub)] hover:text-white':
+        variant === 'primary',
+      'bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white':
+        variant === 'borderOnly',
     },
     className
   );
