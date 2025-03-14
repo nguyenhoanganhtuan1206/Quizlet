@@ -1,8 +1,8 @@
-import './NavbarLinkItem.scss';
+import "./NavbarLinkItem.scss";
 
-import { NavLink } from 'react-router-dom';
-import { ReactNode } from 'react';
-import classNames from 'classnames';
+import { NavLink } from "react-router-dom";
+import { ReactNode } from "react";
+import classNames from "classnames";
 
 type NavbarLinkItemProps = {
   path?: string;
@@ -17,16 +17,24 @@ const NavbarLinkItem = ({
   active,
   children,
 }: NavbarLinkItemProps) => {
-  const initialClassName = classNames(
-    'navbar__link-item flex items-center rounded-xl px-4 py-1 text-white text-[1.3rem] font-bold h-[40px] w-[200px] text-[var(--color-white-gray)]',
+  const finalClassName = classNames(
+    "navbar__link-item flex items-center rounded-xl px-4 py-1 text-white text-[1.3rem] font-bold h-[40px] w-[200px] text-[var(--color-white-gray)]",
     className
   );
+
+  if (!path) {
+    return (
+      <div className={classNames(finalClassName, { active: active })}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <NavLink
       to={path}
       className={({ isActive }) =>
-        classNames(initialClassName, { active: isActive })
+        classNames(finalClassName, { active: isActive })
       }
     >
       {children}
