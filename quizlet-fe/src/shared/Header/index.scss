@@ -1,4 +1,4 @@
-$headerHeader: 5rem;
+$headerHeader: 5.5rem;
 
 .header {
   display: flex;
@@ -8,7 +8,20 @@ $headerHeader: 5rem;
   box-sizing: border-box;
   height: $headerHeader;
   width: 100%;
-  padding: 1rem 1.5rem;
+  padding: 1rem 2rem;
+}
+
+.header__list-icon {
+  padding: 5px;
+  height: 35px;
+  width: 35px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--color-text-blacklight);
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+  }
 }
 
 /* HEADER SEARCH */
@@ -17,7 +30,7 @@ $headerHeader: 5rem;
   align-items: center;
   background-color: var(--color-text-blacklight);
   border-radius: 5px;
-  height: calc($headerHeader - 1.6rem);
+  height: calc($headerHeader - 2rem);
   border: 2px solid none;
 
   &.isFocus {
@@ -42,22 +55,26 @@ $headerHeader: 5rem;
     background-color: transparent;
     border: none;
     color: white;
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     height: 100%;
     width: 100%;
     padding: unset;
   }
 }
 
-.header__list-icon {
-  padding: 5px;
+/**
+* HEADER AVATAR
+*/
+.header-plus {
   height: 35px;
   width: 35px;
+  background-color: var(--color-primary);
+  padding: 3px;
+  color: white;
+  border-radius: 5px;
+  margin-right: 2rem;
 
   &:hover {
-    cursor: pointer;
-    background-color: var(--color-text-blacklight);
-    border-radius: 50%;
-    transition: all 0.2s ease-in-out;
+    background-color: #423ed8;
   }
 }

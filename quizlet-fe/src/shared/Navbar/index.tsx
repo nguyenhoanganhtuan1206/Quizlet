@@ -8,7 +8,7 @@ import NavbarLinkItem from "./NavbarLinkItem";
 
 function Navbar() {
   return (
-    <nav className="navbar bg-[var(--color-primary-sub)] fixed h-screen top-[5rem] overflow-hidden">
+    <nav className="navbar bg-[var(--color-primary-sub)] fixed h-screen top-[5.5rem]">
       <div className="flex flex-col justify-center items-center">
         <NavbarLinkItem path="/">
           <AiOutlineHome className="navbar-icon" />

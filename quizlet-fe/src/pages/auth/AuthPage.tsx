@@ -1,10 +1,9 @@
-import './Auth.scss';
+import "./Auth.scss";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import Login from '../../components/auth/Login';
-import Button from '../../shared/FormFields/Button';
-import Register from '../../components/auth/Register';
+import { Login, Register } from "../../components";
+import { Button } from "../../shared";
 
 export default function AuthPage() {
   const [isLoginPage, setIsLoginPage] = useState(true);
@@ -33,7 +32,7 @@ export default function AuthPage() {
             <div
               onClick={handleSwitchAuthPage}
               className={`auth__left-tab-item mr-12 ${
-                !isLoginPage && 'active'
+                !isLoginPage && "active"
               }`}
             >
               Sign Up
@@ -41,7 +40,7 @@ export default function AuthPage() {
 
             <div
               onClick={handleSwitchAuthPage}
-              className={`auth__left-tab-item ${isLoginPage && 'active'}`}
+              className={`auth__left-tab-item ${isLoginPage && "active"}`}
             >
               Log in
             </div>
@@ -57,8 +56,8 @@ export default function AuthPage() {
               className="mt-5 text-gray-500"
             >
               {isLoginPage
-                ? 'New to Quizlet? Create an account'
-                : 'Already have an account? Log in'}
+                ? "New to Quizlet? Create an account"
+                : "Already have an account? Log in"}
             </Button>
           </div>
         </div>

@@ -6,9 +6,10 @@ import { useForm } from "react-hook-form";
 import { IoSearchOutline } from "react-icons/io5";
 import { IoLogoTumblr } from "react-icons/io";
 import { BsList } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa";
+import { FiPlus } from "react-icons/fi";
 
-import Input from "../FormFields/Input";
+import { Input } from "../";
+import { AssemblyAvatar, HeaderProfilePopper } from "../../components";
 
 type HeaderFormSearchTerm = {
   term: string;
@@ -42,8 +43,16 @@ function Header() {
         />
       </div>
 
-      <div className="flex-1">
-        <FaPlus />
+      <div className="relative flex items-center justify-end flex-1">
+        <FiPlus className="header-plus" />
+
+        <AssemblyAvatar
+          height="40px"
+          width="40px"
+          imagePath="https://graph.facebook.com/1191245547971182/picture?type=large"
+        />
+
+        <HeaderProfilePopper />
       </div>
     </header>
   );

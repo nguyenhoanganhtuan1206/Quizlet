@@ -1,0 +1,20 @@
+$maxHeight: 31.25rem;
+
+.profile__popper {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0;
+
+  border-radius: 5px;
+  border: 1px solid var(--ref-color-twilight200);
+  min-height: fit-content;
+  max-height: 31.25rem;
+
+  &-header {
+    padding: 1rem 1rem 1.5rem 1rem;
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+}
