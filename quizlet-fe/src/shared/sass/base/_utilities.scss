@@ -1,3 +1,10 @@
+/*
+* Circle
+*/
+
+/*
+* When hover it have underline animation
+*/
 @mixin underline-animation(
   $top,
   $left,
@@ -10,7 +17,7 @@
 
   &::after {
     position: absolute;
-    content: '';
+    content: "";
     top: $top;
     left: 0;
     height: $height;
@@ -21,7 +28,4 @@
   }
 
   @content;
-}
-
-@mixin hover-underline-animation {
 }
