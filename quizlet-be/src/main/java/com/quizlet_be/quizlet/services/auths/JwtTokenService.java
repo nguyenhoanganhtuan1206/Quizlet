@@ -5,12 +5,15 @@ import com.quizlet_be.quizlet.services.roles.Role;
 import com.quizlet_be.quizlet.services.roles.RoleService;
 import com.quizlet_be.quizlet.services.users.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +27,8 @@ import static io.micrometer.common.util.StringUtils.isBlank;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenService {
+
+    private static final Clock clock = DefaultClock.INSTANCE;
 
     private final String CLAIM_ROLES = "roles";
     private final String CLAIM_USER_ID = "user_id";
@@ -42,9 +47,8 @@ public class JwtTokenService {
 
             final Claims claims = Jwts.parser()
                     .setSigningKey(jwtProperties.getSecret())
-                    .parseClaimsJwt(token)
+                    .parseClaimsJws(token)
                     .getBody();
-
             if (isBlank(claims.getSubject())) {
                 throw supplyUnauthorizedException("This token is invalid. Please send another request with a valid token.").get();
             }
@@ -52,23 +56,24 @@ public class JwtTokenService {
             isTokenExpired(claims);
             isValidUserInfo(claims);
 
-            final String userId = claims.get(CLAIM_USER_ID, String.class);
+            final UUID userId = UUID.fromString(claims.get(CLAIM_USER_ID, String.class));
+            final String email = claims.getSubject();
             final String roles = claims.get(CLAIM_ROLES, String.class);
-            return new UsernamePasswordAuthenticationToken(
-                    UUID.fromString(userId).toString(),
-                    claims.getSubject(),
-                    Arrays.stream(split(roles, ","))
-                            .map(SimpleGrantedAuthority::new)
-                            .toList()
+
+            List<GrantedAuthority> authorities = Collections.singletonList(
+                    new SimpleGrantedAuthority("ROLE_" + roles)
             );
+
+            return new UserAuthenticationToken(userId, email, authorities);
         } catch (Exception exception) {
-            throw supplyUnauthorizedException("Authentication failed. Please ensure that you have provided the correct credentials.").get();
+            throw supplyUnauthorizedException("Authentication failed.").get();
         }
     }
 
     public String generateToken(final User user) {
         Map<String, Object> claims = new HashMap<>();
         final Role currentRole = roleService.findById(user.getRoleId());
+        final Date expirationDate = new Date(clock.now().getTime() + jwtProperties.getExpiration() * 1000);
 
         // Put anything you want to contain in the token
         claims.put(CLAIM_USER_ID, user.getId());
@@ -76,11 +81,11 @@ public class JwtTokenService {
         claims.put(CLAIM_ROLES, currentRole.getName());
 
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret()) // HS256
-                .setClaims(claims)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret())
                 .compact();
     }
 
