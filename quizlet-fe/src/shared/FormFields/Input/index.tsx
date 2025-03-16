@@ -63,7 +63,7 @@ export default function Input<T extends FieldValues>({
           <div className={`${outsideClassName} relative`}>
             {label && (
               <label
-                className="text-[1.4rem] font-[500] cursor-pointer"
+                className="text-[1.4rem] text-gray-700 font-[500] cursor-pointer"
                 htmlFor={name}
               >
                 {label}

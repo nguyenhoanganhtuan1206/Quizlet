@@ -13,7 +13,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="grid grid-cols-2 h-full">
+    <div className="grid grid-cols-2 min-h-screen max-h-full">
       <div className="grid-cols-6 relative h-full w-full">
         <h1 className="auth__right-title_top w-1/2">
           Smash sets in your sweats.

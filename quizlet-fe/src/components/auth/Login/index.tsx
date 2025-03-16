@@ -1,21 +1,28 @@
-import './Login.scss';
+import "./Login.scss";
 
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
+import { FormLoginValues, loginSchemas } from "../../../schemas/authSchemas";
+import { useLoginMutation } from "../../../redux";
 
-import Input from '../../../shared/FormFields/Input';
-import ButtonLoginSocial from '../ButtonLoginSocial';
-import Button from '../../../shared/FormFields/Button';
+import Input from "../../../shared/FormFields/Input";
+import ButtonLoginSocial from "../ButtonLoginSocial";
+import Button from "../../../shared/FormFields/Button";
 
 export default function Login() {
   const { control, formState, handleSubmit } = useForm<FormLoginValues>({
     resolver: zodResolver(loginSchemas),
   });
+  const [login, { isLoading, isError }] = useLoginMutation();
 
-  const onSubmit: SubmitHandler<FormLoginValues> = (data) => {
-    console.log('data', data);
+  const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
+    await login(data)
+      .unwrap()
+      .then(() => {})
+      .catch((error) => {
+        console.error("error", error);
+      });
   };
 
   return (
@@ -33,13 +40,14 @@ export default function Login() {
         name="password"
         type="password"
         label="Password"
+        outsideClassName="mt-5"
       />
 
       {/* Display Error */}
       {formState.isSubmitted && !formState.isValid && (
         <div className="mt-5">
           <div
-            className={`form__input-error ${'active'} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
+            className={`form__input-error ${"active"} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
           >
             <span className="text-[1.4rem] font-bold text-[var(--ref-color-error)]">
               {formState.errors.email?.message ??
