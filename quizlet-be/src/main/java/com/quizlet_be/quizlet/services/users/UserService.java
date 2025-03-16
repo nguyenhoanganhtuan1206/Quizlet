@@ -2,7 +2,6 @@ package com.quizlet_be.quizlet.services.users;
 
 import com.quizlet_be.quizlet.dto.auths.AuthRequest;
 import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
-import com.quizlet_be.quizlet.persistent.roles.RoleEntity;
 import com.quizlet_be.quizlet.persistent.users.UserStore;
 import com.quizlet_be.quizlet.services.auths.JwtTokenService;
 import com.quizlet_be.quizlet.services.roles.Role;
@@ -38,13 +37,13 @@ public class UserService {
     }
 
     /*
-    * Creates a new user based on the provided signup request.
-    *
-    * @params userRequestDTO containing user signup details
-    *
-    *
-    * @Transactional: To rollback changes if an exception occurs during a user creation.
-    * */
+     * Creates a new user based on the provided signup request.
+     *
+     * @params userRequestDTO containing user signup details
+     *
+     *
+     * @Transactional: To rollback changes if an exception occurs during a user creation.
+     * */
     @Transactional
     public void createNewUser(UserSignUpDTO userRequest) {
         validateCreateUser(userRequest);
@@ -58,6 +57,7 @@ public class UserService {
                     .password(passwordEncoder.encode(userRequest.getPassword()))
                     .createdAt(now())
                     .roleId(role.getId())
+                    .image(userRequest.getImage())
                     .build();
 
             userStore.save(newUser);

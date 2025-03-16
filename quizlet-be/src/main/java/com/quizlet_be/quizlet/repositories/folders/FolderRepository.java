@@ -1,0 +1,17 @@
+package com.quizlet_be.quizlet.repositories.folders;
+
+import com.quizlet_be.quizlet.persistent.folders.FolderEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface FolderRepository extends JpaRepository<FolderEntity, UUID> {
+
+    List<FolderEntity> findByUserId(final UUID userId);
+
+    Optional<FolderEntity> findByName(final String name);
+}

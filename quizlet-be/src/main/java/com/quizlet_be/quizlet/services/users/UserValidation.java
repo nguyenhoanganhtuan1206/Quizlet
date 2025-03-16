@@ -16,7 +16,7 @@ public class UserValidation {
 
     private static <T> void validateUserEmpty(final T type, final String value) {
         if (isBlank(value)) {
-            throw supplyBadRequestException("%s can't be empty", type).get();
+            throw supplyBadRequestException("%s cannot be empty", type).get();
         }
     }
 }

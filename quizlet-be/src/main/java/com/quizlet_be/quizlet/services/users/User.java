@@ -28,5 +28,7 @@ public class User {
 
     private boolean accountDisabled;
 
+    private String image;
+
     private Integer roleId;
 }

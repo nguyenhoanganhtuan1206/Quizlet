@@ -26,4 +26,8 @@ public class CommonError {
     public static Supplier<ConflictException> supplyConflictException(String message, Object... args) {
         return () -> new ConflictException(message, args);
     }
+
+    public static Supplier<AccessDeniedException> supplyAccessDeniedError() {
+        return () -> new AccessDeniedException("You do not have permission to access this resource");
+    }
 }

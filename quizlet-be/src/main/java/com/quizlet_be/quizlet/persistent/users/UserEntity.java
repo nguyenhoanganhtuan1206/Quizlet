@@ -1,9 +1,6 @@
 package com.quizlet_be.quizlet.persistent.users;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
@@ -19,7 +16,7 @@ import java.util.UUID;
 public class UserEntity {
 
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private String fullName;
@@ -35,6 +32,8 @@ public class UserEntity {
     private Instant createdAt;
 
     private boolean accountDisabled;
+
+    private String image;
 
     private Integer roleId;
 }
