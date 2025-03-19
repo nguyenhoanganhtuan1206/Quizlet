@@ -10,7 +10,7 @@ export const authApis = createApi({
     login: builder.mutation<AuthResponseDTO, FormLoginValues>({
       query: (data) => {
         return {
-          url: "/auth/login",
+          url: "/auths/login",
           body: data,
           method: "POST",
         };
