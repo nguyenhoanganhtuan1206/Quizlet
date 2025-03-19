@@ -1,5 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { authApis } from "./apis/auth/authApis";
+import { configureStore } from '@reduxjs/toolkit';
+import { authApis } from './apis/auths/authApis';
 
 const store = configureStore({
   reducer: {
@@ -13,6 +13,6 @@ const store = configureStore({
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 
-export { useLoginMutation } from "./apis/auth/authApis";
+export { useLoginMutation } from './apis/auths/authApis';
 
 export default store;

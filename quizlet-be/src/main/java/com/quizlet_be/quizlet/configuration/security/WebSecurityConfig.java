@@ -2,6 +2,7 @@ package com.quizlet_be.quizlet.configuration.security;
 
 import com.quizlet_be.quizlet.configuration.jwt.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,27 +14,35 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
-
     private static final String[] ALLOW_ALL_ROLES = {
             "/api/v1/auths/signup",
             "/api/v1/auths/login",
     };
-
     private static final String[] API_USERS_ALLOWED = {
             "/api/v1/users/**",
-            "/api/v1/folders/**"
+            "/api/v1/folders/**",
+            "/api/v1/flashsets/**"
     };
-
     private static final String[] API_ADMIN_ALLOWED = {
             "/api/v1/admin/**"
     };
+
+    @Value("${api.allow-hosts}")
+    private String allowedHosts;
+
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,6 +52,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, ALLOW_ALL_ROLES)
@@ -60,5 +70,24 @@ public class WebSecurityConfig {
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+
+        // Handle allowed origins from properties
+        List<String> allowedOrigins = allowedHosts.equals("*")
+                ? List.of("*")
+                : Arrays.asList(allowedHosts.split(","));
+        configuration.setAllowedOrigins(allowedOrigins);
+
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(!allowedOrigins.contains("*")); // Required for credentials with specific origins
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
