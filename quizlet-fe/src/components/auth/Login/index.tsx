@@ -1,14 +1,14 @@
-import "./Login.scss";
+import './Login.scss';
 
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { FormLoginValues, loginSchemas } from "../../../schemas/authSchemas";
-import { useLoginMutation } from "../../../redux";
+import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
+import { useLoginMutation } from '../../../redux';
 
-import Input from "../../../shared/FormFields/Input";
-import ButtonLoginSocial from "../ButtonLoginSocial";
-import Button from "../../../shared/FormFields/Button";
+import Input from '../../../shared/FormFields/Input';
+import ButtonLoginSocial from '../ButtonLoginSocial';
+import Button from '../../../shared/FormFields/Button';
 
 export default function Login() {
   const { control, formState, handleSubmit } = useForm<FormLoginValues>({
@@ -19,9 +19,11 @@ export default function Login() {
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
       .unwrap()
-      .then(() => {})
+      .then((data) => {
+        console.log('data', data);
+      })
       .catch((error) => {
-        console.error("error", error);
+        console.error('error', error);
       });
   };
 
@@ -47,7 +49,7 @@ export default function Login() {
       {formState.isSubmitted && !formState.isValid && (
         <div className="mt-5">
           <div
-            className={`form__input-error ${"active"} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
+            className={`form__input-error ${'active'} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
           >
             <span className="text-[1.4rem] font-bold text-[var(--ref-color-error)]">
               {formState.errors.email?.message ??

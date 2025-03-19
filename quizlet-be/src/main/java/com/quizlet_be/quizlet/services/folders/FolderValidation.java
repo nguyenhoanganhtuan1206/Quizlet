@@ -16,7 +16,7 @@ public class FolderValidation {
      * @param value is the value of this property
      * Eg @output: The $type folder with $value not found
      */
-    public static <T, V> Supplier<NotFoundException> validateFolderNotFound(final T type, final V value) {
+    public static <T, V> Supplier<NotFoundException> supplyFolderNotFound(final T type, final V value) {
         throw supplyNotFoundException("The %t Folder with %v is not found", type, value).get();
     }
 }

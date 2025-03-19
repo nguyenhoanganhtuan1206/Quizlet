@@ -5,7 +5,7 @@ import { AuthResponseDTO } from "../../../type/Auth/authTypes";
 
 export const authApis = createApi({
   reducerPath: "auth",
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_ENDPOINT }),
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponseDTO, FormLoginValues>({
       query: (data) => {
