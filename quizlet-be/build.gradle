@@ -38,7 +38,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-			implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-core'
 	runtimeOnly group: 'org.flywaydb', name: 'flyway-database-postgresql', version: '10.19.0'
 
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
@@ -47,13 +47,10 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-
-	implementation 'javax.xml.bind:jaxb-api:2.3.1'
-	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
 }
 
 flyway {
-	url = 'jdbc:postgresql://localhost:5433/fitness_db'
+	url = 'jdbc:postgresql://localhost:5433/fitness_db?searchpath=public'
 	user = 'postgres'
 	password = 'postgres'
 	locations = ['classpath:ini_data/migration/COMMON']

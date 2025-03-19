@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyConflictException;
-import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateFolderNotFound;
+import static com.quizlet_be.quizlet.services.folders.FolderValidation.supplyFolderNotFound;
 import static java.time.Instant.now;
 
 @Service
@@ -24,7 +24,7 @@ public class FolderService {
 
     public Folder findById(final UUID id) {
         return folderStore.findById(id)
-                .orElseThrow(validateFolderNotFound("Id", id));
+                .orElseThrow(supplyFolderNotFound("Id", id));
     }
 
     public Folder createFolder(final FolderCreationDTO folderCreation) {
