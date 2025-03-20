@@ -17,6 +17,6 @@ export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 
 export { logout, setCredentials } from './slices/authProviderSlice';
-export { useLoginMutation } from './apis/auth/authApis';
+export { useLoginMutation, useRegisterMutation } from './apis/auth/authApis';
 
 export default store;

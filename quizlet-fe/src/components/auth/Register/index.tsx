@@ -1,5 +1,6 @@
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import {
   FormRegisterValues,
@@ -7,15 +8,32 @@ import {
 } from '../../../schemas/authSchemas';
 
 import ButtonLoginSocial from '../ButtonLoginSocial';
-import { Button, Input } from '../../../shared/components';
+import { AlertMessage, Button, Input } from '../../../shared/components';
+import { useRegisterMutation } from '../../../redux';
+import { ApiErrorResponse } from '../../../type';
 
 function Register() {
   const { control, formState, handleSubmit } = useForm<FormRegisterValues>({
     resolver: zodResolver(registerSchemas),
+    defaultValues: {
+      email: '',
+      fullName: '',
+      password: '',
+      confirmPassword: '',
+    },
   });
 
-  const onSubmit: SubmitHandler<FormRegisterValues> = (data) => {
-    console.log('data', data);
+  const [register, { isLoading }] = useRegisterMutation();
+
+  const onSubmit: SubmitHandler<FormRegisterValues> = async (data) => {
+    await register(data)
+      .unwrap()
+      .then((data) => {
+        console.log('data', data);
+      })
+      .catch((error: ApiErrorResponse) => {
+        toast.error(error.data.message);
+      });
   };
 
   return (
@@ -24,7 +42,7 @@ function Register() {
 
       <Input
         control={control}
-        name="username"
+        name="fullName"
         type="text"
         label="Username"
         placeholder="Your username"
@@ -59,23 +77,27 @@ function Register() {
       />
 
       {/* Display Error */}
-      {formState.isSubmitted && !formState.isValid && (
-        <div className="mt-5">
-          <div
-            className={`form__input-error ${'active'} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
-          >
-            <span className="text-[1.4rem] font-bold text-[var(--ref-color-error)]">
-              {formState.errors.username?.message ??
-                formState.errors.email?.message ??
-                formState.errors.password?.message ??
-                formState.errors.confirmPassword?.message}
-            </span>
-          </div>
-        </div>
-      )}
+      {formState.errors.email ||
+      formState.errors.password ||
+      formState.errors.confirmPassword ||
+      formState.errors.fullName ? (
+        <AlertMessage variant="error" className="mt-5">
+          <span>
+            {formState.errors.fullName?.message ??
+              formState.errors.email?.message ??
+              formState.errors.password?.message ??
+              formState.errors.confirmPassword?.message}
+          </span>
+        </AlertMessage>
+      ) : null}
       {/* Display Error */}
 
-      <Button variant="primary" type="submit" className="mt-8">
+      <Button
+        isLoading={isLoading}
+        variant="primary"
+        type="submit"
+        className="mt-8"
+      >
         Sign Up
       </Button>
     </form>

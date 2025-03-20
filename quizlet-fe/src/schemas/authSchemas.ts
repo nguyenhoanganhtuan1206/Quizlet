@@ -27,11 +27,11 @@ export const registerSchemas = z
       .nonempty('Your password cannot be empty')
       .min(5, 'Your password must be at least 5 characters')
       .max(150, 'Your password cannot be larger than 150 characters'),
-    username: z
+      fullName: z
       .string()
-      .min(3, 'Your username is invalid')
-      .max(150, 'Your username is invalid')
-      .nonempty('Your username cannot be empty')
+      .min(3, 'Your name is invalid')
+      .max(150, 'Your name is invalid')
+      .nonempty('Your name cannot be empty')
       .optional(),
     confirmPassword: z.string(),
   })

@@ -1,8 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { FormLoginValues } from '../../../schemas/authSchemas';
-import { AuthResponseDTO } from '../../../type/Auth/authTypes';
 import pause from '../../../utils/timeout_api';
+import {
+  FormLoginValues,
+  FormRegisterValues,
+} from '../../../schemas/authSchemas';
+
+import { AuthResponseDTO } from '../../../type';
 
 export const authApis = createApi({
   reducerPath: 'auth',
@@ -23,7 +27,16 @@ export const authApis = createApi({
         };
       },
     }),
+    register: builder.mutation<void, FormRegisterValues>({
+      query: (data) => {
+        return {
+          url: '/auths/signup',
+          body: data,
+          method: 'POST',
+        };
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation } = authApis;
+export const { useLoginMutation, useRegisterMutation } = authApis;

@@ -11,10 +11,10 @@ import lombok.Setter;
 public class UserSignUpDTO {
 
     @NotBlank(message = "Your username cannot be empty")
-    @Size(min = 5, max = 150, message = "Username must be at between 5 to 150 characters")
+    @Size(min = 5, max = 150, message = "Your username must be at between 5 to 150 characters")
     private String fullName;
 
-    @NotBlank(message = "Email can't be empty")
+    @NotBlank(message = "Your email cannot be empty")
     @Email(message = "Email is invalid")
     @Size(min = 9, max = 150, message = "Your Email must be between 9 to 150 characters")
     private String email;
