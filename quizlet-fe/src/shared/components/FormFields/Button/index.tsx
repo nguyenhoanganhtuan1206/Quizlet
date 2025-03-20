@@ -1,13 +1,15 @@
-import React from 'react';
-import classnames from 'classnames';
+import React from "react";
+import classnames from "classnames";
 
-import './index.scss';
+import { Link } from "react-router-dom";
 
-import { ReactPropsChildren } from '../../../../type/reactPropsChildren';
+import "./index.scss";
 
-type ButtonType = 'submit' | 'button' | 'reset';
+import { ReactPropsChildren } from "../../../../type/";
 
-type ButtonVariants = 'primary' | 'borderOnly';
+type ButtonType = "submit" | "button" | "reset";
+
+type ButtonVariants = "primary" | "borderOnly";
 
 interface ButtonProps {
   variant?: ButtonVariants;
@@ -23,7 +25,7 @@ interface ButtonProps {
 
 export default function Button({
   variant,
-  type = 'button',
+  type = "button",
   path,
   onClick,
   onSubmit,
@@ -33,15 +35,23 @@ export default function Button({
   disabled,
 }: Readonly<ButtonProps>) {
   const buttonClassnames = classnames(
-    'flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 w-full cursor-pointer transition-all duration-300',
+    "flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 w-full cursor-pointer transition-all duration-300",
+    className,
     {
-      'bg-primary text-white hover:bg-[var(--color-primary-sub)] hover:text-white':
-        variant === 'primary',
-      'bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white':
-        variant === 'borderOnly',
-    },
-    className
+      "bg-primary text-white hover:bg-[var(--color-primary-sub)] hover:text-white":
+        variant === "primary",
+      "bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white":
+        variant === "borderOnly",
+    }
   );
+
+  if (path) {
+    return (
+      <Link className={buttonClassnames} to={path}>
+        {children}
+      </Link>
+    );
+  }
 
   return (
     <button
