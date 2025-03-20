@@ -1,15 +1,15 @@
-import './index.scss';
+import "./index.scss";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-import { IoSearchOutline } from 'react-icons/io5';
-import { IoLogoTumblr } from 'react-icons/io';
-import { BsList } from 'react-icons/bs';
-import { FiPlus } from 'react-icons/fi';
+import { IoSearchOutline } from "react-icons/io5";
+import { IoLogoTumblr } from "react-icons/io";
+import { BsList } from "react-icons/bs";
+import { FiPlus } from "react-icons/fi";
 
-import { AssemblyAvatar, HeaderProfilePopper } from '../../../components';
-import { Input } from '../';
+import { AssemblyAvatar, HeaderProfilePopper } from "../../../components";
+import { Input } from "../";
 
 type HeaderFormSearchTerm = {
   term: string;
@@ -17,6 +17,7 @@ type HeaderFormSearchTerm = {
 
 function Header() {
   const { control } = useForm<HeaderFormSearchTerm>();
+  const [isHiddenProfile, setIsHiddenProfile] = useState<boolean>(false);
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
   return (
@@ -29,7 +30,7 @@ function Header() {
       <div
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        className={`header-search flex-[2] ${isFocus && 'isFocus'}`}
+        className={`header-search flex-[2] ${isFocus && "isFocus"}`}
       >
         <IoSearchOutline className="header-search__icon" />
 
@@ -50,9 +51,11 @@ function Header() {
           height="40px"
           width="40px"
           imagePath="https://graph.facebook.com/1191245547971182/picture?type=large"
+          className="cursor-pointer"
+          onClick={() => setIsHiddenProfile(!isHiddenProfile)}
         />
 
-        <HeaderProfilePopper />
+        <HeaderProfilePopper isHidden={isHiddenProfile} />
       </div>
     </header>
   );

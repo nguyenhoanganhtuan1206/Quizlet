@@ -1,5 +1,6 @@
 import "./index.scss";
 
+import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { GrAchievement } from "react-icons/gr";
@@ -11,9 +12,12 @@ import { logout, RootState } from "../../redux";
 import { Button, PopperWrapper } from "../../shared/components";
 import { AssemblyAvatar } from "../";
 import { decodeToken } from "../../utils/jwtUtilities";
-import { Navigate } from "react-router-dom";
 
-export default function HeaderProfilePopper() {
+type HeaderProfilePopper = {
+  isHidden: boolean;
+};
+
+export default function HeaderProfilePopper({ isHidden }: HeaderProfilePopper) {
   const token = useSelector((state: RootState) => state.authProvider.token);
   const dispatch = useDispatch();
 
@@ -26,7 +30,7 @@ export default function HeaderProfilePopper() {
   }
 
   return (
-    <PopperWrapper className="profile__popper">
+    <PopperWrapper className={`profile__popper ${isHidden && "hidden"}`}>
       <div className="profile__popper-header">
         <AssemblyAvatar
           height="64px"
