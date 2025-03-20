@@ -1,8 +1,9 @@
+import React from 'react';
 import classnames from 'classnames';
 
+import './index.scss';
+
 import { ReactPropsChildren } from '../../../../type/reactPropsChildren';
-import { SubmitHandler } from 'react-hook-form';
-import React from 'react';
 
 type ButtonType = 'submit' | 'button' | 'reset';
 
@@ -12,6 +13,7 @@ interface ButtonProps {
   variant?: ButtonVariants;
   children: ReactPropsChildren;
   type?: ButtonType;
+  isLoading?: boolean;
   className?: string;
   path?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -25,6 +27,7 @@ export default function Button({
   path,
   onClick,
   onSubmit,
+  isLoading,
   className,
   children,
   disabled,
@@ -42,13 +45,13 @@ export default function Button({
 
   return (
     <button
-      disabled={disabled}
+      disabled={disabled || isLoading}
       onClick={onClick}
       onSubmit={onSubmit}
       type={type}
       className={buttonClassnames}
     >
-      {children}
+      {isLoading ? <span className="btn-loading"></span> : children}
     </button>
   );
 }

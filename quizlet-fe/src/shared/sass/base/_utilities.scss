@@ -17,7 +17,7 @@
 
   &::after {
     position: absolute;
-    content: "";
+    content: '';
     top: $top;
     left: 0;
     height: $height;
@@ -25,6 +25,32 @@
     border-radius: 5px;
     background-color: $background-color;
     transition: all $timeSpeed ease-in-out;
+  }
+
+  @content;
+}
+
+@mixin loading-spinner-animation(
+  $height: 2.6rem,
+  $width: 2.6rem,
+  $margin: 1px,
+  $borderWidth: 4px,
+  $firstColor: currentColor,
+  $secondColor: transparent,
+  $timeSpeed: 1.2s
+) {
+  z-index: 99;
+
+  &::after {
+    content: '';
+    display: block;
+    height: $height;
+    width: $width;
+    margin: $margin;
+    border: $borderWidth solid $firstColor;
+    border-radius: 50%;
+    border-color: $firstColor $firstColor $secondColor;
+    animation: lds-dual-ring $timeSpeed linear infinite;
   }
 
   @content;

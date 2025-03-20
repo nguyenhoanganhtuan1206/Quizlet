@@ -1,13 +1,14 @@
 import './Login.scss';
 
-import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
-import { setCredentials, useLoginMutation } from '../../../redux';
+import { RootState, setCredentials, useLoginMutation } from '../../../redux';
 
 import { AlertMessage, Input, Button } from '../../../shared/components';
 
@@ -24,8 +25,21 @@ export default function Login() {
   });
 
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.authProvider.isAuthenticated
+  );
   const navigate = useNavigate();
-  const [login, { isLoading, isError }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
+
+  /**
+   * Verify whether logged in or not
+   * If logged in it auto redirect to the Home Page
+   */
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated]);
 
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
@@ -66,7 +80,13 @@ export default function Login() {
         </AlertMessage>
       ) : null}
       {/* Display Error */}
-      <Button variant="primary" type="submit" className="mt-8">
+
+      <Button
+        isLoading={isLoading}
+        variant="primary"
+        type="submit"
+        className="mt-8"
+      >
         Log in
       </Button>
     </form>
