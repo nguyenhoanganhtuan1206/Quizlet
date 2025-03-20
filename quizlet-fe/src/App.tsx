@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { AuthPage, HomePage } from './pages/';
 import RootLayout from './shared/RootLayout';
+import ProtectedRoute from './shared/components/ProtectedRoute';
 
 function App() {
   const router = createBrowserRouter([
@@ -13,12 +14,17 @@ function App() {
       element: <RootLayout />,
       children: [
         {
-          path: '/',
-          element: <HomePage />,
-        },
-        {
-          path: '/libraries',
-          element: <HomePage />,
+          element: <ProtectedRoute />,
+          children: [
+            {
+              path: '/',
+              element: <HomePage />,
+            },
+            {
+              path: '/libraries',
+              element: <HomePage />,
+            },
+          ],
         },
       ],
     },

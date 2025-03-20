@@ -1,11 +1,13 @@
 import './Login.scss';
 
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
-import { useLoginMutation } from '../../../redux';
+import { setCredentials, useLoginMutation } from '../../../redux';
 
 import { AlertMessage, Input, Button } from '../../../shared/components';
 
@@ -21,21 +23,22 @@ export default function Login() {
     },
   });
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [login, { isLoading, isError }] = useLoginMutation();
-
-  console.log('isError', isError);
-  console.log('isLoading', isLoading);
 
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
       .unwrap()
       .then((data) => {
-        console.log('data', data);
+        dispatch(setCredentials(data.token));
+        toast.success('Logged in successfully!');
+        navigate('/');
       })
       .catch((error) => {
         const apiError = error as ApiErrorResponse;
 
-        toast.error(apiError.data.message, { autoClose: 2000 });
+        toast.error(apiError.data.message);
       });
   };
 

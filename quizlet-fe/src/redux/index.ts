@@ -1,8 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { authApis } from "./apis/auth/authApis";
+import { configureStore } from '@reduxjs/toolkit';
+
+import { authApis } from './apis/auth/authApis';
+import { authProviderSlice, authReducer } from './slices/authProviderSlice';
 
 const store = configureStore({
   reducer: {
+    [authProviderSlice.reducerPath]: authReducer,
     [authApis.reducerPath]: authApis.reducer,
   },
   middleware: (getDefaultMiddleware) => {
@@ -13,6 +16,7 @@ const store = configureStore({
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 
-export { useLoginMutation } from "./apis/auth/authApis";
+export { logout, setCredentials } from './slices/authProviderSlice';
+export { useLoginMutation } from './apis/auth/authApis';
 
 export default store;
