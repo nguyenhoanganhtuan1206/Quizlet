@@ -1,42 +1,45 @@
-import './Login.scss';
+import "./Login.scss";
 
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
-import { useLoginMutation } from '../../../redux';
+import { FormLoginValues, loginSchemas } from "../../../schemas/authSchemas";
+import { useLoginMutation } from "../../../redux";
 
-import Input from '../../../shared/FormFields/Input';
-import ButtonLoginSocial from '../ButtonLoginSocial';
-import Button from '../../../shared/FormFields/Button';
+import Input from "../../../shared/FormFields/Input";
+import ButtonLoginSocial from "../ButtonLoginSocial";
+import Button from "../../../shared/FormFields/Button";
+import { AlertMessage } from "../../../shared";
 
 export default function Login() {
   const { control, formState, handleSubmit } = useForm<FormLoginValues>({
     resolver: zodResolver(loginSchemas),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
+
   const [login, { isLoading, isError }] = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
       .unwrap()
       .then((data) => {
-        console.log('data', data);
+        console.log("data", data);
       })
       .catch((error) => {
-        console.error('error', error);
+        console.error("error", error);
       });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <ButtonLoginSocial />
-
       <div className="my-10 flex justify-center login_break-line before:bg-gray-300">
         <p>or email</p>
       </div>
-
       <Input control={control} name="email" type="text" label="Email" />
-
       <Input
         control={control}
         name="password"
@@ -44,22 +47,16 @@ export default function Login() {
         label="Password"
         outsideClassName="mt-5"
       />
-
       {/* Display Error */}
-      {formState.isSubmitted && !formState.isValid && (
-        <div className="mt-5">
-          <div
-            className={`form__input-error ${'active'} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
-          >
-            <span className="text-[1.4rem] font-bold text-[var(--ref-color-error)]">
-              {formState.errors.email?.message ??
-                formState.errors.password?.message}
-            </span>
-          </div>
-        </div>
-      )}
+      {formState.errors.email || formState.errors.password ? (
+        <AlertMessage variant="error" className="mt-5">
+          <span>
+            {formState.errors.email?.message ||
+              formState.errors.password?.message}
+          </span>
+        </AlertMessage>
+      ) : null}
       {/* Display Error */}
-
       <Button variant="primary" type="submit" className="mt-8">
         Log in
       </Button>

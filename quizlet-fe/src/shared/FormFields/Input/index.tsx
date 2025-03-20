@@ -70,6 +70,9 @@ export default function Input<T extends FieldValues>({
               </label>
             )}
 
+            {/**
+             * Just display when have the hidden password
+             */}
             {type === "password" ? (
               <div className="relative">
                 {renderInput(onChange)}
@@ -83,6 +86,13 @@ export default function Input<T extends FieldValues>({
             ) : (
               renderInput(onChange)
             )}
+            {/**
+             * Just display when have the hidden password
+             */}
+
+            {/*!
+             * Using to display the error message
+             * */}
           </div>
         );
       }}
