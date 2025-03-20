@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.configuration.security;
 
-import com.quizlet_be.quizlet.configuration.jwt.JwtAuthFilter;
+import com.quizlet_be.quizlet.configuration.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,19 +30,21 @@ public class WebSecurityConfig {
             "/api/v1/auths/signup",
             "/api/v1/auths/login",
     };
+
     private static final String[] API_USERS_ALLOWED = {
             "/api/v1/users/**",
             "/api/v1/folders/**",
             "/api/v1/flashsets/**"
     };
+
     private static final String[] API_ADMIN_ALLOWED = {
             "/api/v1/admin/**"
     };
 
+    private final JwtAuthenticationFilter jwtAuthFilter;
+
     @Value("${api.allow-hosts}")
     private String allowedHosts;
-
-    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -52,6 +54,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
@@ -67,9 +70,8 @@ public class WebSecurityConfig {
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // No sessions
-                )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return httpSecurity.build();
+                );
+    return httpSecurity.build();
     }
 
     @Bean
@@ -77,7 +79,7 @@ public class WebSecurityConfig {
         final CorsConfiguration configuration = new CorsConfiguration();
 
         // Handle allowed origins from properties
-        List<String> allowedOrigins = allowedHosts.equals("*")
+        final List<String> allowedOrigins = allowedHosts.equals("*")
                 ? List.of("*")
                 : Arrays.asList(allowedHosts.split(","));
         configuration.setAllowedOrigins(allowedOrigins);

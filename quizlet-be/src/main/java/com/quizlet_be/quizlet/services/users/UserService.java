@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.services.users;
 
-import com.quizlet_be.quizlet.dto.auths.AuthRequest;
+import com.quizlet_be.quizlet.dto.auths.AuthRequestDTO;
 import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
 import com.quizlet_be.quizlet.persistent.users.UserStore;
 import com.quizlet_be.quizlet.services.auths.JwtTokenService;
@@ -45,7 +45,7 @@ public class UserService {
      * @Transactional: To rollback changes if an exception occurs during a user creation.
      * */
     @Transactional
-    public void createNewUser(UserSignUpDTO userRequest) {
+    public void createNewUser(final UserSignUpDTO userRequest) {
         validateCreateUser(userRequest);
         verifyIfUserExisted(userRequest.getEmail());
 
@@ -66,7 +66,7 @@ public class UserService {
         }
     }
 
-    public String login(final AuthRequest authRequest) {
+    public String login(final AuthRequestDTO authRequest) {
         final User userFound = findByEmail(authRequest.getEmail());
 
         if (!passwordEncoder.matches(authRequest.getPassword(), userFound.getPassword())) {

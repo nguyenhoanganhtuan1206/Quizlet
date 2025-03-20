@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.api.auth;
 
-import com.quizlet_be.quizlet.dto.auths.AuthRequest;
+import com.quizlet_be.quizlet.dto.auths.AuthRequestDTO;
 import com.quizlet_be.quizlet.dto.auths.AuthResponseDTO;
 import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
 import com.quizlet_be.quizlet.services.users.UserService;
@@ -30,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public AuthResponseDTO login(final @Valid @RequestBody AuthRequest authRequest,
+    public AuthResponseDTO login(final @Valid @RequestBody AuthRequestDTO authRequest,
                                  final BindingResult bindingResult) {
         handleValidationError(bindingResult);
 
