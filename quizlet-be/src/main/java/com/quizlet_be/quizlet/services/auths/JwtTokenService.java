@@ -25,7 +25,11 @@ import static io.micrometer.common.util.StringUtils.isBlank;
 @RequiredArgsConstructor
 public class JwtTokenService {
 
+    private final String USER_ID_CLAIMS = "user_id";
+    private final String ROLE = "role";
+
     private final JwtProperties jwtProperties;
+
     private final RoleService roleService;
 
     @Bean
@@ -41,21 +45,24 @@ public class JwtTokenService {
      * @throws BadRequestException if user or role data is invalid
      */
     public String generateToken(final User user) {
-        System.out.println("User generateToken " + user);
         if (user == null || user.getEmail() == null) {
             throw supplyBadRequestException("User and email cannot be null").get();
         }
 
         final Map<String, Object> claims = new HashMap<>();
+
         final Role currentRole = roleService.findById(user.getRoleId());
         if (currentRole == null) {
             throw supplyBadRequestException("Role not found for ID: " + user.getRoleId()).get();
         }
 
+        claims.put(USER_ID_CLAIMS, user.getId());
+        claims.put(ROLE, currentRole.getName());
+
         long nowMillis = clock().millis();
         final Date expirationDate = new Date(nowMillis + jwtProperties.getExpiration() * 1000);
 
-        SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
+        final SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .claims(claims)
