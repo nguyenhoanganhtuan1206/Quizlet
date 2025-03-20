@@ -6,7 +6,7 @@ import { Controller, FieldValues } from "react-hook-form";
 
 import { FaEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
-import { InputProps } from "../../../type/Form/Input";
+import { InputProps } from "../../../../type/Form/Input";
 
 /**
  * Params

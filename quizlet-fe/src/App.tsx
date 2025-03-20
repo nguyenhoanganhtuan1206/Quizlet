@@ -2,9 +2,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import './App.scss';
 
+import { ToastContainer } from 'react-toastify';
+
+import { AuthPage, HomePage } from './pages/';
 import RootLayout from './shared/RootLayout';
-import AuthPage from './pages/auth/AuthPage';
-import HomePage from './pages/HomePage';
 
 function App() {
   const router = createBrowserRouter([
@@ -26,7 +27,21 @@ function App() {
       element: <AuthPage />,
     },
   ]);
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+        className="text-[1.4rem]"
+      />
+    </>
+  );
 }
 
 export default App;

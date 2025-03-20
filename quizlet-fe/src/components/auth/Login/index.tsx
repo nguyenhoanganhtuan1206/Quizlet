@@ -1,35 +1,41 @@
-import "./Login.scss";
+import './Login.scss';
 
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-toastify';
 
-import { FormLoginValues, loginSchemas } from "../../../schemas/authSchemas";
-import { useLoginMutation } from "../../../redux";
+import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
+import { useLoginMutation } from '../../../redux';
 
-import Input from "../../../shared/FormFields/Input";
-import ButtonLoginSocial from "../ButtonLoginSocial";
-import Button from "../../../shared/FormFields/Button";
-import { AlertMessage } from "../../../shared";
+import { AlertMessage, Input, Button } from '../../../shared/components';
+
+import { ApiErrorResponse } from '../../../type/';
+import ButtonLoginSocial from '../ButtonLoginSocial';
 
 export default function Login() {
   const { control, formState, handleSubmit } = useForm<FormLoginValues>({
     resolver: zodResolver(loginSchemas),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
   const [login, { isLoading, isError }] = useLoginMutation();
 
+  console.log('isError', isError);
+  console.log('isLoading', isLoading);
+
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
       .unwrap()
       .then((data) => {
-        console.log("data", data);
+        console.log('data', data);
       })
       .catch((error) => {
-        console.error("error", error);
+        const apiError = error as ApiErrorResponse;
+
+        toast.error(apiError.data.message, { autoClose: 2000 });
       });
   };
 
@@ -51,7 +57,7 @@ export default function Login() {
       {formState.errors.email || formState.errors.password ? (
         <AlertMessage variant="error" className="mt-5">
           <span>
-            {formState.errors.email?.message ||
+            {formState.errors.email?.message ??
               formState.errors.password?.message}
           </span>
         </AlertMessage>

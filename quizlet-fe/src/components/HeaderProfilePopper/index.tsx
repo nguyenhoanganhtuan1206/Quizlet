@@ -1,7 +1,7 @@
-import "./index.scss";
+import './index.scss';
 
-import { PopperWrapper } from "../../shared";
-import { AssemblyAvatar } from "../";
+import { PopperWrapper } from '../../shared/components';
+import { AssemblyAvatar } from '../';
 
 export default function HeaderProfilePopper() {
   return (

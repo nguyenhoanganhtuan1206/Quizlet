@@ -1,14 +1,13 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
   FormRegisterValues,
   registerSchemas,
-} from "../../../schemas/authSchemas";
+} from '../../../schemas/authSchemas';
 
-import ButtonLoginSocial from "../ButtonLoginSocial";
-import Input from "../../../shared/FormFields/Input";
-import Button from "../../../shared/FormFields/Button";
+import ButtonLoginSocial from '../ButtonLoginSocial';
+import { Button, Input } from '../../../shared/components';
 
 function Register() {
   const { control, formState, handleSubmit } = useForm<FormRegisterValues>({
@@ -16,7 +15,7 @@ function Register() {
   });
 
   const onSubmit: SubmitHandler<FormRegisterValues> = (data) => {
-    console.log("data", data);
+    console.log('data', data);
   };
 
   return (
@@ -63,7 +62,7 @@ function Register() {
       {formState.isSubmitted && !formState.isValid && (
         <div className="mt-5">
           <div
-            className={`form__input-error ${"active"} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
+            className={`form__input-error ${'active'} h-[40px] flex items-center w-full bg-[var(--ref-bg-color-error)] py.1.5 px-3 rounded-[3px]`}
           >
             <span className="text-[1.4rem] font-bold text-[var(--ref-color-error)]">
               {formState.errors.username?.message ??

@@ -1,10 +1,10 @@
-import Header from '../Header';
+import Header from '../components/Header';
 import { Outlet } from 'react-router-dom';
-import Navbar from '../Navbar';
+import Navbar from '../components/Navbar';
 
 const RootLayout = () => {
   return (
-    <div className='relative'>
+    <div className="relative">
       <Header />
       <Navbar />
       <Outlet />

@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 
-import { ReactPropsChildren } from '../../../type/ReactPropsChildren';
+import { ReactPropsChildren } from '../../../../type/reactPropsChildren';
 import { SubmitHandler } from 'react-hook-form';
 import React from 'react';
 
