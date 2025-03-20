@@ -1,92 +1,106 @@
 package com.quizlet_be.quizlet.services.auths;
 
 import com.quizlet_be.quizlet.properties.JwtProperties;
-import com.quizlet_be.quizlet.persistent.users.UserEntity;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.quizlet_be.quizlet.services.roles.Role;
+import com.quizlet_be.quizlet.services.roles.RoleService;
+import com.quizlet_be.quizlet.services.users.User;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 
-import java.util.*;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.time.Clock;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyAccessDeniedException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyUnauthorizedException;
-import static io.jsonwebtoken.lang.Strings.split;
+import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
 import static io.micrometer.common.util.StringUtils.isBlank;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenService {
 
-    private final String CLAIM_ROLES = "roles";
-    private final String CLAIM_USER_ID = "user_id";
+    private final String USER_ID_CLAIMS = "user_id";
+    private final String ROLE = "role";
 
-    @Autowired
     private final JwtProperties jwtProperties;
 
-    public Authentication parse(final String token) {
-        try {
-            if (isBlank(token)) {
-                throw supplyUnauthorizedException("This token is invalid. Please send another request with a valid token.").get();
-            }
+    private final RoleService roleService;
 
-            final Claims claims = Jwts.parser()
-                    .setSigningKey(jwtProperties.getSecret())
-                    .parseClaimsJwt(token)
-                    .getBody();
-
-            if (isBlank(claims.getSubject())) {
-                throw supplyUnauthorizedException("This token is invalid. Please send another request with a valid token.").get();
-            }
-
-            isTokenExpired(claims);
-            isValidUserInfo(claims);
-
-            final String userId = claims.get(CLAIM_USER_ID, String.class);
-            final String roles = claims.get(CLAIM_ROLES, String.class);
-            return new UsernamePasswordAuthenticationToken(
-                    UUID.fromString(userId).toString(),
-                    claims.getSubject(),
-                    Arrays.stream(split(roles, ","))
-                            .map(SimpleGrantedAuthority::new)
-                            .toList()
-            );
-        } catch (Exception exception) {
-            throw supplyUnauthorizedException("Authentication failed. Please ensure that you have provided the correct credentials.").get();
-        }
+    @Bean
+    private Clock clock() {
+        return Clock.systemUTC();
     }
 
-    private String generateToken(final UserEntity user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_USER_ID, user.getId());
-        claims.put(CLAIM_ROLES, String.join(","));
+    /**
+     * Generates a JWT token for the given user.
+     *
+     * @param user The user entity
+     * @return A signed JWT token
+     * @throws BadRequestException if user or role data is invalid
+     */
+    public String generateToken(final User user) {
+        if (user == null || user.getEmail() == null) {
+            throw supplyBadRequestException("User and email cannot be null").get();
+        }
+
+        final Map<String, Object> claims = new HashMap<>();
+
+        final Role currentRole = roleService.findById(user.getRoleId());
+        if (currentRole == null) {
+            throw supplyBadRequestException("Role not found for ID: " + user.getRoleId()).get();
+        }
+
+        claims.put(USER_ID_CLAIMS, user.getId());
+        claims.put(ROLE, currentRole.getName());
+
+        long nowMillis = clock().millis();
+        final Date expirationDate = new Date(nowMillis + jwtProperties.getExpiration() * 1000);
+
+        final SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
-                .setSubject(user.getEmail())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
-                .signWith(SignatureAlgorithm.ES256, jwtProperties.getSecret())
-                .setClaims(claims)
+                .claims(claims)
+                .subject(user.getEmail())
+                .issuedAt(new Date(nowMillis))
+                .expiration(expirationDate)
+                .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 
-    private void isTokenExpired(Claims claims) {
-        if (claims.getExpiration().before(new Date())) {
-            throw supplyAccessDeniedException("Your login session has expired. Please log in again.").get();
+    /**
+     * Parses and validates a JWT token, returning its claims.
+     *
+     * @param token The JWT token to parse
+     * @return Claims extracted from the token
+     * @throws AccessDeniedException if the token is invalid, expired, or malformed
+     */
+    public Claims parseToken(String token) {
+        if (isBlank(token)) {
+            throw supplyAccessDeniedException("Token cannot be null or empty").get();
         }
-    }
 
-    private void isValidUserInfo(Claims claims) {
-        final String userId = claims.get(CLAIM_USER_ID, String.class);
-        final String roles = claims.get(CLAIM_ROLES, String.class);
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
 
-        if (isBlank(userId) || isBlank(roles)) {
-            throw supplyAccessDeniedException("Something went wrong!. Please log in again.").get();
+            return Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            throw supplyAccessDeniedException("Token has expired", e).get();
+        } catch (UnsupportedJwtException | MalformedJwtException e) {
+            throw supplyAccessDeniedException("Invalid token format", e).get();
+        } catch (io.jsonwebtoken.security.SignatureException e) {
+            throw supplyAccessDeniedException("Invalid token signature", e).get();
+        } catch (IllegalArgumentException e) {
+            throw supplyAccessDeniedException("Token cannot be parsed", e).get();
         }
     }
 }

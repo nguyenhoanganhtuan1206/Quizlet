@@ -1,9 +1,21 @@
-# Libraries
+### Libraries
 
+## State management
+- Async Thunk
+- Redux toolkit query
+
+## Form
 - Create Form Fields to reuse (Input, Select,...)
 - React hook form
-- Tailwind
+# Validation
+- Zod
+
+## Router
 - React router dom
-- Firebase
-- Redux toolkit and Redux thunk
+
+## Styles
+- Tailwind
 - SCSS
+
+# Third Party
+- Firebase
