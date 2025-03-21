@@ -4,7 +4,7 @@ import './App.scss';
 
 import { ToastContainer } from 'react-toastify';
 
-import { AuthPage, HomePage } from './pages/';
+import { AuthPage, HomePage, NotFoundPage } from './pages/';
 import RootLayout from './shared/RootLayout';
 import ProtectedRoute from './shared/components/ProtectedRoute';
 
@@ -23,6 +23,10 @@ function App() {
             {
               path: '/libraries',
               element: <HomePage />,
+            },
+            {
+              path: '*',
+              element: <NotFoundPage />,
             },
           ],
         },

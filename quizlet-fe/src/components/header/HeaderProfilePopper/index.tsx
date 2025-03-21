@@ -17,7 +17,11 @@ type HeaderProfilePopper = {
   isHidden: boolean;
 };
 
-export default function HeaderProfilePopper({ isHidden }: Readonly<HeaderProfilePopper>) {
+export default function HeaderProfilePopper({
+  isHidden,
+}: Readonly<HeaderProfilePopper>) {
+  console.log('isHidden', isHidden);
+
   const token = useSelector((state: RootState) => state.authProvider.token);
   const dispatch = useDispatch();
 
@@ -30,7 +34,7 @@ export default function HeaderProfilePopper({ isHidden }: Readonly<HeaderProfile
   }
 
   return (
-    <PopperWrapper className={`profile__popper ${isHidden && 'hidden'}`}>
+    <PopperWrapper className={`profile__popper ${isHidden ? 'active' : 'hidden'}`}>
       <div className="profile__popper-header">
         <AssemblyAvatar
           height="64px"

@@ -37,7 +37,7 @@ export default function Login() {
    */
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/auth');
     }
   }, [isAuthenticated]);
 
@@ -47,7 +47,7 @@ export default function Login() {
       .then((data) => {
         dispatch(setCredentials(data.token));
         toast.success('Logged in successfully!');
-        navigate('/');
+        navigate('/latest');
       })
       .catch((error) => {
         const apiError = error as ApiErrorResponse;
