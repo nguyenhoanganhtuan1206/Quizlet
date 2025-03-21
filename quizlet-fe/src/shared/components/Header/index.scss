@@ -2,7 +2,7 @@ $headerHeader: 5.5rem;
 
 .header {
   top: 0;
-  position: fixed;
+  position: sticky;
 
   display: flex;
   align-items: center;

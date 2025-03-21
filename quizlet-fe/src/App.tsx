@@ -17,7 +17,7 @@ function App() {
           element: <ProtectedRoute />,
           children: [
             {
-              path: '/',
+              path: '/latest',
               element: <HomePage />,
             },
             {

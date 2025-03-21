@@ -4,10 +4,16 @@ import Navbar from '../components/Navbar';
 
 const RootLayout = () => {
   return (
-    <div className="relative">
+    <div className="">
       <Header />
-      <Navbar />
-      <Outlet />
+      <div className="grid grid-cols-12">
+        <div className="col-span-2">
+          <Navbar />
+        </div>
+        <div className="col-span-10">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 };
