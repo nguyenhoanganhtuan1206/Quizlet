@@ -1,9 +1,8 @@
-import { Link } from 'react-router-dom';
 import { Button } from '../../shared/components';
 
 export default function NotFoundPage() {
   return (
-    <div className='flex flex-col items-center text-white'>
+    <div className="flex flex-col items-center text-white">
       <h1 className="text-[2.5rem] mt-4">
         Hmm, we can't seem to find that page
       </h1>
