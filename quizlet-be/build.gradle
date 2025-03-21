@@ -52,7 +52,7 @@ dependencies {
 }
 
 flyway {
-	url = 'jdbc:postgresql://localhost:5433/fitness_db?searchpath=public'
+	url = 'jdbc:postgresql://localhost:5433/quizlet_db?searchpath=public'
 	user = 'postgres'
 	password = 'postgres'
 	locations = ['classpath:ini_data/migration/COMMON']

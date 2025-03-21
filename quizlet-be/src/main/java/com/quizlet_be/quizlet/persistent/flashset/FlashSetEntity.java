@@ -25,5 +25,7 @@ public class FlashSetEntity {
 
     private Instant updatedAt;
 
+    private UUID userId;
+
     private UUID folderId;
 }
