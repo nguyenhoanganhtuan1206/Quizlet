@@ -8,9 +8,9 @@ import NavbarLinkItem from "./NavbarLinkItem";
 
 function Navbar() {
   return (
-    <nav className="navbar bg-[var(--color-primary-sub)] fixed h-screen">
+    <nav className="navbar bg-[var(--color-primary-sub)] fixed h-full">
       <div className="flex flex-col justify-center items-center">
-        <NavbarLinkItem path="/">
+        <NavbarLinkItem path="/latest">
           <AiOutlineHome className="navbar-icon" />
           <span>Home</span>
         </NavbarLinkItem>

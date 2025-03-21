@@ -1,7 +1,7 @@
-import React from 'react';
+import { RecentCardsList } from '../../components/';
 
 const HomePage = () => {
-  return <div>Home</div>;
+  return <RecentCardsList />;
 };
 
 export default HomePage;

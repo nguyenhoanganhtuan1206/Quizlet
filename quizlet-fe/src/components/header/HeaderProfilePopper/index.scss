@@ -6,16 +6,16 @@ $maxHeight: 31.25rem;
   right: -10px;
 
   /* Active */
-  opacity: 0;
-
+  display: flex;
+  
   border-radius: 5px;
   border: 1px solid var(--gray-300-gray-600);
   min-height: fit-content;
   max-height: 31.25rem;
   box-shadow: unset;
-
+  
   &.hidden {
-    opacity: 1;
+    display: none;
   }
 
   &-header {

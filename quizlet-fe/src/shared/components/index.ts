@@ -3,3 +3,4 @@ export { default as Button } from './FormFields/Button';
 export { default as Input } from './FormFields/Input/';
 export { default as PopperWrapper } from './PopperWrapper';
 export { default as AlertMessage } from './AlertMessage';
+export { default as CardItem } from './CardItem';

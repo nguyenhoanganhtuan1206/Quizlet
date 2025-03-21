@@ -1,16 +1,17 @@
-import Header from '../components/Header';
 import { Outlet } from 'react-router-dom';
+
+import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 
 const RootLayout = () => {
   return (
-    <div className="">
+    <div className="h-screen">
       <Header />
-      <div className="grid grid-cols-12">
-        <div className="col-span-2">
+      <div className="grid grid-cols-6">
+        <div className="h-screen col-span-1 bg-[var(--color-primary-sub)]">
           <Navbar />
         </div>
-        <div className="col-span-10">
+        <div className="h-screen col-span-5 bg-[var(--color-primary-sub)]">
           <Outlet />
         </div>
       </div>
