@@ -36,7 +36,7 @@ export default function Login() {
    * If logged in it auto redirect to the Home Page
    */
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       navigate('/auth');
     }
   }, [isAuthenticated]);

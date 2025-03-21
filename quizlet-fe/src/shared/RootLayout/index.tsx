@@ -11,7 +11,7 @@ const RootLayout = () => {
         <div className="h-screen col-span-1 bg-[var(--color-primary-sub)]">
           <Navbar />
         </div>
-        <div className="h-screen col-span-5 bg-[var(--color-primary-sub)]">
+        <div className="h-screen col-span-5 px-[32px] py-[16px] bg-[var(--color-primary-sub)] ">
           <Outlet />
         </div>
       </div>

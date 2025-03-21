@@ -94,7 +94,7 @@ public class JwtTokenService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (ExpiredJwtException e) {
-            throw supplyAccessDeniedException("Token has expired", e).get();
+            throw supplyAccessDeniedException("Token has expired").get();
         } catch (UnsupportedJwtException | MalformedJwtException e) {
             throw supplyAccessDeniedException("Invalid token format", e).get();
         } catch (io.jsonwebtoken.security.SignatureException e) {

@@ -12,9 +12,12 @@ public class FlashSetMapper {
     public static FlashSet toFlashSet(final FlashSetEntity flashSetEntity) {
         return FlashSet.builder()
                 .id(flashSetEntity.getId())
+                .name(flashSetEntity.getName())
                 .description(flashSetEntity.getDescription())
                 .createdAt(flashSetEntity.getCreatedAt())
                 .updatedAt(flashSetEntity.getUpdatedAt())
+                .isDrafted(flashSetEntity.isDrafted())
+                .userId(flashSetEntity.getUserId())
                 .folderId(flashSetEntity.getFolderId())
                 .build();
     }

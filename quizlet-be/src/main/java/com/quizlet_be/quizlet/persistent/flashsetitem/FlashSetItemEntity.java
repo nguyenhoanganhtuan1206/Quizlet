@@ -1,16 +1,20 @@
 package com.quizlet_be.quizlet.persistent.flashsetitem;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "flashsetitem")
+@Table(name = "flashsetitems")
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FlashSetItemEntity {
 
     @Id

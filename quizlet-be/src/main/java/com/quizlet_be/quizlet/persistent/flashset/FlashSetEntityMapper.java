@@ -9,9 +9,12 @@ public class FlashSetEntityMapper {
     public static FlashSetEntity toFlashSetEntity(final FlashSet flashSet) {
         return FlashSetEntity.builder()
                 .id(flashSet.getId())
+                .name(flashSet.getName())
                 .description(flashSet.getDescription())
                 .createdAt(flashSet.getCreatedAt())
                 .updatedAt(flashSet.getUpdatedAt())
+                .isDrafted(flashSet.isDrafted())
+                .userId(flashSet.getUserId())
                 .folderId(flashSet.getFolderId())
                 .build();
     }

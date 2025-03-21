@@ -22,5 +22,9 @@ public class FlashSet {
 
     private Instant updatedAt;
 
+    private boolean isDrafted;
+
+    private UUID userId;
+
     private UUID folderId;
 }

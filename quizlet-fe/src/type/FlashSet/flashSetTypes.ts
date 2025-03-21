@@ -6,4 +6,5 @@ export interface FlashSet {
   updatedAt: string;
   userId: string;
   folderId: string;
+  drafted: boolean;
 }

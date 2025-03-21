@@ -1,38 +1,32 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import pause from "../../../utils/timeoutApiUtilities";
 import {
   FormLoginValues,
   FormRegisterValues,
-} from "../../../schemas/authSchemas";
+} from '../../../schemas/authSchemas';
 
-import { AuthResponseDTO } from "../../../type";
+import { AuthResponseDTO } from '../../../type';
+import { baseQueryWithToken } from '..';
 
 export const authApis = createApi({
-  reducerPath: "auth",
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_ENDPOINT,
-    fetchFn: async (...args) => {
-      await pause(600);
-      return fetch(...args);
-    },
-  }),
+  reducerPath: 'auth',
+  baseQuery: baseQueryWithToken({ isToken: false }),
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponseDTO, FormLoginValues>({
       query: (data) => {
         return {
-          url: "/auths/login",
+          url: '/auths/login',
           body: data,
-          method: "POST",
+          method: 'POST',
         };
       },
     }),
     register: builder.mutation<void, FormRegisterValues>({
       query: (data) => {
         return {
-          url: "/auths/signup",
+          url: '/auths/signup',
           body: data,
-          method: "POST",
+          method: 'POST',
         };
       },
     }),

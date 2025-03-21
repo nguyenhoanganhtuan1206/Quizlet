@@ -16,6 +16,10 @@ public class FlashSetStore {
 
     private final FlashSetRepository flashSetRepository;
 
+    public Set<FlashSet> findByUserId(final UUID userId) {
+        return toFlashSets(flashSetRepository.findByUserId(userId));
+    }
+
     public Set<FlashSet> findByFolderId(final UUID folderId) {
         return toFlashSets(flashSetRepository.findByFolderId(folderId));
     }

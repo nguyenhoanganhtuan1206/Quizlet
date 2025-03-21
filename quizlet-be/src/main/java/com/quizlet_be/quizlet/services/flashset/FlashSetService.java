@@ -13,6 +13,10 @@ public class FlashSetService {
 
     private final FlashSetStore flashSetStore;
 
+    public Set<FlashSet> findByUserId(final UUID userId) {
+        return flashSetStore.findByUserId(userId);
+    }
+
     public Set<FlashSet> findFolderId(final UUID folderId) {
         return flashSetStore.findByFolderId(folderId);
     }

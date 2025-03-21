@@ -9,18 +9,25 @@ export default function RecentCardsList({
   userId,
 }: Readonly<RecentCardListProps>) {
   const { data: flashSets, isLoading } = useGetFlashSetQuery(userId);
-  console.log('flashSets', flashSets);
 
   if (isLoading) {
     return <div>Loading</div>;
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <RecentCardItem isActive />
-      <RecentCardItem />
-      <RecentCardItem />
-      <RecentCardItem />
-    </div>
+    <>
+      <h3 className="text-white text-[1.6rem] font-bold">Recent Flashcards</h3>
+      <div className="grid grid-cols-2 gap-4">
+        {flashSets?.map((flashset) => {
+          return (
+            <RecentCardItem
+              key={flashset.id}
+              name={flashset.name}
+              isActive={flashset.drafted}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 }
