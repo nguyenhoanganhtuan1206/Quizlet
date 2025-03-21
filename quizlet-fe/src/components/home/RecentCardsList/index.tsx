@@ -1,5 +1,6 @@
 import RecentCardItem from '../RecentCardItem';
 import { useGetFlashSetQuery } from '../../../redux';
+import Skeleton from '../../../shared/components/Skeleton';
 
 type RecentCardListProps = {
   userId: string;
@@ -9,9 +10,10 @@ export default function RecentCardsList({
   userId,
 }: Readonly<RecentCardListProps>) {
   const { data: flashSets, isLoading } = useGetFlashSetQuery(userId);
+  console.log('is', isLoading);
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return <Skeleton times={3} />;
   }
 
   return (
