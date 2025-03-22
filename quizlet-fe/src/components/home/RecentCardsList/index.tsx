@@ -54,7 +54,6 @@ export default function RecentCardsList({
 
   return (
     <>
-      <h3 className="text-white text-[1.6rem] font-bold">Recent Flashcards</h3>
       <div className="grid grid-cols-2 gap-4">
         {flashSets?.map((flashset) => {
           return (

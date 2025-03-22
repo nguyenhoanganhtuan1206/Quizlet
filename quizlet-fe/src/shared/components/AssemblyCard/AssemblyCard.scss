@@ -1,0 +1,33 @@
+:root {
+  --border-radius: 6px;
+}
+
+.assembly__card {
+  display: flex;
+  position: relative;
+  background-color: var(--gray-100-gray-700);
+  padding: 16px;
+  border: 0.125rem solid #586380;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100%;
+  border-radius: var(--border-radius);
+
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    position: absolute;
+    display: block;
+    background-color: var(--ref-color-twilight300);
+    bottom: 0;
+    left: 0;
+    height: 0px;
+    width: 100%;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+  &:hover::before {
+    height: 3px;
+  }
+}

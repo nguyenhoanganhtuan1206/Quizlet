@@ -37,7 +37,7 @@ $headerHeader: 5.5rem;
   border: 2px solid none;
 
   &.isFocus {
-    border: 2px solid #586380;
+    border: 2px solid var(--twilight-100-gray-600);
   }
 
   &__icon {
