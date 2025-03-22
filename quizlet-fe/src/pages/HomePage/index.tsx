@@ -1,9 +1,9 @@
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-import { RecentCardsList } from '../../components/';
-import { RootState } from '../../redux';
-import { decodeToken } from '../../utils/jwtUtilities';
+import { RootState } from "../../store";
+import { decodeToken } from "../../utils/jwtUtilities";
+import { RecentCardsList } from "../../components/";
 
 const HomePage = () => {
   const token = useSelector((state: RootState) => state.authProvider.token);

@@ -1,41 +1,81 @@
-import './Skeleton.scss';
-import classNames from 'classnames';
+import "./Skeleton.scss";
+
+import classNames from "classnames";
+
+import { ReactPropsChildren } from "../../../type/ReactPropsChildren";
+
+type SkeletonVariant = "text" | "icon" | "button" | "section";
 
 interface SkeletonProps {
-  times: number; // Number of skeleton items to render
-  className?: string; // Optional additional classes
-  textBars?: number; // Number of text bars (default to 2)
-  iconSize?: string; // Size of the icon placeholder (default to 40px)
+  variant: SkeletonVariant;
+  times?: number;
+  textBars?: number;
+  className?: string;
+  height?: string;
+  width?: string;
+  iconSize?: string;
+  children?: ReactPropsChildren;
 }
 
 const Skeleton = ({
-  times,
+  variant,
+  times = 1,
   className,
   textBars = 2,
-  iconSize = '40px',
+  iconSize = "40px",
+  height,
+  width,
+  children,
 }: SkeletonProps) => {
-  const finalClassName = classNames('skeleton', className);
+  const baseClassNames = classNames(
+    `skeleton__affect skeleton-${variant}`,
+    className
+  );
 
-  return Array(times)
-    .fill(0)
-    .map((_, index) => (
-      <div key={index} className={finalClassName}>
-        {/* Icon placeholder */}
-        <div
-          className="skeleton__icon"
-          style={{ width: iconSize, height: iconSize }}
-        ></div>
+  const style = {};
 
-        {/* Text bars */}
-        <div className="skeleton__text">
-          {Array(textBars)
-            .fill(0)
-            .map((_, barIndex) => (
-              <div key={barIndex}></div>
-            ))}
-        </div>
-      </div>
-    ));
+  const renderSkeletonElement = () => {
+    switch (variant) {
+      case "icon":
+      case "button":
+        return <div className={baseClassNames} style={style}></div>;
+      case "text":
+        return (
+          <div className="skeleton__text-wrapper">
+            {Array(textBars)
+              .fill(0)
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className={classNames(
+                    baseClassNames,
+                    "skeleton__text-wrapper"
+                  )}
+                  style={style}
+                ></div>
+              ))}
+          </div>
+        );
+      case "section":
+        return (
+          <>
+            {Array(times)
+              .fill(0)
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className={`${baseClassNames} mt-5`}
+                  style={style}
+                >
+                  {children}
+                </div>
+              ))}
+          </>
+        );
+    }
+  };
+
+  return <>{renderSkeletonElement()}</>;
 };
 
 export default Skeleton;

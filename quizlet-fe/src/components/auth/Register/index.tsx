@@ -1,25 +1,25 @@
-import { toast } from 'react-toastify';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from "react-toastify";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import {
   FormRegisterValues,
   registerSchemas,
-} from '../../../schemas/authSchemas';
+} from "../../../schemas/authSchemas";
 
-import ButtonLoginSocial from '../ButtonLoginSocial';
-import { AlertMessage, Button, Input } from '../../../shared/components';
-import { useRegisterMutation } from '../../../redux';
-import { ApiErrorResponse } from '../../../type';
+import ButtonLoginSocial from "../ButtonLoginSocial";
+import { AlertMessage, Button, Input } from "../../../shared/components";
+import { useRegisterMutation } from "../../../store";
+import { ApiErrorResponse } from "../../../type";
 
 function Register() {
   const { control, formState, handleSubmit } = useForm<FormRegisterValues>({
     resolver: zodResolver(registerSchemas),
     defaultValues: {
-      email: '',
-      fullName: '',
-      password: '',
-      confirmPassword: '',
+      email: "",
+      fullName: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -29,7 +29,7 @@ function Register() {
     await register(data)
       .unwrap()
       .then((data) => {
-        console.log('data', data);
+        console.log("data", data);
       })
       .catch((error: ApiErrorResponse) => {
         toast.error(error.data.message);

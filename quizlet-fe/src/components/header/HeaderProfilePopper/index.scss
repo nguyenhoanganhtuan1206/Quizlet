@@ -1,3 +1,5 @@
+@use "../../../shared/sass/base/animations" as *;
+
 $maxHeight: 31.25rem;
 
 .profile__popper {
@@ -5,11 +7,14 @@ $maxHeight: 31.25rem;
   top: 110%;
   right: -10px;
 
+  /* Animation scale up */
+  @include scaleAndClose(0.5, 1.1, 1);
+
   /* Active */
   &.hidden {
     display: none;
   }
-  
+
   &.active {
     display: flex;
   }
@@ -19,6 +24,9 @@ $maxHeight: 31.25rem;
   min-height: fit-content;
   max-height: 31.25rem;
   box-shadow: unset;
+
+  transition: all 0.125s;
+  animation: scaleAndClose 0.25s ease-in-out forwards;
 
   &-header {
     padding: 1rem 1rem 1.5rem 1rem;
