@@ -1,9 +1,10 @@
-export interface AuthResponseDTO {
+export interface AuthRequestDTO {
   token: string;
 }
 
 export interface AuthResponseDTO {
   token: string;
+  refreshToken: string;
 }
 
 export interface JwtPayload {

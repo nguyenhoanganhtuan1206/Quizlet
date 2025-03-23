@@ -45,8 +45,13 @@ export default function Login() {
     await login(data)
       .unwrap()
       .then((data) => {
-        dispatch(setCredentials(data.token));
-        toast.success("Logged in successfully!");
+        dispatch(
+          setCredentials({
+            token: data.token,
+            refreshToken: data.refreshToken,
+          })
+        );
+        toast.success("Login successful! Welcome back.");
         navigate("/latest");
       })
       .catch((error) => {

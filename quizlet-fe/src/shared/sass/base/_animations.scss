@@ -13,4 +13,6 @@
       transform: scale($scaleEnd);
     }
   }
+
+  @content;
 }
