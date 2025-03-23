@@ -1,6 +1,7 @@
 package com.quizlet_be.quizlet.services.users;
 
 import com.quizlet_be.quizlet.dto.auths.AuthRequestDTO;
+import com.quizlet_be.quizlet.dto.auths.AuthResponseDTO;
 import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
 import com.quizlet_be.quizlet.persistent.users.UserStore;
 import com.quizlet_be.quizlet.services.auths.JwtTokenService;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
 import static com.quizlet_be.quizlet.error.CommonError.supplyConflictException;
@@ -34,6 +36,11 @@ public class UserService {
     public User findByEmail(final String email) {
         return userStore.findByEmail(email)
                 .orElseThrow(supplyUserNotFound("Email", email));
+    }
+
+    public User findById(final UUID userId) {
+        return userStore.findById(userId)
+                .orElseThrow(supplyUserNotFound("ID", userId));
     }
 
     /*
@@ -66,14 +73,17 @@ public class UserService {
         }
     }
 
-    public String login(final AuthRequestDTO authRequest) {
+    public AuthResponseDTO login(final AuthRequestDTO authRequest) {
         final User userFound = findByEmail(authRequest.getEmail());
 
         if (!passwordEncoder.matches(authRequest.getPassword(), userFound.getPassword())) {
             throw supplyBadRequestException("Your email or password is incorrect! Please try again").get();
         }
 
-        return jwtTokenService.generateToken(userFound);
+        return AuthResponseDTO.builder()
+                .token(jwtTokenService.generateToken(userFound))
+                .refreshToken(jwtTokenService.generateRefreshToken(userFound).getToken())
+                .build();
     }
 
     private void verifyIfUserExisted(final String email) {
