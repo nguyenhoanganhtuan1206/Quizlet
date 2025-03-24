@@ -1,0 +1,35 @@
+.flashcard-container {
+  width: 100%;
+  height: 300px; /* Adjust based on your design */
+}
+
+.flashcard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s linear;
+  background-color: #2d3748;
+  border-radius: 8px;
+  transform-style: preserve-3d; /* Enables 3D transforms */
+}
+
+.flashcard.flipped {
+  transform: rotateX(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+}
+
+.flashcard-front {
+  transform: rotateX(0deg);
+}
+
+.flashcard-back {
+  transform: rotateX(180deg);
+}

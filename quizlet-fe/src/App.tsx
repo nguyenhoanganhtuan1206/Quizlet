@@ -1,16 +1,17 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import "./App.scss";
+import './App.scss';
 
-import { ToastContainer } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
 
-import RootLayout from "./shared/RootLayout";
+import RootLayout from './shared/RootLayout';
 
-import { AuthPage, HomePage, NotFoundPage } from "./pages/";
-import { PrivateRoutes, PublicRoute } from "./components";
+import { AuthPage, HomePage, NotFoundPage } from './pages/';
+import { PrivateRoutes, PublicRoute } from './components';
 
 /* Just using for DEV Test */
-import DevPage from "./pages/Dev/DevPage";
+import DevPage from './pages/Dev/DevPage';
+import FlashCardPage from './pages/FlashCardPage';
 
 function App() {
   const router = createBrowserRouter([
@@ -19,8 +20,12 @@ function App() {
       element: <PublicRoute restricted />,
       children: [
         {
-          path: "/auth",
+          path: '/auth',
           element: <AuthPage />,
+        },
+        {
+          path: '/dev',
+          element: <DevPage />,
         },
       ],
     },
@@ -32,25 +37,31 @@ function App() {
       element: <RootLayout />,
       children: [
         {
+          /*DEVELOPING*/
+          path: '/flashcard',
+          element: <FlashCardPage />,
+        },
+      ],
+    },
+    {
+      element: <RootLayout />,
+      children: [
+        {
           element: <PrivateRoutes />,
           children: [
             {
-              path: "/latest",
+              path: '/latest',
               element: <HomePage />,
             },
             {
-              path: "/libraries",
+              path: '/libraries',
               element: <HomePage />,
             },
           ],
         },
         {
-          path: "*",
+          path: '*',
           element: <NotFoundPage />,
-        },
-        {
-          path: "/dev",
-          element: <DevPage />,
         },
       ],
     },

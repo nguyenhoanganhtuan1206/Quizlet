@@ -6,3 +6,4 @@ export { default as PrivateRoutes } from "./PrivateRoutes";
 export { default as PublicRoute } from "./PublicRoute";
 export { default as PopularCardList } from "./home/PopularCardList";
 export { default as RecentCardsList } from "./home/RecentCardsList";
+export { default as FlashCardHeader } from "./FlashCard/FlashCardHeader";
