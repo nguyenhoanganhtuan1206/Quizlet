@@ -34,7 +34,9 @@ export default function FlashCardHeader() {
       <h1 className="text-[2.6rem] text-white font-bold my-5">(13)</h1>
       {/*Name of the flashset */}
 
+      {/*Name of the Flashcard Mode */}
       <FlashCardStudyMode />
+      {/*Name of the Flashcard Mode */}
     </div>
   );
 }
