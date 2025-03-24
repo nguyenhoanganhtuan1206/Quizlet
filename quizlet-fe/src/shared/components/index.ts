@@ -6,3 +6,4 @@ export { default as AlertMessage } from "./AlertMessage";
 export { default as CardItem } from "./CardItem";
 export { default as Skeleton } from "./Skeleton";
 export { default as AssemblyCard } from "./AssemblyCard";
+export { default as AssemblyCardLabel } from "./AssemblyCard/AssemblyCardLabel";
