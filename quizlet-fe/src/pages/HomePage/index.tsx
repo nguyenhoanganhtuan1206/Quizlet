@@ -1,9 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
-import { logout, RootState } from "../../store";
-import { decodeToken } from "../../utils/jwtUtilities";
-import { PopularCardList, RecentCardsList } from "../../components/";
+import { logout, RootState } from '../../store';
+import { decodeToken } from '../../utils/jwtUtilities';
+import { PopularCardList, RecentCardsList } from '../../components/';
 
 const HomePage = () => {
   // const token = useSelector((state: RootState) => state.authProvider.token); // Updated field name

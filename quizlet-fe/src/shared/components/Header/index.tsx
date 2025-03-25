@@ -50,7 +50,7 @@ function Header() {
 
       <div className="relative flex items-center justify-end flex-1">
         <Button
-          className="header__plus"
+          className="header__plus border-none"
           onClick={() => setIsDisplayMenu(!isDisplayMenu)}
         >
           <FiPlus className="header__plus-icon" />
