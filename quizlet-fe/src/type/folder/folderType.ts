@@ -6,3 +6,8 @@ export interface Folder {
   updatedAt: string;
   userId: string;
 }
+
+export interface FolderCreationRequestDTO {
+  name: string;
+  description: string;
+}
