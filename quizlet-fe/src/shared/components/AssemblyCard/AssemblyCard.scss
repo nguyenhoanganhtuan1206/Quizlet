@@ -1,5 +1,7 @@
 :root {
   --border-radius: 6px;
+  --height-image-card: 95px;
+  --width-image-card: 125px;
 }
 
 .assembly__card {
@@ -9,14 +11,12 @@
   padding: 16px;
   border: 0.125rem solid #586380;
   box-sizing: border-box;
-  display: inline-block;
-  width: 100%;
   border-radius: var(--border-radius);
 
   cursor: pointer;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     display: block;
     background-color: var(--ref-color-twilight300);
@@ -30,4 +30,49 @@
   &:hover::before {
     height: 3px;
   }
+}
+
+.assembly__card-img {
+  flex: 1;
+
+  img {
+    object-fit: cover;
+    width: 100%;
+  }
+}
+
+.assembly__card-content {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: space-between;
+  margin-left: 12px;
+
+  &-header {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    transition: color 0.125s linear;
+
+    &:hover {
+      color: var(--gray-700-gray-500);
+    }
+  }
+}
+
+/*
+*  Assembly Card Label
+*/
+.assembly__card-label {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--twilight-100-gray-600);
+  width: fit-content;
+  padding: 2px 12px;
 }

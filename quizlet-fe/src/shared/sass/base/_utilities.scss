@@ -30,6 +30,9 @@
   @content;
 }
 
+/*
+* Loading spinner
+*/
 @mixin loading-spinner-animation(
   $height: 2.6rem,
   $width: 2.6rem,
@@ -54,4 +57,18 @@
   }
 
   @content;
+}
+
+/*
+* Limited lines
+* line: Lines you want to display on the content
+* width: The width of content.
+*/
+@mixin limitedLines($line: 2, $maxWidth: 160px) {
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: $maxWidth;
 }

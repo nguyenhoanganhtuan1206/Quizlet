@@ -1,15 +1,19 @@
 import "./AssemblyCard.scss";
 
+import { ReactPropsChildren } from "../../../type";
+
 type AssemblyCardLabelProps = {
-  content: string;
+  className?: string;
+  children: ReactPropsChildren;
 };
 
 export default function AssemblyCardLabel({
-  content,
+  className,
+  children,
 }: Readonly<AssemblyCardLabelProps>) {
   return (
-    <div className="text-[1.2rem] border-none rounded-[10px] bg-[var(--twilight-100-gray-600)] text-white">
-      {content}
+    <div className={`assembly__card-label ${className}`}>
+      {children}
     </div>
   );
 }

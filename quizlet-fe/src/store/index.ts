@@ -1,8 +1,8 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
-import { authApis } from "./apis/auth/authApis";
-import { authProviderSlice, authReducer } from "./slices/authProviderSlice";
-import { flashSetApis } from "./apis/flashsets/flashSetApis";
+import { authApis } from './apis/authApis';
+import { authProviderSlice, authReducer } from './slices/authProviderSlices';
+import { flashSetApis } from './apis/flashSetApis';
 
 const store = configureStore({
   reducer: {
@@ -24,8 +24,8 @@ export {
   logout,
   setCredentials,
   updateAccessToken,
-} from "./slices/authProviderSlice";
-export { useLoginMutation, useRegisterMutation } from "./apis/auth/authApis";
-export { useGetFlashSetQuery } from "./apis/flashsets/flashSetApis";
+} from './slices/authProviderSlices';
+export { useLoginMutation, useRegisterMutation } from './apis/authApis';
+export { useGetFlashSetQuery } from './apis/flashSetApis';
 
 export default store;

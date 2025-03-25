@@ -1,17 +1,17 @@
-import "./index.scss";
+import './index.scss';
 
-import { Navigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { GrAchievement } from "react-icons/gr";
-import { IoIosSettings } from "react-icons/io";
-import { MdLogout } from "react-icons/md";
+import { GrAchievement } from 'react-icons/gr';
+import { IoIosSettings } from 'react-icons/io';
+import { MdLogout } from 'react-icons/md';
 
-import { logout, RootState } from "../../../store";
+import { logout, RootState } from '../../../store';
 
-import { Button, PopperWrapper } from "../../../shared/components";
-import { AssemblyAvatar } from "../..";
-import { decodeToken } from "../../../utils/jwtUtilities";
+import { Button, PopperWrapper } from '../../../shared/components';
+import { AssemblyAvatar } from '../..';
+import { decodeToken } from '../../../utils/jwtUtilities';
 
 type HeaderProfilePopper = {
   isHidden: boolean;
@@ -20,8 +20,6 @@ type HeaderProfilePopper = {
 export default function HeaderProfilePopper({
   isHidden,
 }: Readonly<HeaderProfilePopper>) {
-  console.log("isHidden", isHidden);
-
   const token = useSelector((state: RootState) => state.authProvider.token);
   const dispatch = useDispatch();
 
@@ -30,13 +28,12 @@ export default function HeaderProfilePopper({
   };
 
   if (!token) {
-    return <Navigate to="/login" />;
+    return;
+    // return <Navigate to="/auths" />;
   }
 
   return (
-    <PopperWrapper
-      className={`profile__popper ${isHidden ? "active" : "hidden"}`}
-    >
+    <PopperWrapper className='profile__popper' isActive={isHidden}>
       <div className="profile__popper-header">
         <AssemblyAvatar
           height="64px"
