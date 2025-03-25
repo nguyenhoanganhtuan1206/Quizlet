@@ -1,0 +1,28 @@
+:root {
+  --width-modal-folder-creation: 650px;
+}
+
+.modal__folder-creation {
+  padding: 32px;
+  width: var(--width-modal-folder-creation);
+  background-color: var(--ref-color-twilight900);
+  color: white;
+  border-radius: 5px;
+}
+
+.modal-close__icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2.2rem;
+  border-radius: 50%;
+  height: 32px;
+  width: 32px;
+  padding: 3px;
+  background-color: var(--gray-100-gray-700);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

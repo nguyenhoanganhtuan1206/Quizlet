@@ -115,9 +115,11 @@
     &__item {
       display: flex;
       align-items: center;
+      justify-content: unset;
       padding: 8px 24px;
       font-size: 1.4rem;
       font-weight: bold;
+      border: none;
 
       &:hover {
         background-color: var(--color-text-blacklight);
