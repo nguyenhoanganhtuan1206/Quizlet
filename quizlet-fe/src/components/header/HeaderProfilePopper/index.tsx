@@ -33,9 +33,7 @@ export default function HeaderProfilePopper({
   }
 
   return (
-    <PopperWrapper
-      className={`profile__popper ${isHidden ? 'active' : 'hidden'}`}
-    >
+    <PopperWrapper className='profile__popper' isActive={isHidden}>
       <div className="profile__popper-header">
         <AssemblyAvatar
           height="64px"

@@ -1,17 +1,20 @@
-$headerHeader: 5.5rem;
+:root {
+  --height-header: 5.5rem;
+}
 
 .header {
-  top: 0;
   position: sticky;
+  top: 0;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--color-primary-sub);
   box-sizing: border-box;
-  height: $headerHeader;
+  height: var(--height-header);
   width: 100%;
   padding: 1rem 2rem;
+  z-index: 1000;
 }
 
 .header__list-icon {
@@ -33,7 +36,7 @@ $headerHeader: 5.5rem;
   align-items: center;
   background-color: var(--color-text-blacklight);
   border-radius: 5px;
-  height: calc($headerHeader - 2rem);
+  height: calc(var(--height-header) - 2rem);
   border: 2px solid none;
 
   &.isFocus {
@@ -66,9 +69,15 @@ $headerHeader: 5.5rem;
 }
 
 /**
-* HEADER AVATAR
+* HEADER AVATAR 
+* HEADER MENU
 */
-.header-plus {
+.header__plus {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 35px;
   width: 35px;
   background-color: var(--color-primary);
@@ -76,8 +85,43 @@ $headerHeader: 5.5rem;
   color: white;
   border-radius: 5px;
   margin-right: 2rem;
+  cursor: pointer;
 
   &:hover {
     background-color: #423ed8;
+  }
+
+  &-icon {
+    font-size: 2.5rem;
+  }
+
+  &-popper {
+    position: absolute;
+    background-color: var(--ref-color-twilight900);
+    border-radius: 5px;
+    box-shadow: 0 0.25rem 1rem 0 #282e3e1a;
+    width: 200px;
+    top: 110%;
+    right: 0;
+    padding: 8px 0;
+    display: none;
+
+    border: 1px solid var(--gray-300-gray-600);
+
+    &-active {
+      display: flex;
+    }
+
+    &__item {
+      display: flex;
+      align-items: center;
+      padding: 8px 24px;
+      font-size: 1.4rem;
+      font-weight: bold;
+
+      &:hover {
+        background-color: var(--color-text-blacklight);
+      }
+    }
   }
 }

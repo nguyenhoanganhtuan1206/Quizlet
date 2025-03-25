@@ -7,9 +7,7 @@ const RootLayout = () => {
   return (
     <div className="min-h-screen bg-[var(--color-primary-sub)] grid grid-rows-[auto_1fr]">
       {/* Header */}
-      <div className="row-span-1">
-        <Header />
-      </div>
+      <Header />
 
       {/* Main Layout */}
       <div className="row-span-1 grid grid-cols-1 md:grid-cols-12">
