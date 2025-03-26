@@ -27,11 +27,12 @@ public class FolderController {
                                final BindingResult bindingResult) {
         handleValidationError(bindingResult);
 
-        return  folderService.createFolder(folderCreationDTO);
+        return folderService.createFolder(folderCreationDTO);
     }
 
     @GetMapping("{userId}")
-    public List<Folder> findByUserId(final UUID userId) {
-        return folderService.findByUserId(userId);
+    public List<Folder> findFolderById(final @PathVariable(name = "userId") UUID userId,
+                                       final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+        return folderService.findFolderById(userId, sort);
     }
 }

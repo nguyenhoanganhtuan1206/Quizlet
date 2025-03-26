@@ -4,6 +4,7 @@ import com.quizlet_be.quizlet.repositories.folders.FolderRepository;
 import com.quizlet_be.quizlet.services.folders.Folder;
 import com.quizlet_be.quizlet.services.folders.FolderMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class FolderStore {
         return toFolder(folderRepository.save(toFolderEntity(folder)));
     }
 
-    public List<Folder> findByUserId(final UUID userId) {
-        return toFolders(folderRepository.findByUserId(userId));
+    public List<Folder> findByUserId(final UUID userId, final Sort sort) {
+        return toFolders(folderRepository.findByUserId(userId, sort));
     }
 }

@@ -4,6 +4,7 @@ import com.quizlet_be.quizlet.dto.folders.FolderCreationDTO;
 import com.quizlet_be.quizlet.persistent.folders.FolderStore;
 import com.quizlet_be.quizlet.services.auths.AuthsProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +41,18 @@ public class FolderService {
         return folderStore.save(folder);
     }
 
-    public List<Folder> findByUserId(final UUID userId) {
-        return folderStore.findByUserId(userId);
+    public List<Folder> findFolderById(final UUID userId, final String sortDirection) {
+        Sort sort = Sort.by("createdAt");
+
+        if ("desc".equalsIgnoreCase(sortDirection)) {
+            sort = sort.descending();
+        } else if ("asc".equalsIgnoreCase(sortDirection)) {
+            sort = sort.ascending();
+        } else {
+            throw new IllegalArgumentException("Sort direction must be 'asc' or 'desc'");
+        }
+
+        return folderStore.findByUserId(userId, sort);
     }
 
     private void validateFolderIsExisted(final String name) {
