@@ -1,8 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { AppDispatch, logout } from '../store';
+import axios, { AxiosInstance, AxiosResponse } from "axios";
+
+import { AppDispatch, logout } from "../store";
 
 interface CreateApiClientOptions {
-  token?: string;
+  token: string | null;
   dispatch?: AppDispatch;
 }
 
@@ -13,7 +14,7 @@ export default function createApiClient({
   const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_ENDPOINT,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
 
@@ -23,7 +24,7 @@ export default function createApiClient({
    * */
   apiClient.interceptors.request.use((config) => {
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
 
     return config;

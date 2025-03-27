@@ -41,7 +41,7 @@ public class FolderService {
         return folderStore.save(folder);
     }
 
-    public List<Folder> findFolderById(final UUID userId, final String sortDirection) {
+    public List<Folder> findFolderById(final String sortDirection) {
         Sort sort = Sort.by("createdAt");
 
         if ("desc".equalsIgnoreCase(sortDirection)) {
@@ -52,7 +52,7 @@ public class FolderService {
             throw new IllegalArgumentException("Sort direction must be 'asc' or 'desc'");
         }
 
-        return folderStore.findByUserId(userId, sort);
+        return folderStore.findByUserId(authsProvider.getCurrentUserId(), sort);
     }
 
     private void validateFolderIsExisted(final String name) {

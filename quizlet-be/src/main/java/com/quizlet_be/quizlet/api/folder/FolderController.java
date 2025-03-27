@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import static com.quizlet_be.quizlet.error.ValidationErrorHandling.handleValidationError;
 
@@ -30,9 +29,8 @@ public class FolderController {
         return folderService.createFolder(folderCreationDTO);
     }
 
-    @GetMapping("{userId}")
-    public List<Folder> findFolderById(final @PathVariable(name = "userId") UUID userId,
-                                       final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
-        return folderService.findFolderById(userId, sort);
+    @GetMapping
+    public List<Folder> findFolderById(final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+        return folderService.findFolderById(sort);
     }
 }

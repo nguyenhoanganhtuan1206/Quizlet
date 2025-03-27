@@ -1,18 +1,29 @@
-@mixin scaleAndClose($scaleStart, $scaleMiddle, $scaleEnd) {
-  @keyframes scaleAndClose {
+@mixin scaleAndFadeIn(
+  $scale-start,
+  $scale-middle,
+  $scale-end,
+  $duration: 0.25s,
+  $timing-function: ease-in-out,
+  $fill-mode: forwards
+) {
+  animation: scaleAndFadeIn-#{$scale-start}-#{$scale-middle}-#{$scale-end} $duration
+    $timing-function $fill-mode;
+
+  @keyframes scaleAndFadeIn-#{$scale-start}-#{$scale-middle}-#{$scale-end} {
     0% {
       opacity: 0;
-      transform: scale($scaleStart);
+      transform: scale($scale-start);
+      -webkit-transform: scale($scale-start); // For browser compatibility
     }
     50% {
       opacity: 0.7;
-      transform: scale($scaleMiddle);
+      transform: scale($scale-middle);
+      -webkit-transform: scale($scale-middle);
     }
     100% {
       opacity: 1;
-      transform: scale($scaleEnd);
+      transform: scale($scale-end);
+      -webkit-transform: scale($scale-end);
     }
   }
-
-  @content;
 }

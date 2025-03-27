@@ -1,18 +1,16 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Folder } from '../../type';
-import createApiClient from '../../hooks/useAxios';
-import { RootState } from '..';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { Folder } from "../../type";
+import createApiClient from "../../hooks/useAxios";
+import { useDispatch } from "react-redux";
 
-export const fetchFolders = createAsyncThunk<
-  Folder[],
-  void,
-  { state: RootState }
->('folder/fetchFolders', async (_, { getState, dispatch }) => {
-  try {
-    const token = getState().authProvider.token;
+export const fetchFolders = createAsyncThunk<Folder[], void>(
+  "folder/fetchFolders",
+  async () => {
+    const token = localStorage.getItem("token");
+    const apiClient = createApiClient({ token });
 
-    const apiClient = createApiClient({ token, dispatch }); // We'll fix this function below
-    const response = await apiClient.get('/folders');
-    return response.data as Folder[];
-  } catch (error) {}
-});
+    const response = await apiClient.get("folders");
+
+    return response.data;
+  }
+);

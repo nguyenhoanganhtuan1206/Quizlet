@@ -15,9 +15,7 @@ $maxHeight: 31.25rem;
   transition: all 0.125s;
 
   /* Animation scale up */
-  @include scaleAndClose(0.5, 1.1, 1) {
-    animation: scaleAndClose 0.25s ease-in-out forwards;
-  }
+  @include scaleAndFadeIn(0.5, 1.1, 1);
 
   &-header {
     padding: 1rem 1rem 1.5rem 1rem;

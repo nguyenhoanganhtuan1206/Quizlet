@@ -1,13 +1,34 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { FolderCreationRequestDTO } from '../../type/';
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: FolderCreationRequestDTO = {
-  name: '',
-  description: '',
+import { fetchFolders } from "../thunks/folderThunk";
+import { ThunkState, Folder } from "../../type";
+
+type FolderState = ThunkState<Folder>;
+
+const initialState: FolderState = {
+  data: [],
+  isError: false,
+  isLoading: false,
 };
 
 export const folderSlice = createSlice({
-  name: 'folder',
+  name: "folder",
   initialState,
-  extraReducers: (builder) => {},
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchFolders.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchFolders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchFolders.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+      });
+  },
 });
+
+export default folderSlice.reducer;
