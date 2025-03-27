@@ -1,22 +1,22 @@
-import './index.scss';
+import "./index.scss";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-import { FaRegFolder } from 'react-icons/fa';
-import { PiCards } from 'react-icons/pi';
-import { IoSearchOutline } from 'react-icons/io5';
-import { IoLogoTumblr } from 'react-icons/io';
-import { BsList } from 'react-icons/bs';
-import { FiPlus } from 'react-icons/fi';
+import { FaRegFolder } from "react-icons/fa";
+import { PiCards } from "react-icons/pi";
+import { IoSearchOutline } from "react-icons/io5";
+import { IoLogoTumblr } from "react-icons/io";
+import { BsList } from "react-icons/bs";
+import { FiPlus } from "react-icons/fi";
 
 import {
   AssemblyAvatar,
   HeaderProfilePopper,
   ModalFolderCreation,
-} from '../../../components';
+} from "../../../components";
 
-import { Button, Input, PopperWrapper } from '../';
+import { Button, Input, PopperWrapper } from "../";
 
 type HeaderFormSearchTerm = {
   term: string;
@@ -45,7 +45,7 @@ function Header() {
         <form
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
-          className={`header-search flex-[2] ${isFocus && 'isFocus'}`}
+          className={`header-search flex-[2] ${isFocus && "isFocus"}`}
         >
           <IoSearchOutline className="header-search__icon" />
 
@@ -60,7 +60,7 @@ function Header() {
         </form>
 
         <div className="relative flex items-center justify-end flex-1">
-          <Button
+          <div
             className="header__plus border-none"
             onClick={() => setIsDisplayMenu(!isDisplayMenu)}
           >
@@ -82,7 +82,7 @@ function Header() {
                 Folder
               </Button>
             </PopperWrapper>
-          </Button>
+          </div>
 
           <AssemblyAvatar
             height="40px"

@@ -1,17 +1,17 @@
-import './index.scss';
+import "./index.scss";
 
-import { Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
-import { GrAchievement } from 'react-icons/gr';
-import { IoIosSettings } from 'react-icons/io';
-import { MdLogout } from 'react-icons/md';
+import { GrAchievement } from "react-icons/gr";
+import { IoIosSettings } from "react-icons/io";
+import { MdLogout } from "react-icons/md";
 
-import { logout, RootState } from '../../../store';
+import { logout, RootState } from "../../../store";
 
-import { Button, PopperWrapper } from '../../../shared/components';
-import { AssemblyAvatar } from '../..';
-import { decodeToken } from '../../../utils/jwtUtilities';
+import { Button, PopperWrapper } from "../../../shared/components";
+import { AssemblyAvatar } from "../..";
+import { decodeToken } from "../../../utils/jwtUtilities";
 
 type HeaderProfilePopper = {
   isHidden: boolean;
@@ -33,7 +33,7 @@ export default function HeaderProfilePopper({
   }
 
   return (
-    <PopperWrapper className='profile__popper' isActive={isHidden}>
+    <PopperWrapper className="profile__popper" isActive={isHidden}>
       <div className="profile__popper-header">
         <AssemblyAvatar
           height="64px"
@@ -65,8 +65,11 @@ export default function HeaderProfilePopper({
           <span>Settings</span>
         </Button>
       </div>
-      <div className="mt-[2px] mb-[6px]">
-        <Button onClick={handleOnLogout} className="logout-btn duration-0">
+      <div className="mt-[2px] mb-[6px] w-full">
+        <Button
+          onClick={handleOnLogout}
+          className="logout-btn duration-0 w-full"
+        >
           <MdLogout className="mr-3" />
           Log out
         </Button>
