@@ -1,5 +1,3 @@
-import { FlashSet } from '../FlashSet/flashSetTypes';
-
 export interface Folder {
   id: string;
   name: string;
@@ -9,14 +7,14 @@ export interface Folder {
   userId: string;
 }
 
-export interface FolderYourLibraryResponse {
+export interface FolderSummaryDTO {
   id: string;
   name: string;
   description: string;
   createdAt: string;
   updatedAt: string;
   userId: string;
-  flashsets: FlashSet[];
+  flashSetCount: number;
 }
 
 export interface FolderCreationRequestDTO {

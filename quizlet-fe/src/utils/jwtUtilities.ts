@@ -5,6 +5,10 @@ export const getToken = (): string | null => {
   return localStorage.getItem('token');
 };
 
+export const getRefreshToken = (): string | null => {
+  return localStorage.getItem('refreshToken');
+};
+
 /**
  * Decodes a JWT token and returns the payload.
  * @param token - The JWT token to decode.
@@ -18,7 +22,7 @@ export const decodeToken = (token: string | null): JwtPayload => {
 
   try {
     const decoded = jwtDecode<JwtPayload>(token);
-    
+
     if (decoded.exp && Date.now() >= decoded.exp * 1000) {
       throw new Error('Token has expired');
     }

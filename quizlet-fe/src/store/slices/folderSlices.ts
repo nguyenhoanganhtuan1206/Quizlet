@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { fetchFolders } from "../thunks/folderThunk";
-import { ThunkState, Folder } from "../../type";
+import { ThunkState } from "../../type";
+import { FolderSummaryDTO } from "../../type/folder/folderType";
 
-type FolderState = ThunkState<Folder>;
+type FolderSummaryState = ThunkState<FolderSummaryDTO>;
 
-const initialState: FolderState = {
+const initialState: FolderSummaryState = {
   data: [],
   isError: false,
   isLoading: false,

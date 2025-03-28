@@ -3,6 +3,7 @@ package com.quizlet_be.quizlet.services.flashset;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetEntity;
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,9 +23,9 @@ public class FlashSetMapper {
                 .build();
     }
 
-    public static Set<FlashSet> toFlashSets(final Set<FlashSetEntity> flashSetEntities) {
+    public static List<FlashSet> toFlashSets(final Set<FlashSetEntity> flashSetEntities) {
         return flashSetEntities.stream()
                 .map(FlashSetMapper::toFlashSet)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

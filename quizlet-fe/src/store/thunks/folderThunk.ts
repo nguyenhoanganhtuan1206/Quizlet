@@ -1,21 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { Folder } from '../../type';
-import createApiClient from '../../hooks/useAxios';
+import { FolderSummaryDTO } from '../../type/folder/folderType';
+import { getJwtPayload, pause } from '../../utils';
+import { createApiClient } from '../../hooks/useAxios';
 
-import { validateToken } from '../../utils/jwtUtilities';
-
-import pause from '../../utils/timeoutApiUtilities';
-
-export const fetchFolders = createAsyncThunk<Folder[], void>(
+export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], void>(
   'folder/fetchFolders',
   async () => {
-    const token = localStorage.getItem('token');
-
-    const apiClient = createApiClient({ token });
+    const apiClient = await createApiClient();
 
     await pause(600);
-    const decoded = validateToken();
+    const decoded = getJwtPayload();
     const response = await apiClient.get(`folders/${decoded?.user_id}/users`);
 
     return response.data;

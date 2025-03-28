@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface FlashSetItemRepository extends JpaRepository<FlashSetItemEntity, UUID> {
+
+    long countByFlashsetId(final UUID flashSetId);
 }

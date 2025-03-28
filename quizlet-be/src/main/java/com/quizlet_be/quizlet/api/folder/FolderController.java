@@ -1,6 +1,7 @@
 package com.quizlet_be.quizlet.api.folder;
 
 import com.quizlet_be.quizlet.dto.folders.FolderCreationDTO;
+import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.services.folders.Folder;
 import com.quizlet_be.quizlet.services.folders.FolderService;
 import com.quizlet_be.quizlet.utils.JwtTokenUtil;
@@ -37,8 +38,8 @@ public class FolderController {
     }
 
     @GetMapping("{userId}/users")
-    public List<Folder> findByUserId(final @PathVariable UUID userId,
-                                     final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+    public List<FolderSummaryDTO> findByUserId(final @PathVariable UUID userId,
+                                               final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
         return folderService.findByUserId(userId, sort);
     }
 
