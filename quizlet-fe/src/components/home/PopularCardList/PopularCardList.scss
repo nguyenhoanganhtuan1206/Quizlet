@@ -1,0 +1,16 @@
+@use '../../../shared/sass/base/utilities' as *;
+
+:root {
+  --max-height-assembly-card: 150px;
+}
+
+.popular__assembly-card {
+  height: var(--max-height-assembly-card);
+}
+
+.popular__assembly-card-desc {
+  font-size: 1.1rem;
+  color: white;
+
+  @include limitedLines($maxWidth: 180px);
+}

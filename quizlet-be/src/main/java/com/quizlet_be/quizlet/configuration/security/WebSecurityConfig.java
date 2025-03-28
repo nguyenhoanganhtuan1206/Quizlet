@@ -29,6 +29,7 @@ public class WebSecurityConfig {
     private static final String[] ALLOW_ALL_ROLES = {
             "/api/v1/auths/signup",
             "/api/v1/auths/login",
+            "/api/v1/auths/refresh-token",
     };
 
     private static final String[] API_USERS_ALLOWED = {

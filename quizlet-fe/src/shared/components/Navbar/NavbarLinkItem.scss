@@ -1,5 +1,7 @@
 .navbar__link-item {
+  width: 100%;
   cursor: pointer;
+  
   &.active {
     color: var(--ref-color-twilight300);
     background-color: var(--color-text-blacklight);

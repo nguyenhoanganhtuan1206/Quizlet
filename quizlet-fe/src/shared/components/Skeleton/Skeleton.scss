@@ -1,0 +1,74 @@
+:root {
+  // Skeleton button, icon values
+  --height-skeleton-icon: 40px;
+  --width-skeleton-icon: 40px;
+
+  // Skeleton text values
+  --height-skeleton-text: 20px;
+}
+
+.skeleton__affect {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 5px;
+  gap: 12px;
+
+  &:not(:first-child) {
+    margin-top: 12px;
+  }
+}
+
+.skeleton-icon {
+  height: var(--height-skeleton-icon);
+  width: var(--width-skeleton-icon);
+  background-color: #2d3a55;
+}
+
+.skeleton__text-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  div {
+    height: var(--height-skeleton-text);
+    background-color: #2d3a55;
+
+    &:nth-child(even) {
+      width: 100%;
+    }
+
+    &:nth-child(odd) {
+      width: 60%;
+    }
+  }
+}
+
+.skeleton-button {
+  height: 40px;
+  width: 40px;
+  background-color: #2d3a55;
+}
+
+// Section
+.skeleton-section {
+  display: flex;
+  align-items: start;
+  background: none;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

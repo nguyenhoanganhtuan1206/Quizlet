@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.quizlet_be.quizlet.persistent.users.UserEntityMapper.*;
 
@@ -18,6 +19,10 @@ public class UserStore {
 
     public List<User> findAll() {
         return toUsers(userRepository.findAll());
+    }
+
+    public Optional<User> findById(final UUID userId) {
+        return userRepository.findById(userId).map(UserEntityMapper::toUser);
     }
 
     public void save(final User user) {

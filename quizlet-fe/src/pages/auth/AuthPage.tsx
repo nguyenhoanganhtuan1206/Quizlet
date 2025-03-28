@@ -53,7 +53,7 @@ export default function AuthPage() {
             <Button
               variant="borderOnly"
               onClick={handleSwitchAuthPage}
-              className="mt-5 text-gray-500"
+              className="mt-5 text-gray-500 w-full"
             >
               {isLoginPage
                 ? 'New to Quizlet? Create an account'

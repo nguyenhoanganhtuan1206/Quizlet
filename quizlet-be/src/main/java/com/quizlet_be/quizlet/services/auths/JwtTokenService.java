@@ -1,6 +1,8 @@
 package com.quizlet_be.quizlet.services.auths;
 
+import com.quizlet_be.quizlet.persistent.refreshtokens.RefreshTokenStore;
 import com.quizlet_be.quizlet.properties.JwtProperties;
+import com.quizlet_be.quizlet.services.refreshtokens.RefreshToken;
 import com.quizlet_be.quizlet.services.roles.Role;
 import com.quizlet_be.quizlet.services.roles.RoleService;
 import com.quizlet_be.quizlet.services.users.User;
@@ -13,13 +15,16 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyAccessDeniedException;
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
 import static io.micrometer.common.util.StringUtils.isBlank;
+import static java.time.Instant.now;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +36,8 @@ public class JwtTokenService {
     private final JwtProperties jwtProperties;
 
     private final RoleService roleService;
+
+    private final RefreshTokenStore refreshTokenStore;
 
     @Bean
     private Clock clock() {
@@ -73,6 +80,22 @@ public class JwtTokenService {
                 .compact();
     }
 
+    public RefreshToken generateRefreshToken(final User user) {
+        final String token = UUID.randomUUID().toString();
+        final Instant now = now();
+        final Instant expiresAt = now.plusSeconds(jwtProperties.getRefreshExpiration());
+
+        final RefreshToken refreshToken = RefreshToken.builder()
+                .userId(user.getId())
+                .token(token)
+                .createdAt(now)
+                .expiredAt(expiresAt)
+                .revoked(false)
+                .build();
+
+        return refreshTokenStore.save(refreshToken);
+    }
+
     /**
      * Parses and validates a JWT token, returning its claims.
      *
@@ -86,7 +109,7 @@ public class JwtTokenService {
         }
 
         try {
-            SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
+            final SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
 
             return Jwts.parser()
                     .verifyWith(key)
@@ -94,7 +117,7 @@ public class JwtTokenService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (ExpiredJwtException e) {
-            throw supplyAccessDeniedException("Token has expired", e).get();
+            throw supplyAccessDeniedException("Token has expired").get();
         } catch (UnsupportedJwtException | MalformedJwtException e) {
             throw supplyAccessDeniedException("Invalid token format", e).get();
         } catch (io.jsonwebtoken.security.SignatureException e) {

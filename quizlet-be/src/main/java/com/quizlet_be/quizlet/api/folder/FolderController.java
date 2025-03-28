@@ -1,8 +1,10 @@
 package com.quizlet_be.quizlet.api.folder;
 
 import com.quizlet_be.quizlet.dto.folders.FolderCreationDTO;
+import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.services.folders.Folder;
 import com.quizlet_be.quizlet.services.folders.FolderService;
+import com.quizlet_be.quizlet.utils.JwtTokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,16 +24,28 @@ public class FolderController {
 
     private final FolderService folderService;
 
+    private final JwtTokenUtil jwtTokenUtil;
+
     @PostMapping
     public Folder createFolder(final @Valid @RequestBody FolderCreationDTO folderCreationDTO,
+                               final @RequestHeader(value = "Authorization") String authorizationHeader,
                                final BindingResult bindingResult) {
         handleValidationError(bindingResult);
 
-        return  folderService.createFolder(folderCreationDTO);
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return folderService.createFolder(userId, folderCreationDTO);
     }
 
-    @GetMapping("{userId}")
-    public List<Folder> findByUserId(final UUID userId) {
-        return folderService.findByUserId(userId);
+    @GetMapping("{userId}/users")
+    public List<FolderSummaryDTO> findByUserId(final @PathVariable UUID userId,
+                                               final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+        return folderService.findByUserId(userId, sort);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public List<Folder> findAll(final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+        return folderService.findAll(sort);
     }
 }

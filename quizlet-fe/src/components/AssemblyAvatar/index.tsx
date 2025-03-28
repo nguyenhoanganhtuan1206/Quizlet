@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import classNames from 'classnames';
 
 type AssemblyAvatarProps = {
   height: string;
@@ -14,7 +14,7 @@ export default function AssemblyAvatar({
   imagePath,
   className,
   onClick,
-}: AssemblyAvatarProps) {
+}: Readonly<AssemblyAvatarProps>) {
   const finalClassName = classNames(
     `rounded-[50%] cursor-default shadow-[inset 0 0 0.0625rem #0000004d]`,
     className

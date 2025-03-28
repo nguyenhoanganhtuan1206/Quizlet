@@ -18,4 +18,7 @@ public class JwtProperties {
 
     @Min(1)
     private Long expiration;
+
+    @Min(1)
+    private Long refreshExpiration;
 }

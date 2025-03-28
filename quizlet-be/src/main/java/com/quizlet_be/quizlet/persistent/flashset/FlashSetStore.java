@@ -5,9 +5,11 @@ import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
+import static com.quizlet_be.quizlet.persistent.flashset.FlashSetEntityMapper.toFlashSetEntity;
+import static com.quizlet_be.quizlet.services.flashset.FlashSetMapper.toFlashSet;
 import static com.quizlet_be.quizlet.services.flashset.FlashSetMapper.toFlashSets;
 
 @Service
@@ -16,7 +18,19 @@ public class FlashSetStore {
 
     private final FlashSetRepository flashSetRepository;
 
-    public Set<FlashSet> findByFolderId(final UUID folderId) {
+    public long countByFolderId(final UUID folderId) {
+        return flashSetRepository.countByFolderId(folderId);
+    }
+
+    public FlashSet save(final FlashSet flashSet) {
+        return toFlashSet(flashSetRepository.save(toFlashSetEntity(flashSet)));
+    }
+
+    public List<FlashSet> findByUserId(final UUID userId) {
+        return toFlashSets(flashSetRepository.findByUserId(userId));
+    }
+
+    public List<FlashSet> findByFolderId(final UUID folderId) {
         return toFlashSets(flashSetRepository.findByFolderId(folderId));
     }
 }

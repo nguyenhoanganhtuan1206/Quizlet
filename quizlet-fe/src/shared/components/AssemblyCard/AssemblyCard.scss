@@ -1,0 +1,80 @@
+:root {
+  --border-radius: 6px;
+  --height-image-card: 95px;
+  --width-image-card: 125px;
+}
+
+.assembly__card {
+  display: flex;
+  position: relative;
+  background-color: var(--gray-100-gray-700);
+  padding: 16px;
+  border: 0.125rem solid #586380;
+  box-sizing: border-box;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    background-color: var(--ref-color-twilight300);
+    bottom: 0;
+    left: 0;
+    height: 0px;
+    width: 100%;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+
+  &:hover::before {
+    height: 3px;
+  }
+}
+
+.assembly__card-img {
+  flex: 1;
+
+  img {
+    object-fit: cover;
+    width: 100%;
+  }
+}
+
+.assembly__card-content {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 12px;
+
+  &-header {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    transition: color 0.125s linear;
+
+    &:hover {
+      color: var(--gray-700-gray-500);
+    }
+  }
+}
+
+/*
+*  Assembly Card Label
+*/
+.assembly__card-label {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--twilight-100-gray-600);
+  width: fit-content;
+  padding: 2px 12px;
+}

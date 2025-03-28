@@ -2,7 +2,9 @@ package com.quizlet_be.quizlet.api.auth;
 
 import com.quizlet_be.quizlet.dto.auths.AuthRequestDTO;
 import com.quizlet_be.quizlet.dto.auths.AuthResponseDTO;
+import com.quizlet_be.quizlet.dto.auths.RefreshTokenRequestDTO;
 import com.quizlet_be.quizlet.dto.users.UserSignUpDTO;
+import com.quizlet_be.quizlet.services.refreshtokens.RefreshTokenService;
 import com.quizlet_be.quizlet.services.users.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class AuthController {
 
     private final UserService userServices;
 
+    private final RefreshTokenService refreshTokenService;
+
     @PostMapping("signup")
     public void signUp(final @Valid @RequestBody UserSignUpDTO userSignUpDTO,
                        final BindingResult bindingResult) {
@@ -34,8 +38,15 @@ public class AuthController {
                                  final BindingResult bindingResult) {
         handleValidationError(bindingResult);
 
-        return AuthResponseDTO.builder()
-                .token(userServices.login(authRequest))
-                .build();
+        return userServices.login(authRequest);
+    }
+
+    @PostMapping("refresh-token")
+    public AuthResponseDTO refreshToken(final @Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO,
+                                        final BindingResult bindingResult) {
+        handleValidationError(bindingResult);
+
+        return refreshTokenService.refreshToken(refreshTokenRequestDTO.getRefreshToken());
     }
 }
+

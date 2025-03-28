@@ -4,34 +4,73 @@ import './App.scss';
 
 import { ToastContainer } from 'react-toastify';
 
-import { AuthPage, HomePage } from './pages/';
 import RootLayout from './shared/RootLayout';
-import ProtectedRoute from './shared/components/ProtectedRoute';
+
+import {
+  AuthPage,
+  HomePage,
+  NotFoundPage,
+  YourLibraryPage,
+  FlashCardPage,
+} from './pages/';
+import { PrivateRoutes, PublicRoute } from './components';
+
+/* Just using for DEV Test */
+import DevPage from './pages/Dev/DevPage';
 
 function App() {
   const router = createBrowserRouter([
+    /** Public Route */
+    {
+      element: <PublicRoute restricted />,
+      children: [
+        {
+          path: '/auth',
+          element: <AuthPage />,
+        },
+        {
+          path: '/dev',
+          element: <DevPage />,
+        },
+      ],
+    },
+
+    /** Public Route */
+
+    /** Private Route */
     {
       element: <RootLayout />,
       children: [
         {
-          element: <ProtectedRoute />,
-          children: [
-            {
-              path: '/',
-              element: <HomePage />,
-            },
-            {
-              path: '/libraries',
-              element: <HomePage />,
-            },
-          ],
+          /*DEVELOPING*/
+          path: '/flashcard',
+          element: <FlashCardPage />,
         },
       ],
     },
     {
-      path: '/auth',
-      element: <AuthPage />,
+      element: <RootLayout />,
+      children: [
+        {
+          element: <PrivateRoutes />,
+          children: [
+            {
+              path: '/latest',
+              element: <HomePage />,
+            },
+            {
+              path: '/libraries',
+              element: <YourLibraryPage />,
+            },
+          ],
+        },
+        {
+          path: '*',
+          element: <NotFoundPage />,
+        },
+      ],
     },
+    /** Private Route */
   ]);
   return (
     <>

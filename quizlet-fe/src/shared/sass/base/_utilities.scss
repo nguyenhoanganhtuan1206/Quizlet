@@ -6,14 +6,15 @@
 * When hover it have underline animation
 */
 @mixin underline-animation(
-  $top,
-  $left,
-  $height,
-  $width,
-  $background-color,
-  $timeSpeed
+  $top: 100%,
+  $left: 0,
+  $height: 3px,
+  $width: 0,
+  $backgroundColor,
+  $timeSpeed: 0.225s
 ) {
   position: relative;
+  cursor: pointer;
 
   &::after {
     position: absolute;
@@ -23,13 +24,16 @@
     height: $height;
     width: $width;
     border-radius: 5px;
-    background-color: $background-color;
+    background-color: $backgroundColor;
     transition: all $timeSpeed ease-in-out;
   }
 
   @content;
 }
 
+/*
+* Loading spinner
+*/
 @mixin loading-spinner-animation(
   $height: 2.6rem,
   $width: 2.6rem,
@@ -54,4 +58,18 @@
   }
 
   @content;
+}
+
+/*
+* Limited lines
+* line: Lines you want to display on the content
+* width: The width of content.
+*/
+@mixin limitedLines($line: 2, $maxWidth: 160px) {
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: $maxWidth;
 }

@@ -5,7 +5,7 @@ import "./index.scss";
 
 import { Provider } from "react-redux";
 import App from "./App.tsx";
-import store from "./redux/index.ts";
+import store from "./store/index.ts";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
