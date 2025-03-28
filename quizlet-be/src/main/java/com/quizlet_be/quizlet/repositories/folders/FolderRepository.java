@@ -12,9 +12,9 @@ import java.util.UUID;
 @Repository
 public interface FolderRepository extends JpaRepository<FolderEntity, UUID> {
 
-    List<FolderEntity> findByUserId(final UUID userId, final Sort sort);
+    List<FolderEntity> findAll(final Sort sort);
 
-    List<FolderEntity> findByUserIdOrderByCreatedAtDesc(final UUID userId);
+    List<FolderEntity> findByUserId(final UUID userId, final Sort sort);
 
     Optional<FolderEntity> findByName(final String name);
 }

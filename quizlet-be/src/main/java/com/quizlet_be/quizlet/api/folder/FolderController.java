@@ -3,6 +3,7 @@ package com.quizlet_be.quizlet.api.folder;
 import com.quizlet_be.quizlet.dto.folders.FolderCreationDTO;
 import com.quizlet_be.quizlet.services.folders.Folder;
 import com.quizlet_be.quizlet.services.folders.FolderService;
+import com.quizlet_be.quizlet.utils.JwtTokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.quizlet_be.quizlet.error.ValidationErrorHandling.handleValidationError;
 
@@ -21,16 +23,28 @@ public class FolderController {
 
     private final FolderService folderService;
 
+    private final JwtTokenUtil jwtTokenUtil;
+
     @PostMapping
     public Folder createFolder(final @Valid @RequestBody FolderCreationDTO folderCreationDTO,
+                               final @RequestHeader(value = "Authorization") String authorizationHeader,
                                final BindingResult bindingResult) {
         handleValidationError(bindingResult);
 
-        return folderService.createFolder(folderCreationDTO);
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return folderService.createFolder(userId, folderCreationDTO);
     }
 
+    @GetMapping("{userId}/users")
+    public List<Folder> findByUserId(final @PathVariable UUID userId,
+                                     final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+        return folderService.findByUserId(userId, sort);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public List<Folder> findFolderById(final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
-        return folderService.findFolderById(sort);
+    public List<Folder> findAll(final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+        return folderService.findAll(sort);
     }
 }
