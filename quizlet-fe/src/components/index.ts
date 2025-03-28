@@ -7,5 +7,9 @@ export { default as PrivateRoutes } from './PrivateRoutes';
 export { default as PublicRoute } from './PublicRoute';
 export { default as PopularCardList } from './home/PopularCardList';
 export { default as RecentCardsList } from './home/RecentCardsList';
-export { default as FlashCardHeader } from './FlashCard/FlashCardHeader';
-export { default as FlashCardMiddle } from './FlashCard/FlashCardMiddle';
+export {
+  FlashCardHeader,
+  FlashCardMiddle,
+  FlashCardTerm,
+} from './FlashCard/index';
+export { YourLibraryFilterSection } from './YourLibrary';

@@ -6,12 +6,17 @@ import { ToastContainer } from 'react-toastify';
 
 import RootLayout from './shared/RootLayout';
 
-import { AuthPage, HomePage, NotFoundPage } from './pages/';
+import {
+  AuthPage,
+  HomePage,
+  NotFoundPage,
+  YourLibraryPage,
+  FlashCardPage,
+} from './pages/';
 import { PrivateRoutes, PublicRoute } from './components';
 
 /* Just using for DEV Test */
 import DevPage from './pages/Dev/DevPage';
-import FlashCardPage from './pages/FlashCardPage';
 
 function App() {
   const router = createBrowserRouter([
@@ -55,7 +60,7 @@ function App() {
             },
             {
               path: '/libraries',
-              element: <HomePage />,
+              element: <YourLibraryPage />,
             },
           ],
         },

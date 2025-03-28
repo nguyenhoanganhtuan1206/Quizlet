@@ -6,14 +6,15 @@
 * When hover it have underline animation
 */
 @mixin underline-animation(
-  $top,
-  $left,
-  $height,
-  $width,
-  $background-color,
-  $timeSpeed
+  $top: 100%,
+  $left: 0,
+  $height: 3px,
+  $width: 0,
+  $backgroundColor,
+  $timeSpeed: 0.225s
 ) {
   position: relative;
+  cursor: pointer;
 
   &::after {
     position: absolute;
@@ -23,7 +24,7 @@
     height: $height;
     width: $width;
     border-radius: 5px;
-    background-color: $background-color;
+    background-color: $backgroundColor;
     transition: all $timeSpeed ease-in-out;
   }
 

@@ -25,6 +25,8 @@ export const folderSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchFolders.rejected, (state, action) => {
+        console.log("action", action);
+        
         state.isError = true;
         state.isLoading = false;
       });

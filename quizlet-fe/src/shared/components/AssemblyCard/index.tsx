@@ -7,6 +7,8 @@ import classNames from 'classnames';
 type AssemblyCardProps = {
   path?: string;
   className?: string;
+  contentClassName?: string;
+  imageClassName?: string;
   imagePath?: string;
   headerContent?: string;
   children: ReactPropsChildren;
@@ -16,6 +18,8 @@ export default function AssemblyCard({
   path,
   headerContent,
   className,
+  contentClassName,
+  imageClassName,
   imagePath,
   children,
 }: Readonly<AssemblyCardProps>) {
@@ -24,11 +28,11 @@ export default function AssemblyCard({
   const renderContent = () => (
     <>
       {imagePath && (
-        <div className="assembly__card-img">
+        <div className={`assembly__card-img ${imageClassName}`}>
           <img src={imagePath} alt="AssemblyImage" />
         </div>
       )}
-      <div className="assembly__card-content">
+      <div className={`assembly__card-content ${contentClassName}`}>
         {headerContent && (
           <h3 className="assembly__card-content-header">{headerContent}</h3>
         )}

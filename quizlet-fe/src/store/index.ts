@@ -1,13 +1,15 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
-import { authApis } from "./apis/authApis";
-import { authProviderSlice, authReducer } from "./slices/authProviderSlices";
-import { flashSetApis } from "./apis/flashSetApis";
-import { folderSlice } from "./slices/folderSlices";
+import { authApis } from './apis/authApis';
+import { authProviderSlice, authReducer } from './slices/authProviderSlices';
+import { flashSetApis } from './apis/flashSetApis';
+import { folderSlice } from './slices/folderSlices';
+import { libraryFiltersReducer, libraryFiltersSlice } from './slices/libraryFiltersSlices';
 
 const store = configureStore({
   reducer: {
     [authProviderSlice.reducerPath]: authReducer,
+    [libraryFiltersSlice.reducerPath]: libraryFiltersReducer,
     [folderSlice.reducerPath]: folderSlice.reducer,
     [authApis.reducerPath]: authApis.reducer,
     [flashSetApis.reducerPath]: flashSetApis.reducer,
@@ -26,10 +28,13 @@ export {
   logout,
   setCredentials,
   updateAccessToken,
-} from "./slices/authProviderSlices";
-export { useLoginMutation, useRegisterMutation } from "./apis/authApis";
-export { useGetFlashSetQuery } from "./apis/flashSetApis";
+} from './slices/authProviderSlices';
+export {
+  selectFilterLibraryItem,
+} from './slices/libraryFiltersSlices';
+export { useLoginMutation, useRegisterMutation } from './apis/authApis';
+export { useGetFlashSetQuery } from './apis/flashSetApis';
 
-export { fetchFolders } from "./thunks/folderThunk";
+export { fetchFolders } from './thunks/folderThunk';
 
 export default store;

@@ -44,7 +44,7 @@ export default function Button({
     {
       'bg-primary text-white hover:bg-[var(--color-primary-sub)] hover:text-white':
         variant === 'primary',
-      'bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white':
+      'bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white border-[var(--ref-color-twilight100)]':
         variant === 'borderOnly',
     }
   );

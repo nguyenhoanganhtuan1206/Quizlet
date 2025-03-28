@@ -90,7 +90,7 @@ export default function Login() {
         isLoading={isLoading}
         variant="primary"
         type="submit"
-        className="mt-8"
+        className="mt-8 w-full"
       >
         Log in
       </Button>

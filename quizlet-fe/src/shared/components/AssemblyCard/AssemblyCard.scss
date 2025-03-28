@@ -12,6 +12,7 @@
   border: 0.125rem solid #586380;
   box-sizing: border-box;
   border-radius: var(--border-radius);
+  overflow: hidden;
 
   cursor: pointer;
 
@@ -27,6 +28,7 @@
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
   }
+
   &:hover::before {
     height: 3px;
   }
@@ -45,7 +47,7 @@
   flex: 2;
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: center;
   justify-content: space-between;
   margin-left: 12px;
 
