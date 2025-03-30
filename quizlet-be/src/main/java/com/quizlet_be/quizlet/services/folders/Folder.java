@@ -20,5 +20,7 @@ public class Folder {
 
     private Instant updatedAt;
 
+    private UUID parentId;
+
     private UUID userId;
 }

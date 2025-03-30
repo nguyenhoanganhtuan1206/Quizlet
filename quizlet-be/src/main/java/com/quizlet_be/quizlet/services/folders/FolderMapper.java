@@ -16,6 +16,7 @@ public class FolderMapper {
                 .createdAt(folderEntity.getCreatedAt())
                 .updatedAt(folderEntity.getUpdatedAt())
                 .userId(folderEntity.getUserId())
+                .parentId(folderEntity.getParentId())
                 .build();
     }
 

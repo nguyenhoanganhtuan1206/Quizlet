@@ -25,6 +25,10 @@ public class FolderStore {
         return toFolders(folderRepository.findAll(sort));
     }
 
+    public List<Folder> findByParent(final UUID parentId) {
+        return toFolders(folderRepository.findByParentId(parentId));
+    }
+
     public Optional<Folder> findById(final UUID id) {
         return folderRepository.findById(id).map(FolderMapper::toFolder);
     }

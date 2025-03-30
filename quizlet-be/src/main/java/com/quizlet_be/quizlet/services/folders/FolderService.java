@@ -1,8 +1,10 @@
 package com.quizlet_be.quizlet.services.folders;
 
 import com.quizlet_be.quizlet.dto.folders.FolderCreationDTO;
+import com.quizlet_be.quizlet.dto.folders.FolderFlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.persistent.folders.FolderStore;
+import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import com.quizlet_be.quizlet.services.flashset.FlashSetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -12,9 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
 import static com.quizlet_be.quizlet.error.CommonError.supplyConflictException;
-import static com.quizlet_be.quizlet.services.folders.FolderValidation.supplyFolderNotFound;
+import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
 import static com.quizlet_be.quizlet.utils.SortUtilities.createSingleSort;
 import static java.time.Instant.now;
 
@@ -27,17 +28,30 @@ public class FolderService {
     private final FlashSetService flashSetService;
 
     public List<Folder> findAll(final String sortDirection) {
-        Sort sort = Sort.by("createdAt");
-
-        if ("desc".equalsIgnoreCase(sortDirection)) {
-            sort = sort.descending();
-        } else if ("asc".equalsIgnoreCase(sortDirection)) {
-            sort = sort.ascending();
-        } else {
-            throw supplyBadRequestException("Sort direction must be 'asc' or 'desc'").get();
-        }
+        final Sort sort = createSingleSort(sortDirection, "createdAt");
 
         return folderStore.findAll(sort);
+    }
+
+    public Folder findById(final UUID folderId) {
+        return folderStore.findById(folderId)
+                .orElseThrow(supplyNotFoundException("The folder ID with %s not existed!", folderId));
+    }
+
+    public FolderFlashSetDetailResponseDTO findFolderDetail(final UUID folderId) {
+        final Folder folder = findById(folderId);
+        final List<Folder> foldersChildren = findByParentId(folder.getId());
+        final List<FlashSet> flashSets = flashSetService.findFolderId(folderId);
+
+        return FolderFlashSetDetailResponseDTO.builder()
+                .folder(folder)
+                .foldersChildren(foldersChildren)
+                .flashSets(flashSets)
+                .build();
+    }
+
+    public List<Folder> findByParentId(final UUID parentId) {
+        return folderStore.findByParent(parentId);
     }
 
     public List<FolderSummaryDTO> findByUserId(final UUID userId, final String sortDirection) {
@@ -50,11 +64,6 @@ public class FolderService {
                 .toList();
     }
 
-    public Folder findById(final UUID id) {
-        return folderStore.findById(id)
-                .orElseThrow(supplyFolderNotFound("Id", id));
-    }
-
     public Folder createFolder(final UUID userId, final FolderCreationDTO folderCreation) {
         validateFolderIsExisted(folderCreation.getName());
 
@@ -63,6 +72,7 @@ public class FolderService {
                 .description(folderCreation.getDescription())
                 .createdAt(now())
                 .userId(userId)
+                .parentId(folderCreation.getParentId())
                 .build();
 
         return folderStore.save(folder);

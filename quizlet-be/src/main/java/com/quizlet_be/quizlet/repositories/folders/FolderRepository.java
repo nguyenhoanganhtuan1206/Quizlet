@@ -17,4 +17,6 @@ public interface FolderRepository extends JpaRepository<FolderEntity, UUID> {
     List<FolderEntity> findByUserId(final UUID userId, final Sort sort);
 
     Optional<FolderEntity> findByName(final String name);
+
+    List<FolderEntity> findByParentId(final UUID parentId);
 }
