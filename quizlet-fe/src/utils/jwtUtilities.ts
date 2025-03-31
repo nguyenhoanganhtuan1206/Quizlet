@@ -43,8 +43,7 @@ export const getAndValidateToken = (
 
   const currentTime = Math.floor(Date.now() / 1000);
   if (decoded.exp && currentTime >= decoded.exp) {
-    console.error('The token is expired {JwtUtilities | getAndValidateToken}:');
-    throw new Error('Token is expired! Please try to login again!');
+    return null;
   }
 
   return decoded;
@@ -86,6 +85,6 @@ export const handleRefreshToken = async (): Promise<AuthResponseDTO> => {
       'Failed to refresh token {jwtUtilities | handleRefreshToken}:',
       error
     );
-    throw new Error('Failed to refresh token');
+    throw new Error(`Failed to refresh token: ${error}`);
   }
 };

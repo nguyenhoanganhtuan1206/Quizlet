@@ -4,22 +4,23 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AppDispatch, fetchFlashSets, RootState } from '../../../store';
-import { getAndValidateToken, getCurrentToken } from '../../../utils';
 
 import AssemblyAvatar from '../../AssemblyAvatar';
 import { AssemblyCard, Skeleton } from '../../../shared/components';
 
 export default function FlashSetListSection() {
-  const email = useSelector(
-    (rootState: RootState) => rootState.authProvider.jwtInfo?.sub
+  const { jwtInfo } = useSelector(
+    (rootState: RootState) => rootState.authProvider
   );
   const dispatch = useDispatch<AppDispatch>();
-  const { data, isError, isLoading } = useSelector(
+  const { data, isLoading } = useSelector(
     (rootState: RootState) => rootState.flashSetSlice
   );
 
   useEffect(() => {
-    dispatch(fetchFlashSets());
+    if (jwtInfo?.user_id) {
+      dispatch(fetchFlashSets(jwtInfo.user_id));
+    }
   }, []);
 
   if (isLoading) {
@@ -58,7 +59,7 @@ export default function FlashSetListSection() {
                     height="20px"
                     width="20px"
                   />
-                  <span className="ml-3">{email}</span>
+                  <span className="ml-3">{jwtInfo?.sub}</span>
                 </div>
               </div>
               <p className="text-[1.8rem] font-bold">{flashset.name}</p>

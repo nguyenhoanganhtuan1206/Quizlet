@@ -17,6 +17,7 @@ import { PrivateRoutes, PublicRoute } from './components';
 
 /* Just using for DEV Test */
 import DevPage from './pages/Dev/DevPage';
+import { Header } from './shared/components';
 
 function App() {
   const router = createBrowserRouter([
@@ -42,16 +43,6 @@ function App() {
       element: <RootLayout />,
       children: [
         {
-          /*DEVELOPING*/
-          path: '/flashcard',
-          element: <FlashCardPage />,
-        },
-      ],
-    },
-    {
-      element: <RootLayout />,
-      children: [
-        {
           element: <PrivateRoutes />,
           children: [
             {
@@ -61,6 +52,13 @@ function App() {
             {
               path: '/libraries',
               element: <YourLibraryPage />,
+            },
+            {
+              path: '/flashcard',
+              element: <FlashCardPage />,
+            },
+            {
+              element: <Header />,
             },
           ],
         },

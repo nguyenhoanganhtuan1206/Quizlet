@@ -13,13 +13,18 @@ import {
 import { AppDispatch, fetchFolders, RootState } from '../../../store';
 
 export default function FolderListSection() {
+  const currentUserId = useSelector(
+    (rootState: RootState) => rootState.authProvider.jwtInfo?.user_id
+  );
   const dispatch = useDispatch<AppDispatch>();
   const { data, isError, isLoading } = useSelector(
     (state: RootState) => state.folder
   );
 
   useEffect(() => {
-    dispatch(fetchFolders());
+    if (currentUserId) {
+      dispatch(fetchFolders(currentUserId));
+    }
   }, []);
 
   if (isLoading) {

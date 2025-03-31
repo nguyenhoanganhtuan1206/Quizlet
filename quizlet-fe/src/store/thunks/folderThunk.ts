@@ -3,17 +3,21 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FolderSummaryDTO } from '../../type';
 import { createApiClient } from '../../hooks/useAxios';
 
-import { getAndValidateToken, getCurrentToken, pause } from '../../utils';
+import { pause } from '../../utils';
 
-export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], void>(
+export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], string>(
   'folder/fetchFolders',
-  async () => {
+  async (userId: string) => {
+    if (!userId) {
+      console.error(
+        'Something went wrong when fetch all the folders! {folderThunk | fetchFolders}'
+      );
+      throw new Error('Something went wrong when fetch all the folders');
+    }
     const apiClient = await createApiClient();
-    const currentToken = getCurrentToken();
 
     await pause(600);
-    const decoded = getAndValidateToken(currentToken);
-    const response = await apiClient.get(`folders/${decoded?.user_id}/users`);
+    const response = await apiClient.get(`folders/${userId}/users`);
 
     return response.data;
   }

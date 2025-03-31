@@ -2,17 +2,22 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { FlashSetSummaryDTO } from '../../type';
 import { createApiClient } from '../../hooks/useAxios';
-import { getAndValidateToken, getCurrentToken, pause } from '../../utils';
+import { pause } from '../../utils';
 
-export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], void>(
+export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], string>(
   'flashsets/fetchFlashSets',
-  async () => {
+  async (userId: string) => {
+    if (!userId) {
+      console.error(
+        'Something went wrong when fetch all the flash sets! {flashSetThunk | fetchFlashSet}'
+      );
+      throw new Error('Something went wrong when fetch all the flash sets');
+    }
+
     const apiClient = await createApiClient();
-    const currentToken = getCurrentToken();
 
     await pause(600);
-    const decoded = getAndValidateToken(currentToken);
-    const response = await apiClient.get(`flashsets/${decoded?.user_id}/users`);
+    const response = await apiClient.get(`flashsets/${userId}/users`);
 
     return response.data;
   }
