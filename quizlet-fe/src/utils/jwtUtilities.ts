@@ -82,7 +82,10 @@ export const handleRefreshToken = async (): Promise<AuthResponseDTO> => {
 
     return { token: newToken, refreshToken: newRefreshToken };
   } catch (error) {
-    console.error('Failed to refresh token:', error);
+    console.error(
+      'Failed to refresh token {jwtUtilities | handleRefreshToken}:',
+      error
+    );
     throw new Error('Failed to refresh token');
   }
 };
