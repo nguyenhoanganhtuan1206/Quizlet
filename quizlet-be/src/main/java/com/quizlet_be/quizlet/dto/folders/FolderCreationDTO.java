@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 public class FolderCreationDTO {
 
@@ -13,4 +15,6 @@ public class FolderCreationDTO {
 
     @Size(max = 255, message = "Your folder description cannot exceeded 255 characters")
     private String description;
+
+    private UUID parentId;
 }

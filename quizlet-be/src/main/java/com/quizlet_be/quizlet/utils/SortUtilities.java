@@ -8,6 +8,10 @@ import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException
 @UtilityClass
 public class SortUtilities {
 
+    /**
+     * @param sortDirection is the property to decide asc or desc
+     * @param sortedBy      is the property sorted by field (createdAt, updatedAt, ...)
+     */
     public static Sort createSingleSort(final String sortDirection, final String sortedBy) {
         if (sortedBy.isEmpty()) {
             throw supplyBadRequestException("Sort field cannot be null empty").get();

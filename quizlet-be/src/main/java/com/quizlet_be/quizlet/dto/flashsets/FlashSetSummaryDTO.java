@@ -24,9 +24,5 @@ public class FlashSetSummaryDTO {
 
     private boolean isDrafted;
 
-    private UUID userId;
-
-    private UUID folderId;
-
     private long flashSetItemCount;
 }

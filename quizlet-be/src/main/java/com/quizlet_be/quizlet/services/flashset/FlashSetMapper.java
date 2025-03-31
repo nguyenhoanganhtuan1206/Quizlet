@@ -4,8 +4,6 @@ import com.quizlet_be.quizlet.persistent.flashset.FlashSetEntity;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class FlashSetMapper {
@@ -18,14 +16,12 @@ public class FlashSetMapper {
                 .createdAt(flashSetEntity.getCreatedAt())
                 .updatedAt(flashSetEntity.getUpdatedAt())
                 .isDrafted(flashSetEntity.isDrafted())
-                .userId(flashSetEntity.getUserId())
-                .folderId(flashSetEntity.getFolderId())
                 .build();
     }
 
-    public static List<FlashSet> toFlashSets(final Set<FlashSetEntity> flashSetEntities) {
+    public static List<FlashSet> toFlashSets(final List<FlashSetEntity> flashSetEntities) {
         return flashSetEntities.stream()
                 .map(FlashSetMapper::toFlashSet)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
