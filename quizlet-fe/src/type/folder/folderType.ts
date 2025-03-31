@@ -15,6 +15,7 @@ export interface FolderSummaryDTO {
   updatedAt: string;
   userId: string;
   flashSetCount: number;
+  foldersChildrenCount: number;
 }
 
 export interface FolderCreationRequestDTO {

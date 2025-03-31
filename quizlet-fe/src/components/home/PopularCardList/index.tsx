@@ -8,7 +8,7 @@ export default function PopularCardList() {
     <div className="grid grid-cols-3 gap-4">
       <div className="col-span-1">
         <AssemblyCard
-          path="/latest"
+          path="/"
           className="popular__assembly-card"
           imagePath="https://d2nchlq0f2u6vy.cloudfront.net/cache/2c/1e/2c1ebd8444499a8944f1c1c221b4201d.jpg"
           headerContent="Realidades 2: Practice Workbook 2"
@@ -29,7 +29,7 @@ export default function PopularCardList() {
 
       <div className="col-span-1">
         <AssemblyCard
-          path="/latest"
+          path="/"
           className="popular__assembly-card"
           imagePath="https://d2nchlq0f2u6vy.cloudfront.net/cache/2c/1e/2c1ebd8444499a8944f1c1c221b4201d.jpg"
           headerContent="Realidades 2: Practice Workbook 2"
@@ -50,7 +50,7 @@ export default function PopularCardList() {
 
       <div className="col-span-1">
         <AssemblyCard
-          path="/latest"
+          path="/"
           className="popular__assembly-card"
           imagePath="https://d2nchlq0f2u6vy.cloudfront.net/cache/2c/1e/2c1ebd8444499a8944f1c1c221b4201d.jpg"
           headerContent="Realidades 2: Practice Workbook 2"

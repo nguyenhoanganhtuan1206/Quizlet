@@ -51,14 +51,25 @@ export default function FolderListSection() {
         return (
           <li key={folder.id} className="mt-5">
             <AssemblyCard
+              path={`folders/${folder.id}`}
               className={'folder__list-card'}
               contentClassName="folder__list-card-content"
             >
-              <span>
-                {folder.flashSetCount > 1
-                  ? `${folder.flashSetCount} items`
-                  : `${folder.flashSetCount} item`}
-              </span>
+              <div className="flex">
+                <span className="border-r-white border-r-2 pr-3">
+                  {folder.flashSetCount !== 0 && folder.flashSetCount > 1
+                    ? `${folder.flashSetCount} items`
+                    : `${folder.flashSetCount} item`}
+                </span>
+
+                <span className="pl-3">
+                  {folder.foldersChildrenCount !== 0 &&
+                  folder.foldersChildrenCount > 1
+                    ? `${folder.foldersChildrenCount} folders`
+                    : `${folder.foldersChildrenCount} folder`}
+                </span>
+              </div>
+
               <div className="flex items-center">
                 <CiFolderOn className="text-[2rem]" />
                 <p className="ml-3">{folder.name}</p>
