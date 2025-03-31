@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-import static com.quizlet_be.quizlet.services.flashset.FlashSetValidation.supplyFlashSetNotFound;
+import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
 import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.validateFlashSetItemCreation;
 import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.validateFlashSetTitle;
 import static java.time.Instant.now;
@@ -33,7 +33,7 @@ public class FlashSetService {
 
     public FlashSet findById(final UUID flashSetId) {
         return flashSetStore.findById(flashSetId)
-                .orElseThrow(supplyFlashSetNotFound("ID", flashSetId));
+                .orElseThrow(supplyNotFoundException("ID", flashSetId));
     }
 
     public List<FlashSet> findByFolderId(final UUID folderId) {

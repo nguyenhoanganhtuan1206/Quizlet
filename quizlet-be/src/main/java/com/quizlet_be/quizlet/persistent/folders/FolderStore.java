@@ -37,6 +37,10 @@ public class FolderStore {
         return folderRepository.findByName(name).map(FolderMapper::toFolder);
     }
 
+    public long countByUserIdAndParentId(final UUID userId, final UUID parentId) {
+        return folderRepository.countByUserIdAndParentId(userId, parentId);
+    }
+
     public Folder save(final Folder folder) {
         return toFolder(folderRepository.save(toFolderEntity(folder)));
     }

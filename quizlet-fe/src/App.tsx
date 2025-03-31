@@ -12,6 +12,7 @@ import {
   NotFoundPage,
   YourLibraryPage,
   FlashCardPage,
+  FolderDetailsPage,
 } from './pages/';
 import { PrivateRoutes, PublicRoute } from './components';
 
@@ -46,7 +47,7 @@ function App() {
           element: <PrivateRoutes />,
           children: [
             {
-              path: '/latest',
+              path: '/',
               element: <HomePage />,
             },
             {
@@ -56,6 +57,10 @@ function App() {
             {
               path: '/flashcard',
               element: <FlashCardPage />,
+            },
+            {
+              path: '/folders/:folderId',
+              element: <FolderDetailsPage />,
             },
             {
               element: <Header />,

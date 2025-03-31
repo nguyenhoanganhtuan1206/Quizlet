@@ -79,7 +79,8 @@ public class FolderService {
     }
 
     private FolderSummaryDTO mapToFolderSummaryDTO(final Folder folder) {
-        final long countByFolderId = flashSetService.countByFolderId(folder.getId());
+        final long flashSetsCount = flashSetService.countByFolderId(folder.getId());
+        final long foldersChildrenCount = folderStore.countByUserIdAndParentId(folder.getUserId(), folder.getParentId());
 
         return FolderSummaryDTO.builder()
                 .id(folder.getId())
@@ -88,7 +89,8 @@ public class FolderService {
                 .updatedAt(folder.getUpdatedAt())
                 .createdAt(folder.getCreatedAt())
                 .userId(folder.getUserId())
-                .flashSetCount(countByFolderId)
+                .flashSetCount(flashSetsCount)
+                .foldersChildrenCount(foldersChildrenCount)
                 .build();
     }
 
