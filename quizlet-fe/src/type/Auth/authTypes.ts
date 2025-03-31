@@ -8,7 +8,7 @@ export interface AuthResponseDTO {
 }
 
 export interface JwtPayload {
-  sub: string; // it's email
+  sub: string; // Email field
   user_id: string;
   role: string;
   iat: number;

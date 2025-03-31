@@ -1,28 +1,54 @@
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, RootState } from '../../store';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { getJwtPayload } from '../../utils';
+
+import { JwtPayload } from '../../type';
+import { AppDispatch, logout, RootState, setCredentials } from '../../store';
+import {
+  getAndValidateToken,
+  getCurrentToken,
+  handleRefreshToken,
+} from '../../utils';
 
 export default function PrivateRoutes() {
+  const dispatch = useDispatch<AppDispatch>();
   const { pathname } = useLocation();
+  const [jwtInfo, setJwtInfo] = useState<JwtPayload | null>();
+  const { isAuthenticated } = useSelector(
+    (rootState: RootState) => rootState.authProvider
+  );
 
-  const dispatch = useDispatch();
-  const token = useSelector((state: RootState) => state.authProvider.token);
-  const isAuthenticated = !!token;
-  const jwtInfo = getJwtPayload();
+  useEffect(() => {
+    const reAuthenticate = async () => {
+      try {
+        /**
+         * Recheck and call API refresh token
+         * Check expiration of the current token
+         */
+        const { token: newToken, refreshToken: newRefreshToken } =
+          await handleRefreshToken();
 
-  if (!isAuthenticated || !jwtInfo) {
+        // Define credentials to the localStorage
+        dispatch(
+          setCredentials({ token: newToken, refreshToken: newRefreshToken })
+        );
+
+        // Verify with the new token and get jwt information
+        const currentToken = getCurrentToken();
+        setJwtInfo(getAndValidateToken(currentToken));
+      } catch (error) {
+        // If error to call -> Logout
+        dispatch(logout());
+      }
+    };
+
+    reAuthenticate();
+  }, [dispatch]);
+
+  if (!jwtInfo && !isAuthenticated) {
     dispatch(logout());
     return <Navigate to="/auth" replace />;
   }
-
-  // Check token expiration
-  const currentTime = Math.floor(Date.now() / 1000);
-  if (jwtInfo?.exp && currentTime >= jwtInfo.exp) {
-    dispatch(logout());
-    return <Navigate to="/auth" replace />;
-  }
-
   /*
    * Define the privateRoute for Admin
    */

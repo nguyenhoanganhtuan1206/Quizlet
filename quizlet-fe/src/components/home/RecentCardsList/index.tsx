@@ -1,9 +1,9 @@
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
-import { useGetFlashSetQuery } from "../../../store";
+import { useGetFlashSetQuery } from '../../../store';
 
-import RecentCardItem from "../RecentCardItem";
-import { Skeleton } from "../../../shared/components";
+import RecentCardItem from '../RecentCardItem';
+import { Skeleton } from '../../../shared/components';
 
 type RecentCardListProps = {
   userId: string;
@@ -49,22 +49,20 @@ export default function RecentCardsList({
   }
 
   if (isError) {
-    toast.error("Something went wrong!");
+    toast.error('Something went wrong!');
   }
 
   return (
-    <>
-      <div className="grid grid-cols-2 gap-4">
-        {flashSets?.map((flashset) => {
-          return (
-            <RecentCardItem
-              key={flashset.id}
-              name={flashset.name}
-              isActive={flashset.drafted}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div className="grid grid-cols-2 gap-4">
+      {flashSets?.map((flashset) => {
+        return (
+          <RecentCardItem
+            key={flashset.id}
+            name={flashset.name}
+            isActive={flashset.drafted}
+          />
+        );
+      })}
+    </div>
   );
 }

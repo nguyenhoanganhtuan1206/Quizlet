@@ -11,7 +11,7 @@ import { logout, RootState } from '../../../store';
 
 import { Button, PopperWrapper } from '../../../shared/components';
 import { AssemblyAvatar } from '../..';
-import { getJwtPayload } from '../../../utils/jwtUtilities';
+import { getAndValidateToken } from '../../../utils';
 
 type HeaderProfilePopper = {
   isHidden: boolean;
@@ -21,14 +21,15 @@ export default function HeaderProfilePopper({
   isHidden,
 }: Readonly<HeaderProfilePopper>) {
   const token = useSelector((state: RootState) => state.authProvider.token);
+  const jwtInfo = getAndValidateToken(token);
   const dispatch = useDispatch();
 
   const handleOnLogout = () => {
     dispatch(logout());
   };
 
-  if (!token) {
-    return <Navigate to="/auths" />;
+  if (!jwtInfo) {
+    return <Navigate to="/auth" />;
   }
 
   return (
@@ -43,7 +44,7 @@ export default function HeaderProfilePopper({
 
         <div>
           <p>Email</p>
-          <p>{getJwtPayload()?.sub}</p>
+          <p>{jwtInfo.sub}</p>
         </div>
       </div>
 

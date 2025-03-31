@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { ThunkState, FlashSetSummaryDTO } from '../../type';
 import { fetchFlashSets } from '../thunks/flashsetThunk';
 

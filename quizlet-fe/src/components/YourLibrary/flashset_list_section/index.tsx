@@ -3,13 +3,16 @@ import './FlashSetListSection.scss';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { AppDispatch, fetchFlashSets, RootState } from '../../../store';
+import { getAndValidateToken, getCurrentToken } from '../../../utils';
+
 import AssemblyAvatar from '../../AssemblyAvatar';
 import { AssemblyCard, Skeleton } from '../../../shared/components';
-import { AppDispatch, fetchFlashSets, RootState } from '../../../store';
-import { getJwtPayload } from '../../../utils';
 
 export default function FlashSetListSection() {
-  const email = getJwtPayload()?.sub;
+  const email = useSelector(
+    (rootState: RootState) => rootState.authProvider.jwtInfo?.sub
+  );
   const dispatch = useDispatch<AppDispatch>();
   const { data, isError, isLoading } = useSelector(
     (rootState: RootState) => rootState.flashSetSlice

@@ -8,7 +8,7 @@ export const flashSetApis = createApi({
   baseQuery: baseQueryWithToken,
   endpoints: (builder) => ({
     getFlashSet: builder.query<FlashSet[], string>({
-      query: (userId) => `/flashsets?userId=${userId}`,
+      query: (userId) => `/flashsets/${userId}/users`,
     }),
   }),
 });
