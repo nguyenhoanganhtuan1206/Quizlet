@@ -17,6 +17,10 @@ public class FlashSetService {
 
     private final FlashSetItemService flashSetItemService;
 
+    public FlashSet save(final FlashSet flashSet) {
+        return flashSetStore.save(flashSet);
+    }
+
     public List<FlashSetSummaryDTO> findByUserId(final UUID userId) {
         final List<FlashSet> flashSets = flashSetStore.findByUserId(userId);
 
