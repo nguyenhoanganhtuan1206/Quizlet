@@ -1,0 +1,67 @@
+import './FolderListSection.scss';
+
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { CiFolderOn } from 'react-icons/ci';
+
+import {
+  AssemblyCard,
+  ErrorComponent,
+  Skeleton,
+} from '../../../shared/components';
+import { AppDispatch, fetchFolders, RootState } from '../../../store';
+
+export default function FolderListSection() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { data, isError, isLoading } = useSelector(
+    (state: RootState) => state.folder
+  );
+
+  useEffect(() => {
+    dispatch(fetchFolders());
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Skeleton variant="section" className="w-full" times={1}>
+        <Skeleton
+          textBars={data.length % 2 > 0 ? data.length % 2 : 3}
+          className="mt-5"
+          variant="text"
+          height="45px"
+          width="100%"
+        />
+      </Skeleton>
+    );
+  }
+
+  if (isError) {
+    return <ErrorComponent />;
+  }
+
+  return (
+    <ul className="mt-10">
+      {data.map((folder) => {
+        return (
+          <li key={folder.id} className="mt-5">
+            <AssemblyCard
+              className={'folder__list-card'}
+              contentClassName="folder__list-card-content"
+            >
+              <span>
+                {folder.flashSetCount > 1
+                  ? `${folder.flashSetCount} items`
+                  : `${folder.flashSetCount} item`}
+              </span>
+              <div className="flex items-center">
+                <CiFolderOn className="text-[2rem]" />
+                <p className="ml-3">{folder.name}</p>
+              </div>
+            </AssemblyCard>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

@@ -1,22 +1,23 @@
-export interface FlashSet {
+export interface Folder {
   id: string;
   name: string;
   description: string;
   createdAt: string;
   updatedAt: string;
   userId: string;
-  folderId: string;
-  drafted: boolean;
 }
 
-export interface FlashSetSummaryDTO {
+export interface FolderSummaryDTO {
   id: string;
   name: string;
   description: string;
   createdAt: string;
   updatedAt: string;
   userId: string;
-  folderId: string;
-  drafted: boolean;
-  flashSetItemCount: number;
+  flashSetCount: number;
+}
+
+export interface FolderCreationRequestDTO {
+  name: string;
+  description: string;
 }

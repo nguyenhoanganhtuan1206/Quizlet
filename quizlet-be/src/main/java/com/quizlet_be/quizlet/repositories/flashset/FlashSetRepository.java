@@ -11,6 +11,4 @@ import java.util.UUID;
 public interface FlashSetRepository extends JpaRepository<FlashSetEntity, UUID> {
 
     List<FlashSetEntity> findByUserId(UUID userId);
-
-    long countByFolderId(UUID folderId);
 }

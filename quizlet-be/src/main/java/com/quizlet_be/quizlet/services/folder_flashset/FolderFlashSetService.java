@@ -28,4 +28,8 @@ public class FolderFlashSetService {
     public List<FolderFlashSet> findByFlashSetId(final UUID flashSetId) {
         return toFolderFlashSets(folderFlashSetRepository.findByFlashSetId(flashSetId));
     }
+
+    public long countByFolderId(final UUID folderId) {
+        return folderFlashSetRepository.countByFolderIdAndFlashSetIdIsNotNull(folderId);
+    }
 }

@@ -3,7 +3,6 @@ package com.quizlet_be.quizlet.persistent.folder_flashset;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.UUID;
 
 @Entity

@@ -1,7 +1,6 @@
 package com.quizlet_be.quizlet.services.folder_flashset;
 
 import com.quizlet_be.quizlet.persistent.folder_flashset.FolderFlashSetEntity;
-import com.quizlet_be.quizlet.persistent.folder_flashset.FolderFlashSetEntityMapper;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;

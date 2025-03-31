@@ -55,7 +55,7 @@ public class FlashSetService {
     }
 
     public long countByFolderId(final UUID folderId) {
-        return flashSetStore.countByFolderId(folderId);
+        return folderFlashSetService.countByFolderId(folderId);
     }
 
     @Transactional

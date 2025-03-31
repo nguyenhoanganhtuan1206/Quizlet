@@ -1,0 +1,22 @@
+@use '../../sass/base/utilities' as *;
+
+.table-filter__item {
+  transition: all 2s;
+
+  p {
+    @include underline-animation(
+      $height: 2px,
+      $backgroundColor: var(--color-primary)
+    );
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+
+  &--active {
+    p::after {
+      width: 100%;
+    }
+  }
+}

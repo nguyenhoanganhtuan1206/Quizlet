@@ -1,0 +1,26 @@
+.folder__list-card {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+
+  &::before {
+    transition: all 0.16s ease;
+  }
+  
+  &:hover::before {
+    height: 5px;
+  }
+}
+
+.folder__list-card-content {
+  justify-content: start;
+  align-items: start;
+
+  span {
+    font-size: 1.2rem;
+  }
+
+  font-size: 1.8rem;
+  color: white;
+  font-weight: bold;
+}

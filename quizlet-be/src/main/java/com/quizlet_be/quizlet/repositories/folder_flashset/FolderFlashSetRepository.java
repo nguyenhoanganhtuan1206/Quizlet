@@ -13,4 +13,6 @@ public interface FolderFlashSetRepository extends JpaRepository<FolderFlashSetEn
     List<FolderFlashSetEntity> findByFolderId(final UUID folderId);
 
     List<FolderFlashSetEntity> findByFlashSetId(final UUID flashSetId);
+
+    long countByFolderIdAndFlashSetIdIsNotNull(final UUID folderId);
 }

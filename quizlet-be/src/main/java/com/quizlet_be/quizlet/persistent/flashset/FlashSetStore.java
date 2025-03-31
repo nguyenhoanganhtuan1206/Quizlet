@@ -25,10 +25,6 @@ public class FlashSetStore {
                 .map(FlashSetMapper::toFlashSet);
     }
 
-    public long countByFolderId(final UUID folderId) {
-        return flashSetRepository.countByFolderId(folderId);
-    }
-
     public FlashSet save(final FlashSet flashSet) {
         return toFlashSet(flashSetRepository.save(toFlashSetEntity(flashSet)));
     }
