@@ -33,6 +33,4 @@ public class FlashSetEntity {
     private boolean isDrafted;
 
     private UUID userId;
-
-    private UUID folderId;
 }

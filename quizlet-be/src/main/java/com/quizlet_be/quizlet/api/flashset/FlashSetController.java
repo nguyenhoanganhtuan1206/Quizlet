@@ -1,9 +1,11 @@
 package com.quizlet_be.quizlet.api.flashset;
 
-import com.quizlet_be.quizlet.dto.flashsets.FlashSetRequestDTO;
+import com.quizlet_be.quizlet.dto.flashsets.FlashSetCreationRequestDTO;
+import com.quizlet_be.quizlet.dto.flashsets.FlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetSummaryDTO;
 import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import com.quizlet_be.quizlet.services.flashset.FlashSetService;
+import com.quizlet_be.quizlet.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,24 @@ public class FlashSetController {
 
     private final FlashSetService flashSetService;
 
-    @PostMapping
-    public void createFlashSet(final @RequestBody FlashSetRequestDTO flashSetRequestDTO) {
+    private final JwtTokenUtil jwtTokenUtil;
 
+    @PostMapping
+    public FlashSetDetailResponseDTO createFlashSet(
+            final @RequestBody FlashSetCreationRequestDTO flashSetRequestDTO,
+            final @RequestHeader(value = "Authorization") String authorizationHeader
+    ) {
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return flashSetService.createFlashSet(flashSetRequestDTO, userId);
+    }
+
+    @PutMapping("{flashSetId}")
+    public FlashSetDetailResponseDTO updateFlashSet(
+            final @PathVariable UUID flashSetId,
+            final @RequestBody FlashSetCreationRequestDTO flashSetRequestDTO
+    ) {
+        return flashSetService.updateFlashSet(flashSetId, flashSetRequestDTO);
     }
 
     @GetMapping("{userId}/users")
@@ -31,6 +48,6 @@ public class FlashSetController {
 
     @GetMapping("{folderId}/folder")
     public List<FlashSet> findByFolderId(final @PathVariable UUID folderId) {
-        return flashSetService.findFolderId(folderId);
+        return flashSetService.findByFolderId(folderId);
     }
 }

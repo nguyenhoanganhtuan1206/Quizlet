@@ -1,5 +1,6 @@
 package com.quizlet_be.quizlet.services.flashsetitem;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 public class FlashSetItem {
     private UUID id;
 

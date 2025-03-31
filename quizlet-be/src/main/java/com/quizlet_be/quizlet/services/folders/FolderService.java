@@ -41,7 +41,7 @@ public class FolderService {
     public FolderFlashSetDetailResponseDTO findFolderDetail(final UUID folderId) {
         final Folder folder = findById(folderId);
         final List<Folder> foldersChildren = findByParentId(folder.getId());
-        final List<FlashSet> flashSets = flashSetService.findFolderId(folderId);
+        final List<FlashSet> flashSets = flashSetService.findByFolderId(folderId);
 
         return FolderFlashSetDetailResponseDTO.builder()
                 .folder(folder)

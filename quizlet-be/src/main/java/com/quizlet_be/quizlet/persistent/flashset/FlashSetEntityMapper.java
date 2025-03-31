@@ -15,7 +15,6 @@ public class FlashSetEntityMapper {
                 .updatedAt(flashSet.getUpdatedAt())
                 .isDrafted(flashSet.isDrafted())
                 .userId(flashSet.getUserId())
-                .folderId(flashSet.getFolderId())
                 .build();
     }
 }
