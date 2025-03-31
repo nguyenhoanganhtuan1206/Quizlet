@@ -3,10 +3,11 @@ import {
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
-} from "@reduxjs/toolkit/query";
-import { logout, RootState, updateAccessToken } from "..";
-import { AuthResponseDTO } from "../../type/Auth/authTypes";
-import pause from "../../utils/timeoutApiUtilities";
+} from '@reduxjs/toolkit/query';
+
+import { logout, RootState, updateAccessToken } from '..';
+import { AuthResponseDTO } from '../../type';
+import { pause } from '../../utils/';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_ENDPOINT,
@@ -18,7 +19,7 @@ const baseQuery = fetchBaseQuery({
     const token = (getState() as RootState).authProvider.token;
 
     if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+      headers.set('Authorization', `Bearer ${token}`);
     }
 
     return headers;
@@ -45,8 +46,8 @@ export const baseQueryWithToken: BaseQueryFn<
     try {
       const refreshResult = await baseQuery(
         {
-          url: "/refresh-token",
-          method: "POST",
+          url: '/refresh-token',
+          method: 'POST',
           body: { refreshToken },
         },
         api,

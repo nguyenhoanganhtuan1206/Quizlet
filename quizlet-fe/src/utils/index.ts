@@ -1,3 +1,8 @@
-export { decodeToken } from './jwtUtilities';
-export { getJwtPayload } from './jwtUtilities';
+export {
+  decodeToken,
+  getAndValidateToken,
+  getCurrentRefreshToken,
+  getCurrentToken,
+  handleRefreshToken,
+} from './jwtUtilities';
 export { default as pause } from './timeoutApiUtilities';

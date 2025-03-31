@@ -4,7 +4,11 @@ export type {
   AuthRequestDTO,
   AuthResponseDTO,
 } from './Auth/authTypes';
-export type { Folder, FolderCreationRequestDTO } from './folder/folderType';
+export type {
+  Folder,
+  FolderCreationRequestDTO,
+  FolderSummaryDTO,
+} from './folder/folderType';
 export type { FlashSet, FlashSetSummaryDTO } from './FlashSet/flashSetTypes';
 export type { InputProps } from './Form/Input';
 export type { ReactPropsChildren } from './reactPropsChildren';
