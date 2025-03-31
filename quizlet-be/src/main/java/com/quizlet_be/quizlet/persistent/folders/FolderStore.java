@@ -41,7 +41,7 @@ public class FolderStore {
         return toFolder(folderRepository.save(toFolderEntity(folder)));
     }
 
-    public List<Folder> findByUserId(final UUID userId, final Sort sort) {
-        return toFolders(folderRepository.findByUserId(userId, sort));
+    public List<Folder> findByUserIdAndParentIdIsNull(final UUID userId, final Sort sort) {
+        return toFolders(folderRepository.findByUserIdAndParentIdIsNull(userId, sort));
     }
 }

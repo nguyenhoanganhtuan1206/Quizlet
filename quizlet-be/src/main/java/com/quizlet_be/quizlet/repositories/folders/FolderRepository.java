@@ -3,6 +3,7 @@ package com.quizlet_be.quizlet.repositories.folders;
 import com.quizlet_be.quizlet.persistent.folders.FolderEntity;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface FolderRepository extends JpaRepository<FolderEntity, UUID> {
 
     List<FolderEntity> findAll(final Sort sort);
 
-    List<FolderEntity> findByUserId(final UUID userId, final Sort sort);
+    List<FolderEntity> findByUserIdAndParentIdIsNull(final UUID userId, final Sort sort);
 
     Optional<FolderEntity> findByName(final String name);
 

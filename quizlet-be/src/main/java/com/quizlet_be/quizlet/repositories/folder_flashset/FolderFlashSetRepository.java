@@ -2,6 +2,8 @@ package com.quizlet_be.quizlet.repositories.folder_flashset;
 
 import com.quizlet_be.quizlet.persistent.folder_flashset.FolderFlashSetEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +16,6 @@ public interface FolderFlashSetRepository extends JpaRepository<FolderFlashSetEn
 
     List<FolderFlashSetEntity> findByFlashSetId(final UUID flashSetId);
 
-    long countByFolderIdAndFlashSetIdIsNotNull(final UUID folderId);
+    @Query(value = "SELECT COUNT(f) FROM folder_flashset f WHERE f.folder_id = :folderId AND f.flashset_id IS NOT NULL", nativeQuery = true)
+    long countByFolderIdAndFlashSetIdIsNotNull(@Param("folderId") UUID folderId);
 }

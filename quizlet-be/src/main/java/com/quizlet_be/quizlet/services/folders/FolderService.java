@@ -56,7 +56,7 @@ public class FolderService {
 
     public List<FolderSummaryDTO> findByUserId(final UUID userId, final String sortDirection) {
         final Sort sort = createSingleSort(sortDirection, "createdAt");
-        final List<Folder> folders = folderStore.findByUserId(userId, sort);
+        final List<Folder> folders = folderStore.findByUserIdAndParentIdIsNull(userId, sort);
 
         return folders
                 .stream()
