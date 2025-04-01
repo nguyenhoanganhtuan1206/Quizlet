@@ -13,7 +13,7 @@ export default function ErrorComponent() {
         Please try again.
       </span>
 
-      <Button className="mt-5 border-none" path="/latest" variant="borderOnly">
+      <Button className="mt-5 border-none" path="/" variant="borderOnly">
         Go to the Home Page
       </Button>
     </div>

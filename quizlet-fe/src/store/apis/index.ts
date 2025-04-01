@@ -5,9 +5,9 @@ import {
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query';
 
-import { logout, RootState, updateAccessToken } from '..';
+import { logout, setCredentials } from '..';
 import { AuthResponseDTO } from '../../type';
-import { pause } from '../../utils/';
+import { getCurrentRefreshToken, getCurrentToken, pause } from '../../utils/';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_ENDPOINT,
@@ -15,8 +15,8 @@ const baseQuery = fetchBaseQuery({
     await pause(600);
     return fetch(...args);
   },
-  prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).authProvider.token;
+  prepareHeaders: (headers) => {
+    const token = getCurrentToken();
 
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
@@ -34,8 +34,7 @@ export const baseQueryWithToken: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
 
   if (result.error && result.error.status === 401) {
-    const refreshToken = (api.getState() as RootState).authProvider
-      .refreshToken;
+    const refreshToken = getCurrentRefreshToken();
 
     if (!refreshToken) {
       api.dispatch(logout());
@@ -55,8 +54,8 @@ export const baseQueryWithToken: BaseQueryFn<
       );
 
       if (refreshResult.data) {
-        const { token } = refreshResult.data as AuthResponseDTO;
-        api.dispatch(updateAccessToken(token));
+        const response = refreshResult.data as AuthResponseDTO;
+        api.dispatch(setCredentials(response));
 
         result = await baseQuery(args, api, extraOptions);
       } else {

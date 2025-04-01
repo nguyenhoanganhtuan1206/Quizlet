@@ -1,49 +1,56 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { JwtPayload } from '../../type';
-import { AppDispatch, logout, RootState, setCredentials } from '../../store';
+import { AppDispatch, doRefreshToken, logout, RootState } from '../../store';
 import {
-  getAndValidateToken,
+  getCurrentRefreshToken,
   getCurrentToken,
   handleRefreshToken,
-} from '../../utils';
+} from '../../utils/jwtUtilities';
 
 export default function PrivateRoutes() {
-  const dispatch = useDispatch<AppDispatch>();
   const { pathname } = useLocation();
-  const [jwtInfo, setJwtInfo] = useState<JwtPayload | null>();
-  const { isAuthenticated } = useSelector(
-    (rootState: RootState) => rootState.authProvider
-  );
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const currentToken = getCurrentToken();
+  const currentRefreshToken = getCurrentRefreshToken();
+
+  const { isLoading, isError, isAuthenticated, jwtInfo, refreshToken, token } =
+    useSelector((rootState: RootState) => rootState.authProvider);
 
   useEffect(() => {
-    const reAuthenticate = async () => {
-      try {
-        /**
-         * Recheck and call API refresh token
-         * Check expiration of the current token
-         */
-        const { token: newToken, refreshToken: newRefreshToken } =
+    if (!currentToken && !currentRefreshToken) {
+      dispatch(logout());
+      navigate('/auth');
+    }
+  }, []);
+
+  useEffect(() => {
+    const refreshToken = () => {
+      const refreshInterval = setInterval(async () => {
+        console.info('Call the refresh before 10 minutes expired!!!');
+
+        try {
           await handleRefreshToken();
+        } catch (error) {
+          console.error('Error refreshing token:', error);
+        }
+      }, (60 - 10) * 1000); // Refresh 10 minutes before expired
 
-        // Define credentials to the localStorage
-        dispatch(
-          setCredentials({ token: newToken, refreshToken: newRefreshToken })
-        );
-
-        // Verify with the new token and get jwt information
-        const currentToken = getCurrentToken();
-        setJwtInfo(getAndValidateToken(currentToken));
-      } catch (error) {
-        // If error to call -> Logout
-        dispatch(logout());
-      }
+      return () => clearInterval(refreshInterval);
     };
 
-    reAuthenticate();
-  }, [dispatch]);
+    refreshToken();
+  }, [token, refreshToken, dispatch]);
+
+  if (isLoading) {
+    return <h1>Loading..</h1>;
+  }
+
+  if (isError) {
+    return <Navigate to="/" replace />;
+  }
 
   if (!jwtInfo && !isAuthenticated) {
     dispatch(logout());

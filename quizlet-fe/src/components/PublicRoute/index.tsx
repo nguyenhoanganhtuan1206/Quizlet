@@ -14,7 +14,7 @@ export default function PublicRoute({
   );
 
   if (restricted && isAuthenticated) {
-    return <Navigate to="/latest" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

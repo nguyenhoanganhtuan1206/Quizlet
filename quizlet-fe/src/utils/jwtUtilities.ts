@@ -62,8 +62,6 @@ export const handleRefreshToken = async (): Promise<AuthResponseDTO> => {
   getAndValidateToken(currentToken);
 
   if (!currentRefreshToken) {
-    console.log('Login');
-
     throw new Error('Without refresh token');
   }
 
@@ -74,10 +72,6 @@ export const handleRefreshToken = async (): Promise<AuthResponseDTO> => {
     );
 
     const { token: newToken, refreshToken: newRefreshToken } = response.data;
-
-    // Update tokens in localStorage
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('refreshToken', newRefreshToken);
 
     return { token: newToken, refreshToken: newRefreshToken };
   } catch (error) {

@@ -1,35 +1,64 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { getCurrentRefreshToken, getCurrentToken } from '../utils';
+import { AuthResponseDTO } from '../type';
+import { getAndValidateToken, handleRefreshToken } from '../utils/jwtUtilities';
 
-import { handleRefreshToken } from '../utils';
+const createApiClient = async () => {
+  const apiClient = axios.create({
+    baseURL: import.meta.env.VITE_API_ENDPOINT,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-export const createApiClient = async () => {
-  try {
-    const { token } = await handleRefreshToken();
+  // Request interceptor to add the token to headers
+  axios.interceptors.request.use(
+    function (config) {
+      const token = getCurrentToken();
 
-    const apiClient = axios.create({
-      baseURL: import.meta.env.VITE_API_ENDPOINT,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    /**
-     * Handle request to the API
-     * It included token
-     * */
-    apiClient.interceptors.request.use((config) => {
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
       }
 
       return config;
-    });
-    return apiClient;
-  } catch (error) {
-    console.error(
-      'Error while processing call API {createApiClient | useAxios}: ',
-      error
-    );
-    throw new Error('Something went wrong! Please try to login again!');
-  }
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+  );
+
+  // Response interceptor to handle 401/403 errors
+  apiClient.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    async (error: AxiosError) => {
+      const currentToken = getCurrentToken();
+      const currentRefreshToken = getCurrentRefreshToken();
+      const { response } = error;
+
+      // 1. Should refresh token when status response 401
+      // if status is response code 401, we need to send request token here
+      if (response?.status === 401 || response?.status === 403) {
+        const decodedToken = getAndValidateToken(currentToken);
+
+        // The token is not existed or expired
+        if (!decodedToken || !currentRefreshToken) {
+          localStorage.clear();
+          // Need to logout
+        }
+        await handleRefreshToken();
+      }
+
+      // Handle 401 and 403 errors
+      if (response?.status === 401 || response?.status === 403) {
+        console.error('Error while calling API | {createApiClient | useAxios}');
+        return Promise.reject(
+          new Error('Something went wrong! Pleas try to login!')
+        );
+      }
+    }
+  );
+
+  return apiClient;
 };
+
+export default createApiClient;

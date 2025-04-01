@@ -32,7 +32,6 @@ export type RootState = ReturnType<typeof store.getState>;
 export {
   logout,
   setCredentials,
-  updateAccessToken,
 } from './slices/authProviderSlices';
 export { selectFilterLibraryItem } from './slices/libraryFiltersSlices';
 export { useLoginMutation, useRegisterMutation } from './apis/authApis';
@@ -40,5 +39,6 @@ export { useGetFlashSetQuery } from './apis/flashSetApis';
 
 export { fetchFolders } from './thunks/folderThunk';
 export { fetchFlashSets } from './thunks/flashsetThunk';
+export { doRefreshToken } from './thunks/refreshTokenThunk';
 
 export default store;

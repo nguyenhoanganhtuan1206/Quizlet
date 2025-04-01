@@ -1,24 +1,22 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { FolderSummaryDTO } from '../../type';
-import { createApiClient } from '../../hooks/useAxios';
 
 import { pause } from '../../utils';
+import createApiClient from '../../hooks/useAxios';
 
 export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], string>(
   'folder/fetchFolders',
   async (userId: string) => {
     if (!userId) {
-      console.error(
-        'Something went wrong when fetch all the folders! {folderThunk | fetchFolders}'
-      );
-      throw new Error('Something went wrong when fetch all the folders');
+      console.error('Invalid userId when fetching folders');
+      throw new Error('Invalid userId');
     }
-    const apiClient = await createApiClient();
 
     await pause(600);
-    const response = await apiClient.get(`folders/${userId}/users`);
 
+    const apiClient = await createApiClient();
+    const response = await apiClient.get(`folders/${userId}/users`);
     return response.data;
   }
 );

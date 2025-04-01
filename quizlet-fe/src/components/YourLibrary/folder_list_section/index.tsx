@@ -10,7 +10,7 @@ import {
   ErrorComponent,
   Skeleton,
 } from '../../../shared/components';
-import { AppDispatch, fetchFolders, RootState } from '../../../store';
+import { AppDispatch, fetchFolders, logout, RootState } from '../../../store';
 
 export default function FolderListSection() {
   const currentUserId = useSelector(
@@ -22,9 +22,12 @@ export default function FolderListSection() {
   );
 
   useEffect(() => {
-    if (currentUserId) {
-      dispatch(fetchFolders(currentUserId));
+    if (!currentUserId) {
+      dispatch(logout());
+      return;
     }
+
+    dispatch(fetchFolders(currentUserId));
   }, []);
 
   if (isLoading) {

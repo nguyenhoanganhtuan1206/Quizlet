@@ -1,8 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthResponseDTO, JwtPayload } from '../../type/Auth/authTypes';
 import { getAndValidateToken } from '../../utils';
+import { doRefreshToken } from '../thunks/refreshTokenThunk';
 
 interface AuthProviderState {
+  isLoading: boolean;
+  isError: boolean;
   token: string | null;
   refreshToken: string | null;
   jwtInfo: JwtPayload | null;
@@ -10,6 +13,8 @@ interface AuthProviderState {
 }
 
 const initialState: AuthProviderState = {
+  isLoading: false,
+  isError: false,
   token: localStorage.getItem('token') ?? null,
   refreshToken: localStorage.getItem('refreshToken') ?? null,
   jwtInfo: null,
@@ -33,19 +38,36 @@ export const authProviderSlice = createSlice({
       localStorage.setItem('token', action.payload.token);
       localStorage.setItem('refreshToken', action.payload.refreshToken);
     },
-    updateAccessToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
-    },
     logout: (state) => {
       state.token = null;
       state.isAuthenticated = false;
       state.jwtInfo = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
+      localStorage.clear();
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(doRefreshToken.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(doRefreshToken.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.jwtInfo = getAndValidateToken(action.payload.token);
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+      })
+      .addCase(doRefreshToken.rejected, (state) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.jwtInfo = null;
+        localStorage.clear();
+      });
   },
 });
 
-export const { setCredentials, logout, updateAccessToken } =
-  authProviderSlice.actions;
+export const { setCredentials, logout } = authProviderSlice.actions;
 export const authReducer = authProviderSlice.reducer;
