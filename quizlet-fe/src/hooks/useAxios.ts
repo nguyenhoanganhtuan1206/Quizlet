@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { getCurrentRefreshToken, getCurrentToken } from '../utils';
-import { AuthResponseDTO } from '../type';
 import { getAndValidateToken, handleRefreshToken } from '../utils/jwtUtilities';
 
 const createApiClient = async () => {
@@ -37,13 +36,26 @@ const createApiClient = async () => {
 
       // 1. Should refresh token when status response 401
       // if status is response code 401, we need to send request token here
-      if (response?.status === 401 || response?.status === 403) {
+      if (response?.status === 401) {
         const decodedToken = getAndValidateToken(currentToken);
 
-        // The token is not existed or expired
-        if (!decodedToken || !currentRefreshToken) {
-          localStorage.clear();
-          // Need to logout
+        if (!decodedToken) {
+          // Token is expired but refresh token still existed
+          if (currentRefreshToken) {
+            try {
+              const response = await handleRefreshToken();
+
+              localStorage.setItem('token', response.token);
+              localStorage.setItem('refreshToken', response.refreshToken);
+            } catch (error) {
+              console.error('Error while calling the refresh token', error);
+            }
+          }
+
+          if (!currentToken && !currentRefreshToken) {
+            localStorage.clear();
+
+          }
         }
         await handleRefreshToken();
       }
