@@ -2,21 +2,22 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
+import { useAuth } from "../../hooks/useAuth";
+
 import { AppDispatch, logout, RootState } from "../../store";
-import useAuth from "../../hooks/useAuth";
 
 export default function PrivateRoutes() {
   const { pathname } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
-  const { checkAuth, isLoading } = useAuth();
+  const { isLoading, isError, runAuth } = useAuth();
 
   const { isAuthenticated, jwtInfo } = useSelector(
     (rootState: RootState) => rootState.authProvider
   );
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    runAuth();
+  }, [runAuth]);
 
   if (isLoading) {
     return <div>Loading...</div>;
