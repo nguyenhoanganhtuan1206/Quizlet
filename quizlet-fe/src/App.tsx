@@ -1,10 +1,10 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import './App.scss';
+import "./App.scss";
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
-import RootLayout from './shared/RootLayout';
+import RootLayout from "./shared/RootLayout";
 
 import {
   AuthPage,
@@ -13,25 +13,25 @@ import {
   YourLibraryPage,
   FlashCardPage,
   FolderDetailsPage,
-} from './pages/';
-import { PrivateRoutes, PublicRoute } from './components';
+} from "./pages/";
+import { PrivateRoutes, PublicRoute } from "./components";
 
 /* Just using for DEV Test */
-import DevPage from './pages/Dev/DevPage';
-import { Header } from './shared/components';
+import DevPage from "./pages/Dev/DevPage";
+import { Header } from "./shared/components";
 
 function App() {
   const router = createBrowserRouter([
     /** Public Route */
     {
-      element: <PublicRoute restricted />,
+      element: <PublicRoute />,
       children: [
         {
-          path: '/auth',
+          path: "/auth",
           element: <AuthPage />,
         },
         {
-          path: '/dev',
+          path: "/dev",
           element: <DevPage />,
         },
       ],
@@ -47,19 +47,19 @@ function App() {
           element: <PrivateRoutes />,
           children: [
             {
-              path: '/',
+              path: "/",
               element: <HomePage />,
             },
             {
-              path: '/libraries',
+              path: "/libraries",
               element: <YourLibraryPage />,
             },
             {
-              path: '/flashcard',
+              path: "/flashcard",
               element: <FlashCardPage />,
             },
             {
-              path: '/folders/:folderId',
+              path: "/folders/:folderId",
               element: <FolderDetailsPage />,
             },
             {
@@ -68,7 +68,7 @@ function App() {
           ],
         },
         {
-          path: '*',
+          path: "*",
           element: <NotFoundPage />,
         },
       ],

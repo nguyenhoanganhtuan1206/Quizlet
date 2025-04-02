@@ -1,26 +1,26 @@
-import './Login.scss';
+import "./Login.scss";
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-import { FormLoginValues, loginSchemas } from '../../../schemas/authSchemas';
-import { RootState, setCredentials, useLoginMutation } from '../../../store';
+import { FormLoginValues, loginSchemas } from "../../../schemas/authSchemas";
+import { RootState, setCredentials, useLoginMutation } from "../../../store";
 
-import { AlertMessage, Input, Button } from '../../../shared/components';
+import { AlertMessage, Input, Button } from "../../../shared/components";
 
-import { ApiErrorResponse } from '../../../type/';
-import ButtonLoginSocial from '../ButtonLoginSocial';
+import { ApiErrorResponse } from "../../../type/";
+import ButtonLoginSocial from "../ButtonLoginSocial";
 
 export default function Login() {
   const { control, formState, handleSubmit } = useForm<FormLoginValues>({
     resolver: zodResolver(loginSchemas),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -35,11 +35,11 @@ export default function Login() {
    * Verify whether logged in or not
    * If logged in it auto redirect to the Home Page
    */
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/auth');
-    }
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     navigate('/auth');
+  //   }
+  // }, [isAuthenticated]);
 
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
@@ -51,8 +51,8 @@ export default function Login() {
             refreshToken: data.refreshToken,
           })
         );
-        toast.success('Login successful! Welcome back.');
-        navigate('/');
+        toast.success("Login successful! Welcome back.");
+        navigate("/");
       })
       .catch((error) => {
         const apiError = error as ApiErrorResponse;

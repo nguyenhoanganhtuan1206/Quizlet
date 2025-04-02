@@ -1,14 +1,14 @@
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-import { AuthResponseDTO, JwtPayload } from '../type';
+import { AuthResponseDTO, JwtPayload } from "../type";
 
 export const getCurrentToken = (): string | null => {
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 };
 
 export const getCurrentRefreshToken = (): string | null => {
-  return localStorage.getItem('refreshToken');
+  return localStorage.getItem("refreshToken");
 };
 
 /**
@@ -27,11 +27,15 @@ export const decodeToken = (token: string | null): JwtPayload | null => {
     const decoded = jwtDecode<JwtPayload>(token);
     return decoded;
   } catch (error) {
-    console.error('Failed to decode token {JwtUtilities | decode}: ', error);
-    throw new Error('Error while decoding token');
+    console.error("Failed to decode token {JwtUtilities | decode}: ", error);
+    throw new Error("Error while decoding token");
   }
 };
 
+/**
+ * Check whether the token is expired.
+ * @returns decoded
+ */
 export const getAndValidateToken = (
   token: string | null
 ): JwtPayload | null => {
@@ -59,10 +63,10 @@ export const handleRefreshToken = async (): Promise<AuthResponseDTO> => {
   const currentRefreshToken = getCurrentRefreshToken();
 
   // Verify current token
-  getAndValidateToken(currentToken);
+  const decodedToken = getAndValidateToken(currentToken);
 
-  if (!currentRefreshToken) {
-    throw new Error('Without refresh token');
+  if (!currentRefreshToken || !decodedToken) {
+    throw new Error("Without refresh token");
   }
 
   try {
@@ -76,7 +80,7 @@ export const handleRefreshToken = async (): Promise<AuthResponseDTO> => {
     return { token: newToken, refreshToken: newRefreshToken };
   } catch (error) {
     console.error(
-      'Failed to refresh token {jwtUtilities | handleRefreshToken}:',
+      "Failed to refresh token {jwtUtilities | handleRefreshToken}:",
       error
     );
     throw new Error(`Failed to refresh token: ${error}`);

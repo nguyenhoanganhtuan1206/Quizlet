@@ -1,16 +1,16 @@
-import './FolderListSection.scss';
+import "./FolderListSection.scss";
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { CiFolderOn } from 'react-icons/ci';
+import { CiFolderOn } from "react-icons/ci";
 
 import {
   AssemblyCard,
   ErrorComponent,
   Skeleton,
-} from '../../../shared/components';
-import { AppDispatch, fetchFolders, logout, RootState } from '../../../store';
+} from "../../../shared/components";
+import { AppDispatch, fetchFolders, logout, RootState } from "../../../store";
 
 export default function FolderListSection() {
   const currentUserId = useSelector(
@@ -21,14 +21,14 @@ export default function FolderListSection() {
     (state: RootState) => state.folder
   );
 
-  useEffect(() => {
-    if (!currentUserId) {
-      dispatch(logout());
-      return;
-    }
+  // useEffect(() => {
+  //   if (!currentUserId) {
+  //     dispatch(logout());
+  //     return;
+  //   }
 
-    dispatch(fetchFolders(currentUserId));
-  }, []);
+  //   dispatch(fetchFolders(currentUserId));
+  // }, []);
 
   if (isLoading) {
     return (
@@ -55,7 +55,7 @@ export default function FolderListSection() {
           <li key={folder.id} className="mt-5">
             <AssemblyCard
               path={`folders/${folder.id}`}
-              className={'folder__list-card'}
+              className={"folder__list-card"}
               contentClassName="folder__list-card-content"
             >
               <div className="flex">

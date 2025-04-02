@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyConflictException;
+import static com.quizlet_be.quizlet.error.CommonError.*;
 import static com.quizlet_be.quizlet.services.users.UserError.supplyUserNotFound;
 import static com.quizlet_be.quizlet.services.users.UserValidation.validateCreateUser;
 import static java.time.Instant.now;
@@ -40,7 +39,7 @@ public class UserService {
 
     public User findById(final UUID userId) {
         return userStore.findById(userId)
-                .orElseThrow(supplyUserNotFound("ID", userId));
+                .orElseThrow(supplyUnauthorizedException("The seem your session is expired please try to login again"));
     }
 
     /*

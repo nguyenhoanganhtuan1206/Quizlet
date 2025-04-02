@@ -1,12 +1,12 @@
-import './FlashSetListSection.scss';
+import "./FlashSetListSection.scss";
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { AppDispatch, fetchFlashSets, RootState } from '../../../store';
+import { AppDispatch, fetchFlashSets, RootState } from "../../../store";
 
-import AssemblyAvatar from '../../AssemblyAvatar';
-import { AssemblyCard, Skeleton } from '../../../shared/components';
+import AssemblyAvatar from "../../AssemblyAvatar";
+import { AssemblyCard, Skeleton } from "../../../shared/components";
 
 export default function FlashSetListSection() {
   const { jwtInfo } = useSelector(
@@ -17,11 +17,11 @@ export default function FlashSetListSection() {
     (rootState: RootState) => rootState.flashSetSlice
   );
 
-  useEffect(() => {
-    if (jwtInfo?.user_id) {
-      dispatch(fetchFlashSets(jwtInfo.user_id));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (jwtInfo?.user_id) {
+  //     dispatch(fetchFlashSets(jwtInfo.user_id));
+  //   }
+  // }, []);
 
   if (isLoading) {
     return (

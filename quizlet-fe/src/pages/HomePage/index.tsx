@@ -1,9 +1,9 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-import { logout, RootState } from '../../store';
-import { decodeToken } from '../../utils';
-import { PopularCardList, RecentCardsList } from '../../components/';
+import { logout, RootState } from "../../store";
+import { decodeToken } from "../../utils";
+import { PopularCardList, RecentCardsList } from "../../components/";
 
 const HomePage = () => {
   const token = useSelector((state: RootState) => state.authProvider.token); // Updated field name
@@ -19,7 +19,7 @@ const HomePage = () => {
     const decodedToken = decodeToken(token);
     userId = decodedToken.user_id;
   } catch (error) {
-    console.error('Token decoding failed:', error);
+    console.error("Token decoding failed:", error);
     dispatch(logout());
     return <Navigate to="/auth" replace />;
   }
@@ -33,7 +33,7 @@ const HomePage = () => {
         Recent flashcards
       </h3>
 
-      <RecentCardsList userId={userId} />
+      {/* <RecentCardsList userId={userId} /> */}
 
       {/**
        * Popular flashset List

@@ -1,13 +1,12 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { getCurrentRefreshToken, getCurrentToken } from '../utils';
-import { AuthResponseDTO } from '../type';
-import { getAndValidateToken, handleRefreshToken } from '../utils/jwtUtilities';
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { getCurrentRefreshToken, getCurrentToken } from "../utils";
+import { getAndValidateToken, handleRefreshToken } from "../utils/jwtUtilities";
 
 const createApiClient = async () => {
   const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_ENDPOINT,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
 
@@ -17,7 +16,7 @@ const createApiClient = async () => {
       const token = getCurrentToken();
 
       if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
+        config.headers["Authorization"] = `Bearer ${token}`;
       }
 
       return config;
@@ -45,14 +44,14 @@ const createApiClient = async () => {
           localStorage.clear();
           // Need to logout
         }
-        await handleRefreshToken();
+        // await handleRefreshToken();
       }
 
       // Handle 401 and 403 errors
       if (response?.status === 401 || response?.status === 403) {
-        console.error('Error while calling API | {createApiClient | useAxios}');
+        console.error("Error while calling API | {createApiClient | useAxios}");
         return Promise.reject(
-          new Error('Something went wrong! Pleas try to login!')
+          new Error("Something went wrong! Pleas try to login!")
         );
       }
     }
