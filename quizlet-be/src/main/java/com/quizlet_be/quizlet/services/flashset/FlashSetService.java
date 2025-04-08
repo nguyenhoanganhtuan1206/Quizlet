@@ -4,6 +4,7 @@ import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetCreationRequestDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetSummaryDTO;
+import com.quizlet_be.quizlet.dto.flashsets.FlashSetUpdateRequestDTO;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetStore;
 import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItem;
 import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemService;
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
 import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
-import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.validateFlashSetItemCreation;
-import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.validateFlashSetTitle;
+import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.*;
 import static java.time.Instant.now;
 
 @Service
@@ -58,6 +59,16 @@ public class FlashSetService {
         return folderFlashSetService.countByFolderId(folderId);
     }
 
+    /**
+     * Creates a new flash set.
+     * Creates a new flash set items.
+     *
+     * @param FlashSetCreationRequestDTO The request containing the flash set details, items, and optional folder ID.
+     * @param userId                     The ID of the user creating the flash set.
+     * @return A DTO containing the details of the created flash set and its items.
+     * @throws com.quizlet_be.quizlet.error.NotFoundException   If the specified folder does not exist.
+     * @throws com.quizlet_be.quizlet.error.BadRequestException If the flash set cannot be created due to a constraint violation.
+     */
     @Transactional
     public FlashSetDetailResponseDTO createFlashSet(
             final FlashSetCreationRequestDTO flashSetCreationRequest,
@@ -65,51 +76,76 @@ public class FlashSetService {
     ) {
         validateFlashSetItemCreation(flashSetCreationRequest, userId);
 
-        final FlashSet flashSetCreation = buildAndSaveFlashSet(flashSetCreationRequest, userId);
-        final List<FlashSetItem> flashSetItems = flashSetCreationRequest.getFlashSetItems()
-                .stream()
-                .map(flashSetItemCreationDTO -> mapToFlashSetItem(flashSetItemCreationDTO, flashSetCreation.getId()))
-                .toList();
+        try {
+            final FlashSet flashSetCreation = flashSetStore.save(buildFlashSetByRequestAndUserId(flashSetCreationRequest, userId));
 
-        flashSetItemService.saveAll(flashSetItems);
-        folderFlashSetService.save(mapFolderFlashSet(flashSetCreation.getId(), flashSetCreation.getId()));
+            final List<FlashSetItem> flashSetItemsBuilder = flashSetCreationRequest.getFlashSetItems()
+                    .stream()
+                    .map(flashSetItemCreationDTO -> buildFlashSetItemByFlashSetIdAndCreation(flashSetItemCreationDTO, flashSetCreation.getId()))
+                    .toList();
 
-        return mapToFlashSEtDetailResponseDTO(flashSetCreation, flashSetItems);
+            // Save all the FlashSet Item
+            flashSetItemService.saveAll(flashSetItemsBuilder);
+
+            folderFlashSetService.save(buildFolderFlashSet(flashSetCreationRequest.getFolderId(), flashSetCreation.getId()));
+
+            return mapToFlashSEtDetailResponseDTO(flashSetCreation, flashSetItemsBuilder);
+        } catch (Exception exception) {
+            System.out.println("Message" + exception.getMessage());
+            throw supplyBadRequestException("Something went wrong while creating new flash set!!! Could you please try it again!!!").get();
+        }
     }
 
+    /**
+     * Creates a new flash set.
+     * Creates a new flash set items.
+     *
+     * @param FlashSetUpdateRequestDTO The request containing the flash set details, items, and optional folder ID.
+     * @param userId                     The ID of the user creating the flash set.
+     * @return A DTO containing the details of the created flash set and its items.
+     * @throws com.quizlet_be.quizlet.error.NotFoundException   If the specified folder does not exist.
+     * @throws com.quizlet_be.quizlet.error.BadRequestException If the flash set cannot be created due to a constraint violation.
+     */
     @Transactional
-    public FlashSetDetailResponseDTO updateFlashSet(
+    public FlashSet updateFlashSet(
+            final UUID userId,
             final UUID flashSetId,
-            final FlashSetCreationRequestDTO flashSetUpdateRequest
+            final FlashSetUpdateRequestDTO flashSetUpdateRequest
     ) {
         final FlashSet currentFlashSet = findById(flashSetId);
+        validateFlashSetItemUpdate(flashSetUpdateRequest, userId, currentFlashSet);
 
-        if (!currentFlashSet.getName().equalsIgnoreCase(flashSetUpdateRequest.getName())) {
-            validateFlashSetTitle(flashSetUpdateRequest.getName());
+        try {
+            if (!currentFlashSet.getName().equalsIgnoreCase(flashSetUpdateRequest.getName())) {
+                validateFlashSetTitle(flashSetUpdateRequest.getName());
+                currentFlashSet.setName(flashSetUpdateRequest.getName());
+            }
+
+            currentFlashSet.setDescription(flashSetUpdateRequest.getDescription());
+            currentFlashSet.setUpdatedAt(now());
+            currentFlashSet.setDrafted(flashSetUpdateRequest.isDrafted());
+
+            return flashSetStore.save(currentFlashSet);
+        } catch (Exception exception) {
+            System.out.println("Message" + exception.getMessage());
+            throw supplyBadRequestException("Something went wrong while updating flash set!!! Could you please try it again").get();
         }
-
-        currentFlashSet.setDescription(flashSetUpdateRequest.getDescription());
-//        currentFlashSet.setUpdatedAt(flashSetUpdateRequest.getDescription());
-        currentFlashSet.setUpdatedAt(now());
-
-        return null;
     }
 
-    private FlashSet buildAndSaveFlashSet(
+    private FlashSet buildFlashSetByRequestAndUserId(
             final FlashSetCreationRequestDTO request,
             final UUID userId
     ) {
-        final FlashSet flashSet = FlashSet.builder()
+        return FlashSet.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .createdAt(now())
                 .isDrafted(request.isDrafted())
                 .userId(userId)
                 .build();
-        return flashSetStore.save(flashSet);
     }
 
-    private FolderFlashSet mapFolderFlashSet(final UUID folderId, final UUID flashSetId) {
+    private FolderFlashSet buildFolderFlashSet(final UUID folderId, final UUID flashSetId) {
         return FolderFlashSet.builder()
                 .folderId(folderId)
                 .flashSetId(flashSetId)
@@ -130,14 +166,13 @@ public class FlashSetService {
                 .build();
     }
 
-    private FlashSetItem mapToFlashSetItem(FlashSetItemCreationDTO itemDTO, UUID flashSetId) {
-        FlashSetItem flashSetItem = FlashSetItem.builder()
+    private FlashSetItem buildFlashSetItemByFlashSetIdAndCreation(FlashSetItemCreationDTO itemDTO, final UUID flashSetId) {
+        return FlashSetItem.builder()
                 .answer(itemDTO.getAnswer())
                 .question(itemDTO.getQuestion())
                 .createdAt(now())
                 .flashsetId(flashSetId)
                 .build();
-        return flashSetItemService.save(flashSetItem);
     }
 
     private FlashSetDetailResponseDTO mapToFlashSEtDetailResponseDTO(
