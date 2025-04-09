@@ -3,6 +3,7 @@ package com.quizlet_be.quizlet.api.flashset;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetCreationRequestDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetSummaryDTO;
+import com.quizlet_be.quizlet.dto.flashsets.FlashSetUpdateRequestDTO;
 import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import com.quizlet_be.quizlet.services.flashset.FlashSetService;
 import com.quizlet_be.quizlet.utils.JwtTokenUtil;
@@ -34,11 +35,14 @@ public class FlashSetController {
     }
 
     @PutMapping("{flashSetId}")
-    public FlashSetDetailResponseDTO updateFlashSet(
+    public FlashSet updateFlashSet(
             final @PathVariable UUID flashSetId,
-            final @RequestBody FlashSetCreationRequestDTO flashSetRequestDTO
+            final @RequestBody FlashSetUpdateRequestDTO flashSetRequestDTO,
+            final @RequestHeader(value = "Authorization") String authorizationHeader
     ) {
-        return flashSetService.updateFlashSet(flashSetId, flashSetRequestDTO);
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return flashSetService.updateFlashSet(userId, flashSetId, flashSetRequestDTO);
     }
 
     @GetMapping("{userId}/users")

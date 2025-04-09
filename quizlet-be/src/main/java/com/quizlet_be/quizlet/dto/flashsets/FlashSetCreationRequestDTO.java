@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,10 +18,6 @@ public class FlashSetCreationRequestDTO {
     private String name;
 
     private String description;
-
-    private Instant createdAt;
-
-    private Instant updatedAt;
 
     private boolean isDrafted;
 

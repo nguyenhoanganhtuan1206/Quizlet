@@ -1,5 +1,6 @@
 package com.quizlet_be.quizlet.services.auths;
 
+import com.quizlet_be.quizlet.error.UnauthorizedException;
 import com.quizlet_be.quizlet.persistent.refreshtokens.RefreshTokenStore;
 import com.quizlet_be.quizlet.properties.JwtProperties;
 import com.quizlet_be.quizlet.services.refreshtokens.RefreshToken;
@@ -21,8 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyAccessDeniedException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
+import static com.quizlet_be.quizlet.error.CommonError.*;
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static java.time.Instant.now;
 
@@ -101,11 +101,11 @@ public class JwtTokenService {
      *
      * @param token The JWT token to parse
      * @return Claims extracted from the token
-     * @throws AccessDeniedException if the token is invalid, expired, or malformed
+     * @throws UnauthorizedException if the token is invalid, expired, or malformed
      */
     public Claims parseToken(String token) {
         if (isBlank(token)) {
-            throw supplyAccessDeniedException("Token cannot be null or empty").get();
+            throw supplyUnauthorizedException("Token cannot be null or empty").get();
         }
 
         try {
@@ -117,13 +117,13 @@ public class JwtTokenService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (ExpiredJwtException e) {
-            throw supplyAccessDeniedException("Token has expired").get();
+            throw supplyUnauthorizedException("Token has expired").get();
         } catch (UnsupportedJwtException | MalformedJwtException e) {
-            throw supplyAccessDeniedException("Invalid token format", e).get();
+            throw supplyUnauthorizedException("Invalid token format", e).get();
         } catch (io.jsonwebtoken.security.SignatureException e) {
-            throw supplyAccessDeniedException("Invalid token signature", e).get();
+            throw supplyUnauthorizedException("Invalid token signature", e).get();
         } catch (IllegalArgumentException e) {
-            throw supplyAccessDeniedException("Token cannot be parsed", e).get();
+            throw supplyUnauthorizedException("Token cannot be parsed", e).get();
         }
     }
 }

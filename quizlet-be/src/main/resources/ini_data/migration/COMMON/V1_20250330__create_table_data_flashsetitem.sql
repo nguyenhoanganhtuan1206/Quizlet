@@ -7,7 +7,7 @@ CREATE TABLE flashsetitems (
     question    VARCHAR(50)     NOT NULL,
     created_at  TIMESTAMP       NOT NULL        DEFAULT NOW(),
     updated_at  TIMESTAMP,
-    flashset_id UUID            NULL,
+    flashset_id UUID            NOT NULL,
     CONSTRAINT  fk_flashset
         FOREIGN KEY (flashset_id)
         REFERENCES  flashsets (id)
