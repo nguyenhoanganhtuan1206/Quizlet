@@ -1,15 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthResponseDTO, JwtPayload } from "../../type/Auth/authTypes";
-import { getAndValidateToken } from "../../utils";
+import { AuthResponseDTO } from "../../type/Auth/authTypes";
+import { doRefreshToken } from "../thunks/refreshTokenThunk";
 
 interface AuthProviderState {
-  jwtInfo: JwtPayload | null;
-  isAuthenticated: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  token: string | null;
+  refreshToken: string | null;
 }
 
 const initialState: AuthProviderState = {
-  jwtInfo: null,
-  isAuthenticated: !!localStorage.getItem("token"),
+  isLoading: false,
+  isError: false,
+  token: localStorage.getItem("token"),
+  refreshToken: localStorage.getItem("token"),
 };
 
 export const authProviderSlice = createSlice({
@@ -22,16 +26,30 @@ export const authProviderSlice = createSlice({
      * @param action - The action containing the token and refresh token
      * */
     setCredentials: (state, action: PayloadAction<AuthResponseDTO>) => {
-      state.isAuthenticated = !!action.payload.token;
-      state.jwtInfo = getAndValidateToken(action.payload.token);
+      state.token = action.payload.token;
+      state.refreshToken = action.payload.refreshToken;
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("refreshToken", action.payload.refreshToken);
     },
     logout: (state) => {
-      state.isAuthenticated = false;
-      state.jwtInfo = null;
+      state.token = null;
+      state.refreshToken = null;
       localStorage.clear();
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(doRefreshToken.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(doRefreshToken.fulfilled, (state, action) => {
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.token;
+      })
+      .addCase(doRefreshToken.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+      });
   },
 });
 

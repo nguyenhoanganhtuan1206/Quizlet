@@ -1,17 +1,17 @@
-import './index.scss';
+import "./index.scss";
 
-import { Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-import { GrAchievement } from 'react-icons/gr';
-import { IoIosSettings } from 'react-icons/io';
-import { MdLogout } from 'react-icons/md';
+import { GrAchievement } from "react-icons/gr";
+import { IoIosSettings } from "react-icons/io";
+import { MdLogout } from "react-icons/md";
 
-import { logout, RootState } from '../../../store';
+import { logout } from "../../../store";
 
-import { Button, PopperWrapper } from '../../../shared/components';
-import { AssemblyAvatar } from '../..';
-import { getAndValidateToken } from '../../../utils';
+import { Button, PopperWrapper } from "../../../shared/components";
+import { AssemblyAvatar } from "../..";
+import { decodeToken, getCurrentToken } from "../../../utils";
 
 type HeaderProfilePopper = {
   isHidden: boolean;
@@ -20,15 +20,14 @@ type HeaderProfilePopper = {
 export default function HeaderProfilePopper({
   isHidden,
 }: Readonly<HeaderProfilePopper>) {
-  const token = useSelector((state: RootState) => state.authProvider.token);
-  const jwtInfo = getAndValidateToken(token);
+  const currentUser = decodeToken(getCurrentToken());
   const dispatch = useDispatch();
 
   const handleOnLogout = () => {
     dispatch(logout());
   };
 
-  if (!jwtInfo) {
+  if (!currentUser) {
     return <Navigate to="/auth" />;
   }
 
@@ -44,7 +43,7 @@ export default function HeaderProfilePopper({
 
         <div>
           <p>Email</p>
-          <p>{jwtInfo.sub}</p>
+          <p>{currentUser.sub}</p>
         </div>
       </div>
 

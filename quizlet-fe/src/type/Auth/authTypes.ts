@@ -15,3 +15,10 @@ export interface JwtPayload {
   exp: number;
   [key: string]: any; // Allow additional fields
 }
+
+export class AuthError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthError";
+  }
+}

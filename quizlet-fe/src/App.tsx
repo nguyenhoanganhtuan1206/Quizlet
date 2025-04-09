@@ -62,9 +62,6 @@ function App() {
               path: "/folders/:folderId",
               element: <FolderDetailsPage />,
             },
-            {
-              element: <Header />,
-            },
           ],
         },
         {

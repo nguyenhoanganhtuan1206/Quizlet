@@ -10,25 +10,19 @@ import {
   ErrorComponent,
   Skeleton,
 } from "../../../shared/components";
-import { AppDispatch, fetchFolders, logout, RootState } from "../../../store";
+import { AppDispatch, fetchFolders, RootState } from "../../../store";
+import { decodeToken, getCurrentToken } from "../../../utils";
 
 export default function FolderListSection() {
-  const currentUserId = useSelector(
-    (rootState: RootState) => rootState.authProvider.jwtInfo?.user_id
-  );
+  const currentUser = decodeToken(getCurrentToken());
   const dispatch = useDispatch<AppDispatch>();
   const { data, isError, isLoading } = useSelector(
     (state: RootState) => state.folder
   );
 
-  // useEffect(() => {
-  //   if (!currentUserId) {
-  //     dispatch(logout());
-  //     return;
-  //   }
-
-  //   dispatch(fetchFolders(currentUserId));
-  // }, []);
+  useEffect(() => {
+    dispatch(fetchFolders(currentUser.user_id));
+  }, []);
 
   if (isLoading) {
     return (
@@ -50,37 +44,40 @@ export default function FolderListSection() {
 
   return (
     <ul className="mt-10">
-      {data.map((folder) => {
-        return (
-          <li key={folder.id} className="mt-5">
-            <AssemblyCard
-              path={`folders/${folder.id}`}
-              className={"folder__list-card"}
-              contentClassName="folder__list-card-content"
-            >
-              <div className="flex">
-                <span className="border-r-white border-r-2 pr-3">
-                  {folder.flashSetCount !== 0 && folder.flashSetCount > 1
-                    ? `${folder.flashSetCount} items`
-                    : `${folder.flashSetCount} item`}
-                </span>
+      {data.length === 0 && <div>Folder still is empty. Let create it</div>}
 
-                <span className="pl-3">
-                  {folder.foldersChildrenCount !== 0 &&
-                  folder.foldersChildrenCount > 1
-                    ? `${folder.foldersChildrenCount} folders`
-                    : `${folder.foldersChildrenCount} folder`}
-                </span>
-              </div>
+      {data.length > 0 &&
+        data.map((folder) => {
+          return (
+            <li key={folder.id} className="mt-5">
+              <AssemblyCard
+                path={`folders/${folder.id}`}
+                className={"folder__list-card"}
+                contentClassName="folder__list-card-content"
+              >
+                <div className="flex">
+                  <span className="border-r-white border-r-2 pr-3">
+                    {folder.flashSetCount !== 0 && folder.flashSetCount > 1
+                      ? `${folder.flashSetCount} items`
+                      : `${folder.flashSetCount} item`}
+                  </span>
 
-              <div className="flex items-center">
-                <CiFolderOn className="text-[2rem]" />
-                <p className="ml-3">{folder.name}</p>
-              </div>
-            </AssemblyCard>
-          </li>
-        );
-      })}
+                  <span className="pl-3">
+                    {folder.foldersChildrenCount !== 0 &&
+                    folder.foldersChildrenCount > 1
+                      ? `${folder.foldersChildrenCount} folders`
+                      : `${folder.foldersChildrenCount} folder`}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
+                  <CiFolderOn className="text-[2rem]" />
+                  <p className="ml-3">{folder.name}</p>
+                </div>
+              </AssemblyCard>
+            </li>
+          );
+        })}
     </ul>
   );
 }

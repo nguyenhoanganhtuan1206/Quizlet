@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { FormLoginValues, loginSchemas } from "../../../schemas/authSchemas";
-import { RootState, setCredentials, useLoginMutation } from "../../../store";
+import { setCredentials, useLoginMutation } from "../../../store";
 
 import { AlertMessage, Input, Button } from "../../../shared/components";
 
@@ -25,9 +25,6 @@ export default function Login() {
   });
 
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.authProvider.isAuthenticated
-  );
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
 
@@ -51,6 +48,7 @@ export default function Login() {
             refreshToken: data.refreshToken,
           })
         );
+
         toast.success("Login successful! Welcome back.");
         navigate("/");
       })

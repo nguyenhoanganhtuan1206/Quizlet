@@ -7,21 +7,18 @@ import { AppDispatch, fetchFlashSets, RootState } from "../../../store";
 
 import AssemblyAvatar from "../../AssemblyAvatar";
 import { AssemblyCard, Skeleton } from "../../../shared/components";
+import { decodeToken, getCurrentToken } from "../../../utils";
 
 export default function FlashSetListSection() {
-  const { jwtInfo } = useSelector(
-    (rootState: RootState) => rootState.authProvider
-  );
+  const currentUser = decodeToken(getCurrentToken());
   const dispatch = useDispatch<AppDispatch>();
   const { data, isLoading } = useSelector(
     (rootState: RootState) => rootState.flashSetSlice
   );
 
-  // useEffect(() => {
-  //   if (jwtInfo?.user_id) {
-  //     dispatch(fetchFlashSets(jwtInfo.user_id));
-  //   }
-  // }, []);
+  useEffect(() => {
+    dispatch(fetchFlashSets(currentUser.user_id));
+  }, []);
 
   if (isLoading) {
     return (
@@ -59,7 +56,7 @@ export default function FlashSetListSection() {
                     height="20px"
                     width="20px"
                   />
-                  <span className="ml-3">{jwtInfo?.sub}</span>
+                  <span className="ml-3">{currentUser.sub}</span>
                 </div>
               </div>
               <p className="text-[1.8rem] font-bold">{flashset.name}</p>

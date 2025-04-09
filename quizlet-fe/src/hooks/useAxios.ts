@@ -1,75 +1,30 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { getCurrentRefreshToken, getCurrentToken } from "../utils";
-import { getAndValidateToken, handleRefreshToken } from "../utils/jwtUtilities";
+import axios from "axios";
+import { getCurrentToken } from "../utils";
 
-const createApiClient = async () => {
-  const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_ENDPOINT,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_ENDPOINT,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
 
-  // Request interceptor to add the token to headers
-  axios.interceptors.request.use(
-    function (config) {
-      const token = getCurrentToken();
+// Add request interceptor to include Authorization header
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getCurrentToken();
 
-      if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      return config;
-    },
-    function (error) {
-      return Promise.reject(error);
+    if (token) {
+      config.headers = config.headers || {};
+      // eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJfaWQiOiIyMzdjNzM2Yi05YWEzLTRjNGUtOGQ3ZS01NTgxNjZiYjNkNmIiLCJzdWIiOiJuZ3V5ZW5ob2FuZ2FuaHR1YW4xMjA2QGdtYWlsLmNvbSIsImlhdCI6MTc0Mzk5MjQ1NiwiZXhwIjoxNzQzOTk2MDU2fQ.lCpidZHxDT8BcBdxOyJXgv8pM42a6KyXyCIaMnGCs7o
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
-  );
 
-  // Response interceptor to handle 401/403 errors
-  apiClient.interceptors.response.use(
-    (response: AxiosResponse) => response,
-    async (error: AxiosError) => {
-      const currentToken = getCurrentToken();
-      const currentRefreshToken = getCurrentRefreshToken();
-      const { response } = error;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-      // 1. Should refresh token when status response 401
-      // if status is response code 401, we need to send request token here
-      if (response?.status === 401) {
-        const decodedToken = getAndValidateToken(currentToken);
-
-        if (!decodedToken) {
-          // Token is expired but refresh token still existed
-          if (currentRefreshToken) {
-            try {
-              const response = await handleRefreshToken();
-
-              localStorage.setItem("token", response.token);
-              localStorage.setItem("refreshToken", response.refreshToken);
-            } catch (error) {
-              console.error("Error while calling the refresh token", error);
-            }
-          }
-
-          if (!currentToken && !currentRefreshToken) {
-            localStorage.clear();
-          }
-        }
-        // await handleRefreshToken();
-      }
-
-      // Handle 401 and 403 errors
-      if (response?.status === 401 || response?.status === 403) {
-        console.error("Error while calling API | {createApiClient | useAxios}");
-        return Promise.reject(
-          new Error("Something went wrong! Pleas try to login!")
-        );
-      }
-    }
-  );
-
-  return apiClient;
-};
-
-export default createApiClient;
+export default axiosInstance;
