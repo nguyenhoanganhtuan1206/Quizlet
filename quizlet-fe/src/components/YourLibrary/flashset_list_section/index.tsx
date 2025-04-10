@@ -8,11 +8,13 @@ import { AppDispatch, fetchFlashSets, RootState } from "../../../store";
 import AssemblyAvatar from "../../AssemblyAvatar";
 import { AssemblyCard, Skeleton } from "../../../shared/components";
 import { decodeToken, getCurrentToken } from "../../../utils";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function FlashSetListSection() {
   const currentUser = decodeToken(getCurrentToken());
   const dispatch = useDispatch<AppDispatch>();
-  const { data, isLoading } = useSelector(
+  const { data, isLoading, error } = useSelector(
     (rootState: RootState) => rootState.flashSetSlice
   );
 
@@ -33,6 +35,12 @@ export default function FlashSetListSection() {
       </Skeleton>
     );
   }
+
+  if (error && error?.status === 401) {
+    toast.error(error.message ? error.message : "Error");
+    return <Navigate to="/auth" />;
+  }
+  // console.log("flashset error", isError);
 
   return (
     <ul>

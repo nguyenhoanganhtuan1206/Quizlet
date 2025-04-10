@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
+import static com.quizlet_be.quizlet.error.CommonError.supplyUnauthorizedException;
 import static com.quizlet_be.quizlet.services.refreshtokens.RefreshTokenError.throwRefreshTokenValidation;
 import static java.time.Instant.now;
 
@@ -24,7 +25,7 @@ public class RefreshTokenService {
 
     public RefreshToken findByToken(final String token) {
         return refreshTokenStore.findByToken(token)
-                .orElseThrow(supplyNotFoundException("Something went wrong! Your login session is expired!"));
+                .orElseThrow(supplyUnauthorizedException("Your login session is expired or invalid!! Please try to login again"));
     }
 
     public AuthResponseDTO refreshToken(final String token) {

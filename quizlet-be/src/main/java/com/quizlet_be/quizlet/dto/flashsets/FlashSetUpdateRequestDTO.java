@@ -12,4 +12,6 @@ public class FlashSetUpdateRequestDTO {
     private String name;
 
     private String description;
+
+    private boolean isDrafted;
 }

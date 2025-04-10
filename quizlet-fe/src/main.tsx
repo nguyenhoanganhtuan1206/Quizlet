@@ -11,7 +11,7 @@ import axiosInstance from "./hooks/useAxios.ts";
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.error("Error 401: Session is expired or invalid!!");
+    console.error("Error 401: Session is expired or invalid!!", error);
     if (error.response.status === 401) {
       // Attempt token refresh, unwrap result
       const refreshTokenResult = await store

@@ -1,13 +1,13 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AuthResponseDTO } from '../../type';
-import axios from 'axios';
-import { getCurrentRefreshToken, pause } from '../../utils';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AuthResponseDTO } from "../../type";
+import axios from "axios";
+import { getCurrentRefreshToken, pause } from "../../utils";
 
 export const doRefreshToken = createAsyncThunk<AuthResponseDTO, void>(
-  'auths/refreshToken',
+  "auths/refreshToken",
   async (_, { rejectWithValue }) => {
     const currentRefreshToken = getCurrentRefreshToken();
-    
+
     await pause(3000);
     try {
       const response = await axios.post<AuthResponseDTO>(
@@ -18,10 +18,10 @@ export const doRefreshToken = createAsyncThunk<AuthResponseDTO, void>(
       return response.data;
     } catch (error) {
       console.error(
-        'Failed to refresh token {refreshTokenThunk | doRefreshToken}:',
+        "Failed to refresh token {refreshTokenThunk | doRefreshToken}:",
         error
       );
-      return rejectWithValue('Session is expired. Please login again');
+      return rejectWithValue(error);
     }
   }
 );

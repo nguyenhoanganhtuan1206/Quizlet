@@ -1,18 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-import { ThunkState, FlashSetSummaryDTO } from '../../type';
-import { fetchFlashSets } from '../thunks/flashsetThunk';
+import { ThunkState, FlashSetSummaryDTO } from "../../type";
+import { fetchFlashSets } from "../thunks/flashsetThunk";
 
 type FlashSetState = ThunkState<FlashSetSummaryDTO>;
 
 const initialState: FlashSetState = {
   data: [],
-  isError: false,
   isLoading: false,
+  error: null,
 };
 
 export const flashSetSlice = createSlice({
-  name: 'flashSetSlice',
+  name: "flashSetSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -24,9 +24,9 @@ export const flashSetSlice = createSlice({
         state.isLoading = false;
         state.data = action.payload;
       })
-      .addCase(fetchFlashSets.rejected, (state) => {
+      .addCase(fetchFlashSets.rejected, (state, action) => {
         state.isLoading = false;
-        state.isError = true;
+        state.error = action.payload;
       });
   },
 });

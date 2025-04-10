@@ -5,8 +5,6 @@ import axiosInstance from "../../hooks/useAxios";
 import { FolderSummaryDTO } from "../../type";
 
 import { pause } from "../../utils";
-import { AxiosError } from "axios";
-import { handleUnauthorizedError } from "../../utils/errorHandlingUtilities";
 
 export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], string>(
   "folder/fetchFolders",
@@ -23,7 +21,7 @@ export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], string>(
         error
       );
 
-      handleUnauthorizedError({ error, dispatch, rejectWithValue });
+      rejectWithValue(error);
     }
   }
 );
