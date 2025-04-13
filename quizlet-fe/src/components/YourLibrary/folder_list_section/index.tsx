@@ -16,7 +16,7 @@ import { decodeToken, getCurrentToken } from "../../../utils";
 export default function FolderListSection() {
   const currentUser = decodeToken(getCurrentToken());
   const dispatch = useDispatch<AppDispatch>();
-  const { data, isError, isLoading } = useSelector(
+  const { data, error, isLoading } = useSelector(
     (state: RootState) => state.folder
   );
 
@@ -38,7 +38,7 @@ export default function FolderListSection() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return <ErrorComponent />;
   }
 
@@ -51,7 +51,7 @@ export default function FolderListSection() {
           return (
             <li key={folder.id} className="mt-5">
               <AssemblyCard
-                path={`folders/${folder.id}`}
+                path={`/libraries/folders/${folder.id}`}
                 className={"folder__list-card"}
                 contentClassName="folder__list-card-content"
               >

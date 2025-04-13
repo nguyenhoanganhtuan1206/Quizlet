@@ -1,14 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { authApis } from "./apis/authApis";
-import { authProviderSlice, authReducer } from "./slices/authProviderSlices";
-import { flashSetApis } from "./apis/flashSetApis";
-import { folderSlice } from "./slices/folderSlices";
 import {
   libraryFiltersReducer,
   libraryFiltersSlice,
-} from "./slices/libraryFiltersSlices";
-import { flashSetReducer, flashSetSlice } from "./slices/flashsetsSlices";
+  folderSlice,
+  flashSetReducer,
+  flashSetSlice,
+  authProviderSlice,
+  authReducer,
+} from "./slices/";
+import { flashSetApis, authApis, folderApis } from "./apis";
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     [folderSlice.reducerPath]: folderSlice.reducer,
     [authApis.reducerPath]: authApis.reducer,
     [flashSetApis.reducerPath]: flashSetApis.reducer,
+    [folderApis.reducerPath]: folderApis.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()

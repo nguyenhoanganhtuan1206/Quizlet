@@ -1,12 +1,12 @@
-import './Input.scss';
+import "./Input.scss";
 
-import classNames from 'classnames';
-import { useState } from 'react';
-import { Controller, FieldValues } from 'react-hook-form';
+import classNames from "classnames";
+import { useState } from "react";
+import { Controller, FieldValues } from "react-hook-form";
 
-import { FaEyeSlash } from 'react-icons/fa';
-import { FaRegEye } from 'react-icons/fa6';
-import { InputProps } from '../../../../type/Form/Input';
+import { FaEyeSlash } from "react-icons/fa";
+import { FaRegEye } from "react-icons/fa6";
+import { InputProps } from "../../../../type/form/Input";
 
 /**
  * Params
@@ -31,16 +31,16 @@ export default function Input<T extends FieldValues>({
 }: Readonly<InputProps<T>>) {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const inputClassName = classNames(
-    'input border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] outline-none focus:border-blue-500',
+    "input border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] outline-none focus:border-blue-500",
     {
-      'input--mode-black': variant === 'mode-black',
+      "input--mode-black": variant === "mode-black",
     },
     className
   );
 
   const showInputType = () => {
-    if (type === 'password') {
-      return isShowPassword ? 'text' : 'password';
+    if (type === "password") {
+      return isShowPassword ? "text" : "password";
     }
 
     return type;
@@ -51,7 +51,7 @@ export default function Input<T extends FieldValues>({
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void
   ) => {
-    return type === 'textarea' ? (
+    return type === "textarea" ? (
       <textarea
         id={name}
         className={inputClassName}
@@ -92,7 +92,7 @@ export default function Input<T extends FieldValues>({
             {/**
              * Just display when have the hidden password
              */}
-            {type === 'password' ? (
+            {type === "password" ? (
               <div className="relative">
                 {renderInput(onChange)}
                 <button

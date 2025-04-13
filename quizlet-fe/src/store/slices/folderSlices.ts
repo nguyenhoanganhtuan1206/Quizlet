@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { fetchFolders } from "../thunks/folderThunk";
 import { ThunkState } from "../../type";
-import { FolderSummaryDTO } from "../../type/folder/folderType";
+import { FolderSummaryDTO } from "../../type/";
 
 type FolderSummaryState = ThunkState<FolderSummaryDTO>;
 
 const initialState: FolderSummaryState = {
   data: [],
-  isError: false,
+  error: null,
   isLoading: false,
 };
 
@@ -26,12 +26,10 @@ export const folderSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchFolders.rejected, (state, action) => {
-        console.log("action", action);
-        
-        state.isError = true;
+        state.error = action.payload;
         state.isLoading = false;
       });
   },
 });
 
-export default folderSlice.reducer;
+export const folderReducer = folderSlice.reducer;

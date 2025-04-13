@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthResponseDTO } from "../../type/Auth/authTypes";
+import { AuthResponseDTO } from "../../type/auth/authTypes";
 import { doRefreshToken } from "../thunks/refreshTokenThunk";
 
 interface AuthProviderState {

@@ -58,7 +58,7 @@ function App() {
               element: <FlashCardPage />,
             },
             {
-              path: "/folders/:folderId",
+              path: "/libraries/folders/:folderId",
               element: <FolderDetailsPage />,
             },
           ],

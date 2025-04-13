@@ -1,8 +1,8 @@
-import './AssemblyCard.scss';
+import "./AssemblyCard.scss";
 
-import { ReactPropsChildren } from '../../../type/';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames';
+import { ReactPropsChildren } from "../../../type/";
+import { Link } from "react-router-dom";
+import classNames from "classnames";
 
 type AssemblyCardProps = {
   path?: string;
@@ -23,7 +23,7 @@ export default function AssemblyCard({
   imagePath,
   children,
 }: Readonly<AssemblyCardProps>) {
-  const assemblyCardClassName = classNames(className, 'assembly__card');
+  const assemblyCardClassName = classNames(className, "assembly__card");
 
   const renderContent = () => (
     <>
