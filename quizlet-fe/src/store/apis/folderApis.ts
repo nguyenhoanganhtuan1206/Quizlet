@@ -6,16 +6,14 @@ export const folderApis = createApi({
   reducerPath: "folders",
   baseQuery: baseQueryWithToken,
   endpoints: (builder) => ({
-    fetchFolderById: builder.query<FolderFlashSetItemDetailsResponse[], string>(
-      {
-        query: (folderId) => {
-          return {
-            url: `folders/${folderId}`,
-            method: "GET",
-          };
-        },
-      }
-    ),
+    fetchFolderById: builder.query<FolderFlashSetItemDetailsResponse, string>({
+      query: (folderId) => {
+        return {
+          url: `folders/${folderId}`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 

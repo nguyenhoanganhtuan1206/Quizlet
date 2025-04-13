@@ -24,6 +24,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
       .concat(authApis.middleware)
+      .concat(folderApis.middleware)
       .concat(flashSetApis.middleware);
   },
 });
@@ -31,13 +32,14 @@ const store = configureStore({
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 
-export { logout, setCredentials } from "./slices/authProviderSlices";
-export { selectFilterLibraryItem } from "./slices/libraryFiltersSlices";
-export { useLoginMutation, useRegisterMutation } from "./apis/authApis";
-export { useGetFlashSetQuery } from "./apis/flashSetApis";
+export { logout, setCredentials, selectFilterLibraryItem } from "./slices";
+export {
+  useLoginMutation,
+  useRegisterMutation,
+  useGetFlashSetQuery,
+  useFetchFolderByIdQuery,
+} from "./apis";
 
-export { fetchFolders } from "./thunks/folderThunk";
-export { fetchFlashSets } from "./thunks/flashsetThunk";
-export { doRefreshToken } from "./thunks/refreshTokenThunk";
+export { fetchFolders, fetchFlashSets, doRefreshToken } from "./thunks/";
 
 export default store;

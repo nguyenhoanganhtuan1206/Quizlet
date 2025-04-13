@@ -5,8 +5,6 @@ import { getCurrentRefreshToken, getCurrentToken } from "../../utils";
 import { useEffect } from "react";
 
 export default function PrivateRoutes() {
-  console.log("PrivateRoutes");
-
   const currentToken = getCurrentToken();
   const currentRefreshToken = getCurrentRefreshToken();
   const navigate = useNavigate();
