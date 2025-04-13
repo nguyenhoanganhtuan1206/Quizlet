@@ -12,6 +12,8 @@ import { logout } from "../../../store";
 import { Button, PopperWrapper } from "../../../shared/components";
 import { AssemblyAvatar } from "../..";
 import { decodeToken, getCurrentToken } from "../../../utils";
+import { toast } from "react-toastify";
+import { JwtPayload } from "../../../type";
 
 type HeaderProfilePopper = {
   isHidden: boolean;
@@ -20,16 +22,22 @@ type HeaderProfilePopper = {
 export default function HeaderProfilePopper({
   isHidden,
 }: Readonly<HeaderProfilePopper>) {
-  const currentUser = decodeToken(getCurrentToken());
   const dispatch = useDispatch();
+
+  let currentUser: JwtPayload | null = null;
+  try {
+    currentUser = decodeToken(getCurrentToken());
+  } catch (error) {
+    console.log("Error decoded token in HeaderProfilePopper ", error);
+    toast.error(
+      "The seem your session is expired or invalid!! Please try to login again"
+    );
+    return <Navigate to="/auth" replace />;
+  }
 
   const handleOnLogout = () => {
     dispatch(logout());
   };
-
-  if (!currentUser) {
-    return <Navigate to="/auth" />;
-  }
 
   return (
     <PopperWrapper className="profile__popper" isActive={isHidden}>

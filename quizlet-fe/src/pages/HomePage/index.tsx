@@ -1,10 +1,10 @@
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
 
-import { logout } from "../../store";
-import { decodeToken, getCurrentToken } from "../../utils";
 import { PopularCardList, RecentCardsList } from "../../components/";
+import { decodeToken, getCurrentToken } from "../../utils";
+import { logout } from "../../store";
 import { AuthError } from "../../type";
 
 const HomePage = () => {

@@ -18,7 +18,6 @@ import { PrivateRoutes, PublicRoute } from "./components";
 
 /* Just using for DEV Test */
 import DevPage from "./pages/Dev/DevPage";
-import { Header } from "./shared/components";
 
 function App() {
   const router = createBrowserRouter([

@@ -2,14 +2,14 @@ import "./FlashSetListSection.scss";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { AppDispatch, fetchFlashSets, RootState } from "../../../store";
 
 import AssemblyAvatar from "../../AssemblyAvatar";
 import { AssemblyCard, Skeleton } from "../../../shared/components";
 import { decodeToken, getCurrentToken } from "../../../utils";
-import { Navigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 export default function FlashSetListSection() {
   const currentUser = decodeToken(getCurrentToken());
