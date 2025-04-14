@@ -1,4 +1,3 @@
-import "./breadcrumb_navigation.scss";
 import { NavLink } from "react-router-dom";
 
 import { MdNavigateNext } from "react-icons/md";
