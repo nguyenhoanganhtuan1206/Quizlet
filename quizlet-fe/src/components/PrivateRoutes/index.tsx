@@ -22,7 +22,7 @@ export default function PrivateRoutes() {
         replace: true,
       });
     }
-  }, []);
+  }, [currentToken, currentRefreshToken, navigate]);
 
   return currentToken && currentRefreshToken ? (
     <Outlet />

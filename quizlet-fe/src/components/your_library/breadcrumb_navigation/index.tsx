@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 import { MdNavigateNext } from "react-icons/md";
+import classNames from "classnames";
 
 type BreadCrumbItemNavigationType = {
   title: string;
@@ -10,12 +11,16 @@ type BreadCrumbItemNavigationType = {
 type BreadCrumbNavigationType = {
   currentPage: string;
   allPages: BreadCrumbItemNavigationType[];
+  className?: string;
 };
 
 const BreadCrumbNavigation = ({
   currentPage,
   allPages,
+  className
 }: BreadCrumbNavigationType) => {
+  const finalClassNames = classNames('breadcrumb__item text-[1.6rem]', className)
+  
   return (
     <div className="flex gap-4">
       {allPages.map((page, index) => {
@@ -25,7 +30,7 @@ const BreadCrumbNavigation = ({
               key={page.title}
               to={page.path}
               className={({ isActive }) => {
-                return `breadcrumb__item text-[1.26rem] ${
+                return `${finalClassNames} ${
                   isActive && currentPage === page.title
                     ? "text-[var(--color-primary)] font-bold"
                     : "text-gray-400 hover:text-blue-300"

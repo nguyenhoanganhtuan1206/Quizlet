@@ -22,7 +22,7 @@ export default function FolderListSection() {
 
   useEffect(() => {
     dispatch(fetchFolders(currentUser.user_id));
-  }, []);
+  }, [currentUser.user_id, dispatch]);
 
   if (isLoading) {
     return (
@@ -57,15 +57,15 @@ export default function FolderListSection() {
               >
                 <div className="flex">
                   <span className="border-r-white border-r-2 pr-3">
-                    {folder.flashSetCount !== 0 && folder.flashSetCount > 1
-                      ? `${folder.flashSetCount} items`
-                      : `${folder.flashSetCount} item`}
+                    {folder.numberOfFlashSets !== 0 && folder.numberOfFlashSets > 1
+                      ? `${folder.numberOfFlashSets} items`
+                      : `${folder.numberOfFlashSets} item`}
                   </span>
 
                   <span className="pl-3">
-                    {folder.flashSetCount !== 0 && folder.flashSetCount > 1
-                      ? `${folder.flashSetCount} folders`
-                      : `${folder.flashSetCount} folder`}
+                    {folder.numberOfChildrenFolders !== 0 && folder.numberOfChildrenFolders > 1
+                      ? `${folder.numberOfChildrenFolders} folders`
+                      : `${folder.numberOfChildrenFolders} folder`}
                   </span>
                 </div>
 

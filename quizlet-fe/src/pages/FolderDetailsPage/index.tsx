@@ -1,24 +1,26 @@
 import { Navigate, useParams } from "react-router-dom";
 
 import { useFetchFolderByIdQuery } from "../../store";
+import { ErrorComponent, Skeleton } from "../../shared/components";
 import {
-  ErrorComponent,
-  Skeleton,
-} from "../../shared/components";
-import { BreadCrumbNavigation, FolderDetails } from "../../components/your_library";
+  BreadCrumbNavigation,
+  FolderDetails,
+} from "../../components/your_library";
 
 export default function FolderDetailsPage() {
   const { folderId } = useParams<{ folderId: string }>();
-
-  if (!folderId) {
-    return <Navigate to="/not-found" replace />;
-  }
 
   const {
     data: folderDetails,
     isLoading,
     isError,
-  } = useFetchFolderByIdQuery(folderId);
+  } = useFetchFolderByIdQuery(folderId ?? "", {
+    skip: !folderId, // Skip the query if folderId is undefined
+  });
+
+  if (!folderId) {
+    return <Navigate to="/not-found" replace />;
+  }
 
   if (isLoading) {
     return (
@@ -38,10 +40,13 @@ export default function FolderDetailsPage() {
     return <ErrorComponent />;
   }
 
+  console.log("folderDetails", folderDetails);
+
   if (!folderDetails) {
     return <div>Is empty</div>;
   }
 
+  // Define all pages for Breadcrumb
   const allPages = [
     { title: "Folders", path: "/libraries" },
     {

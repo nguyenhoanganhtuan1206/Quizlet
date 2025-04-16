@@ -8,7 +8,7 @@ import { pause } from "../../utils";
 
 export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], string>(
   "folder/fetchFolders",
-  async (userId: string, { rejectWithValue, dispatch }) => {
+  async (userId: string, { rejectWithValue }) => {
     try {
       await pause(600);
 

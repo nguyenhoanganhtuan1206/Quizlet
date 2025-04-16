@@ -2,13 +2,12 @@ import "./FlashSetListSection.scss";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { AppDispatch, fetchFlashSets, RootState } from "../../../../store";
 
 import AssemblyAvatar from "../../../AssemblyAvatar";
-import { AssemblyCard, Skeleton } from "../../../../shared/components";
+import { AssemblyCard, ErrorComponent, Skeleton } from "../../../../shared/components";
 import { decodeToken, getCurrentToken } from "../../../../utils";
 
 export default function FlashSetListSection() {
@@ -20,7 +19,7 @@ export default function FlashSetListSection() {
 
   useEffect(() => {
     dispatch(fetchFlashSets(currentUser.user_id));
-  }, []);
+  }, [currentUser.user_id, dispatch]);
 
   if (isLoading) {
     return (
@@ -36,11 +35,12 @@ export default function FlashSetListSection() {
     );
   }
 
-  if (error && error?.status === 401) {
-    toast.error(error.message ? error.message : "Error");
-    return <Navigate to="/auth" />;
+  if (error) {
+    console.log("error", error);
+    
+    toast.error("Something went wrong!! Please try it again!");
+    return <ErrorComponent />;
   }
-  // console.log("flashset error", isError);
 
   return (
     <ul>

@@ -12,7 +12,7 @@ export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], string>(
     try {
       await pause(600);
 
-      const response = await axiosInstance.get(`flashsets/${userId}/users`);
+      const response = await axiosInstance.get(`flashsets/${userId}/users`);      
 
       return response.data;
     } catch (error) {
