@@ -1,6 +1,7 @@
-package com.quizlet_be.quizlet.services.flashset;
+package com.quizlet_be.quizlet.mapper.flashsets;
 
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetEntity;
+import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;

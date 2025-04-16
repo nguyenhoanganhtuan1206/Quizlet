@@ -2,10 +2,12 @@ package com.quizlet_be.quizlet.dto.folders;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.UUID;
 
+@Builder
 @Getter
 public class FolderCreationDTO {
 

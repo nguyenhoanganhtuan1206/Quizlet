@@ -1,6 +1,7 @@
-package com.quizlet_be.quizlet.services.flashsetitem;
+package com.quizlet_be.quizlet.mapper.flashsetitems;
 
 import com.quizlet_be.quizlet.persistent.flashsetitem.FlashSetItemEntity;
+import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItem;
 
 import java.util.List;
 

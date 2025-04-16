@@ -48,10 +48,4 @@ public class FolderController {
                                                final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
         return folderService.findByUserId(userId, sort);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
-    public List<Folder> findAll(final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
-        return folderService.findAll(sort);
-    }
 }

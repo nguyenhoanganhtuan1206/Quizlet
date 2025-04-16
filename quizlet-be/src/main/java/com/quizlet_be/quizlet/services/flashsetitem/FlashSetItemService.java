@@ -9,8 +9,8 @@ import java.util.UUID;
 
 import static com.quizlet_be.quizlet.repositories.flashsetitem.FlashSetItemEntityMapper.toFlashSetItemEntities;
 import static com.quizlet_be.quizlet.repositories.flashsetitem.FlashSetItemEntityMapper.toFlashSetItemEntity;
-import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemMapper.toFlashSetItem;
-import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemMapper.toFlashSetItems;
+import static com.quizlet_be.quizlet.mapper.flashsetitems.FlashSetItemMapper.toFlashSetItem;
+import static com.quizlet_be.quizlet.mapper.flashsetitems.FlashSetItemMapper.toFlashSetItems;
 
 @Service
 @RequiredArgsConstructor

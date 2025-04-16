@@ -24,7 +24,7 @@ public class FolderSummaryDTO {
 
     private UUID userId;
 
-    private long flashSetCount;
+    private long numberOfFlashSets;
 
-    private long foldersChildrenCount;
+    private long numberOfChildrenFolders;
 }
