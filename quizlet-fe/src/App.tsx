@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
 import "./App.scss";
 
@@ -26,11 +26,11 @@ function App() {
       element: <PublicRoute />,
       children: [
         {
-          path: "/auth",
+          path: "auth",
           element: <AuthPage />,
         },
         {
-          path: "/dev",
+          path: "dev",
           element: <DevPage />,
         },
       ],

@@ -28,16 +28,6 @@ export default function Login() {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
 
-  /**
-   * Verify whether logged in or not
-   * If logged in it auto redirect to the Home Page
-   */
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     navigate('/auth');
-  //   }
-  // }, [isAuthenticated]);
-
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
       .unwrap()

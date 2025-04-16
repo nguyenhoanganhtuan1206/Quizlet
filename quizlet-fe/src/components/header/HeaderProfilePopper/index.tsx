@@ -32,7 +32,8 @@ export default function HeaderProfilePopper({
     toast.error(
       "The seem your session is expired or invalid!! Please try to login again"
     );
-    return <Navigate to="/auth" />;
+
+    return <Navigate to="/auth" replace />;
   }
 
   const handleOnLogout = () => {
