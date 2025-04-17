@@ -8,6 +8,8 @@ import {
   flashSetSlice,
   authProviderSlice,
   authReducer,
+  navigateBreadCrumbReducer,
+  navigateBreadCrumbSlice,
 } from "./slices/";
 import { flashSetApis, authApis, folderApis } from "./apis";
 
@@ -20,6 +22,7 @@ const store = configureStore({
     [authApis.reducerPath]: authApis.reducer,
     [flashSetApis.reducerPath]: flashSetApis.reducer,
     [folderApis.reducerPath]: folderApis.reducer,
+    [navigateBreadCrumbSlice.reducerPath]: navigateBreadCrumbReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
@@ -32,7 +35,16 @@ const store = configureStore({
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 
-export { logout, setCredentials, selectFilterLibraryItem } from "./slices";
+export {
+  logout,
+  setCredentials,
+  selectFilterLibraryItem,
+  addMorePage,
+  authProviderSlice,
+  flashSetReducer,
+  setCurrentPage,
+  initialNavigationBreadCrumb
+} from "./slices";
 export {
   useLoginMutation,
   useRegisterMutation,

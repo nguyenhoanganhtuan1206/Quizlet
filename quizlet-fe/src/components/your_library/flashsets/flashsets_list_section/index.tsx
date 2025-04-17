@@ -50,7 +50,7 @@ export default function FlashSetListSection() {
         return (
           <li key={flashset.id}>
             <AssemblyCard
-              className="flashset-list__card mt-5"
+              className="flashset-list__card mt-5 p-5 pb-3"
               contentClassName="flashset-list__card-content"
             >
               <div className="flashset-list__card-info">

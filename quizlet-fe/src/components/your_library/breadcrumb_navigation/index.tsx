@@ -2,6 +2,8 @@ import { NavLink } from "react-router-dom";
 
 import { MdNavigateNext } from "react-icons/md";
 import classNames from "classnames";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 type BreadCrumbItemNavigationType = {
   title: string;
@@ -21,6 +23,8 @@ const BreadCrumbNavigation = ({
   className,
   wrapperClassName
 }: BreadCrumbNavigationType) => {
+  // const navigationState = useSelector((state: RootState) => state.navigationBreadCrumb);
+  
   const finalClassNames = classNames('breadcrumb__item text-[1.6rem]', className)
   
   return (

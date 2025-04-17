@@ -12,23 +12,25 @@ type FolderDetailsType = {
 
 export default function FolderDetails({ folderDetails }: FolderDetailsType) {
   const currentUser = decodeToken(getCurrentToken());
-  
+
   return (
     <>
       {/* Folder List Section */}
       {folderDetails.foldersSummaryChildren &&
         folderDetails.foldersSummaryChildren.length > 0 && (
           <div>
-            <h3 className="text-white text-4xl font-bold mt-5 mb-3">Folder List</h3>
+            <h3 className="text-white text-4xl font-bold mt-5 mb-3">
+              Folder List
+            </h3>
             <ul>
               {folderDetails.foldersSummaryChildren.map((folder) => (
                 <li key={folder.id}>
                   <AssemblyCard
                     path={`/libraries/folders/${folder.id}`}
-                    className="mt-5 folder__list-card"
+                    className="mt-5 folder__list-card px-3 py-4"
                     contentClassName="folder__list-card-content"
                   >
-                    <div className="flex">
+                    <div className="flex items-center">
                       <span className="border-r-white border-r-2 pr-3">
                         {folder.numberOfFlashSets !== 0 &&
                         folder.numberOfFlashSets > 1
@@ -42,7 +44,7 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
                           : `${folder.numberOfChildrenFolders} folder`}
                       </span>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center mt-2">
                       <CiFolderOn className="text-[2rem]" />
                       <p className="ml-3">{folder.name}</p>
                     </div>
@@ -63,7 +65,7 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
             {folderDetails.flashSets.map((flashSet) => (
               <li key={flashSet.id}>
                 <AssemblyCard
-                  className="mt-5 flashset-list__card"
+                  className="mt-5 flashset-list__card px-3 pt-6 pb-5"
                   contentClassName="flashset-list__card-content"
                 >
                   <div className="flashset-list__card-info">
@@ -73,8 +75,8 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
                         height="20px"
                         width="20px"
                       />
-                      
-                      <span className="ml-3">{currentUser.sub}</span>
+
+                      <span className="ml-3 mt-3">{currentUser.sub}</span>
                     </div>
                   </div>
                   <p className="text-[1.8rem] font-bold">{flashSet.name}</p>

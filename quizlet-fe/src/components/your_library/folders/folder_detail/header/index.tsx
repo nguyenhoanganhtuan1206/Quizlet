@@ -1,3 +1,5 @@
+import { useDispatch } from "react-redux";
+
 import { PiCards } from "react-icons/pi";
 import { CiFolderOn } from "react-icons/ci";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
@@ -5,6 +7,7 @@ import { GoClock } from "react-icons/go";
 
 import { Button } from "../../../../../shared/components";
 import { Folder } from "../../../../../type";
+import { AppDispatch } from "../../../../../store";
 
 type FolderDetailHeaderProps = {
   folderDetails: Folder;
@@ -15,6 +18,8 @@ export default function FolderDetailHeader({
   folderDetails,
   className,
 }: FolderDetailHeaderProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  
   return (
     <div className={`${className} flex justify-between items-start text-white`}>
       <div>

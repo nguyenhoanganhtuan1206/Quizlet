@@ -52,10 +52,10 @@ export default function FolderListSection() {
             <li key={folder.id} className="mt-5">
               <AssemblyCard
                 path={`/libraries/folders/${folder.id}`}
-                className={"folder__list-card"}
+                className="folder__list-card p-5"
                 contentClassName="folder__list-card-content"
               >
-                <div className="flex">
+                <div className="flex items-center">
                   <span className="border-r-white border-r-2 pr-3">
                     {folder.numberOfFlashSets !== 0 && folder.numberOfFlashSets > 1
                       ? `${folder.numberOfFlashSets} items`
@@ -69,7 +69,7 @@ export default function FolderListSection() {
                   </span>
                 </div>
 
-                <div className="flex items-center">
+                <div className="flex items-center mt-2">
                   <CiFolderOn className="text-[2rem]" />
                   <p className="ml-3">{folder.name}</p>
                 </div>

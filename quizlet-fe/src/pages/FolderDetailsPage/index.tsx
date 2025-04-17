@@ -1,6 +1,7 @@
+import { useDispatch } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
 
-import { useFetchFolderByIdQuery } from "../../store";
+import { AppDispatch, initialNavigationBreadCrumb, useFetchFolderByIdQuery } from "../../store";
 import { ErrorComponent, Skeleton } from "../../shared/components";
 import {
   BreadCrumbNavigation,
@@ -9,6 +10,8 @@ import {
 } from "../../components/your_library";
 
 export default function FolderDetailsPage() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const { folderId } = useParams<{ folderId: string }>();
 
   const {
@@ -25,7 +28,7 @@ export default function FolderDetailsPage() {
 
   if (isLoading) {
     return (
-      <Skeleton variant="section" className="w-full" times={1}>
+      <Skeleton variant="section" className="w-full" times={2}>
         <Skeleton
           textBars={2}
           className="mt-5"
@@ -41,8 +44,6 @@ export default function FolderDetailsPage() {
     return <ErrorComponent />;
   }
 
-  console.log("folderDetails", folderDetails);
-
   if (!folderDetails) {
     return <div>Is empty</div>;
   }
@@ -56,8 +57,10 @@ export default function FolderDetailsPage() {
     },
   ];
 
+  dispatch(initialNavigationBreadCrumb(allPages));
+
   return (
-    <div>
+    <>
       <FolderDetailHeader folderDetails={folderDetails.folder} />
 
       <BreadCrumbNavigation
@@ -67,6 +70,6 @@ export default function FolderDetailsPage() {
       />
 
       <FolderDetails folderDetails={folderDetails} />
-    </div>
+    </>
   );
 }
