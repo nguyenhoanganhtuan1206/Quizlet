@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { CiFolderOn } from "react-icons/ci";
 
+import { Folder } from "../../../../type";
+
 import {
   AssemblyCard,
   ErrorComponent,
@@ -12,6 +14,10 @@ import {
 } from "../../../../shared/components";
 import { AppDispatch, fetchFolders, RootState } from "../../../../store";
 import { decodeToken, getCurrentToken } from "../../../../utils";
+import {
+  addMorePage,
+  BreadcrumbNavigationItem,
+} from "../../../../store/slices/navigateBreadCrumbSlices";
 
 export default function FolderListSection() {
   const currentUser = decodeToken(getCurrentToken());
@@ -23,6 +29,19 @@ export default function FolderListSection() {
   useEffect(() => {
     dispatch(fetchFolders(currentUser.user_id));
   }, [currentUser.user_id, dispatch]);
+
+  const handleNavigateFolder = (folder: Folder) => {
+    if (!folder) {
+      return;
+    }
+
+    const newNavigation: BreadcrumbNavigationItem = {
+      path: `/libraries/folders/${folder.id}`,
+      title: folder.name,
+    };
+
+    dispatch(addMorePage(newNavigation));
+  };
 
   if (isLoading) {
     return (
@@ -51,19 +70,22 @@ export default function FolderListSection() {
           return (
             <li key={folder.id} className="mt-5">
               <AssemblyCard
+                onClick={() => handleNavigateFolder(folder)}
                 path={`/libraries/folders/${folder.id}`}
                 className="folder__list-card p-5"
                 contentClassName="folder__list-card-content"
               >
                 <div className="flex items-center">
                   <span className="border-r-white border-r-2 pr-3">
-                    {folder.numberOfFlashSets !== 0 && folder.numberOfFlashSets > 1
+                    {folder.numberOfFlashSets !== 0 &&
+                    folder.numberOfFlashSets > 1
                       ? `${folder.numberOfFlashSets} items`
                       : `${folder.numberOfFlashSets} item`}
                   </span>
 
                   <span className="pl-3">
-                    {folder.numberOfChildrenFolders !== 0 && folder.numberOfChildrenFolders > 1
+                    {folder.numberOfChildrenFolders !== 0 &&
+                    folder.numberOfChildrenFolders > 1
                       ? `${folder.numberOfChildrenFolders} folders`
                       : `${folder.numberOfChildrenFolders} folder`}
                   </span>

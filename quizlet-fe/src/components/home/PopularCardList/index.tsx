@@ -1,7 +1,7 @@
-import './PopularCardList.scss';
+import "./PopularCardList.scss";
 
-import { AssemblyCard, AssemblyCardLabel } from '../../../shared/components';
-import { MdOutlineVerified } from 'react-icons/md';
+import { AssemblyCard, AssemblyCardLabel } from "../../../shared/components";
+import { MdOutlineVerified } from "react-icons/md";
 
 export default function PopularCardList() {
   return (

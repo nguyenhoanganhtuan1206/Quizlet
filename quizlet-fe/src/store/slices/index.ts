@@ -18,6 +18,4 @@ export {
   addMorePage,
   navigateBreadCrumbReducer,
   navigateBreadCrumbSlice,
-  setCurrentPage,
-  initialNavigationBreadCrumb,
-} from "./navigateBreadCrumSlices";
+} from "./navigateBreadCrumbSlices";

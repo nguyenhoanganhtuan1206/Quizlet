@@ -1,7 +1,13 @@
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
 
-import { AppDispatch, initialNavigationBreadCrumb, useFetchFolderByIdQuery } from "../../store";
+import {
+  addMorePage,
+  AppDispatch,
+  RootState,
+  useFetchFolderByIdQuery,
+} from "../../store";
 import { ErrorComponent, Skeleton } from "../../shared/components";
 import {
   BreadCrumbNavigation,
@@ -10,9 +16,9 @@ import {
 } from "../../components/your_library";
 
 export default function FolderDetailsPage() {
-  const dispatch = useDispatch<AppDispatch>();
-
   const { folderId } = useParams<{ folderId: string }>();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     data: folderDetails,
@@ -24,6 +30,14 @@ export default function FolderDetailsPage() {
 
   if (!folderId) {
     return <Navigate to="/not-found" replace />;
+  }
+
+  if (!folderDetails) {
+    return <div>Is empty</div>;
+  }
+
+  if (isError) {
+    return <ErrorComponent />;
   }
 
   if (isLoading) {
@@ -40,34 +54,9 @@ export default function FolderDetailsPage() {
     );
   }
 
-  if (isError) {
-    return <ErrorComponent />;
-  }
-
-  if (!folderDetails) {
-    return <div>Is empty</div>;
-  }
-
-  // Define all pages for Breadcrumb
-  const allPages = [
-    { title: "Folders", path: "/libraries" },
-    {
-      title: `${folderDetails.folder.name}`,
-      path: `/libraries/folders/${folderId}`,
-    },
-  ];
-
-  dispatch(initialNavigationBreadCrumb(allPages));
-
   return (
     <>
       <FolderDetailHeader folderDetails={folderDetails.folder} />
-
-      <BreadCrumbNavigation
-        wrapperClassName="px-2 py-10"
-        currentPage={folderDetails.folder.name}
-        allPages={allPages}
-      />
 
       <FolderDetails folderDetails={folderDetails} />
     </>

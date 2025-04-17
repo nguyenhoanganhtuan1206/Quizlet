@@ -42,8 +42,6 @@ export {
   addMorePage,
   authProviderSlice,
   flashSetReducer,
-  setCurrentPage,
-  initialNavigationBreadCrumb
 } from "./slices";
 export {
   useLoginMutation,

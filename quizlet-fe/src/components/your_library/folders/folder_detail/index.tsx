@@ -1,20 +1,46 @@
 import { CiFolderOn } from "react-icons/ci";
 
 import { decodeToken, getCurrentToken } from "../../../../utils";
+import { useDispatch, useSelector } from "react-redux";
 
+import { AppDispatch, RootState } from "../../../../store";
 import AssemblyAvatar from "../../../AssemblyAvatar";
 import { AssemblyCard } from "../../../../shared/components";
-import { FolderFlashSetItemDetailsResponse } from "../../../../type";
+import { Folder, FolderFlashSetItemDetailsResponse } from "../../../../type";
+import {
+  addMorePage,
+  BreadcrumbNavigationItem,
+} from "../../../../store/slices/navigateBreadCrumbSlices";
+import BreadCrumbNavigation from "../../breadcrumb_navigation";
 
 type FolderDetailsType = {
   folderDetails: FolderFlashSetItemDetailsResponse;
 };
 
 export default function FolderDetails({ folderDetails }: FolderDetailsType) {
+  const dispatch = useDispatch<AppDispatch>();
   const currentUser = decodeToken(getCurrentToken());
+
+  const handleNavigateFolder = (folder: Folder) => {
+    if (!folder) {
+      return;
+    }
+
+    const newNavigation: BreadcrumbNavigationItem = {
+      path: `/libraries/folders/${folder.id}`,
+      title: folder.name,
+    };
+
+    dispatch(addMorePage(newNavigation));
+  };
 
   return (
     <>
+      <BreadCrumbNavigation
+        wrapperClassName="px-2 py-10"
+        currentPage={folderDetails.folder.name}
+      />
+
       {/* Folder List Section */}
       {folderDetails.foldersSummaryChildren &&
         folderDetails.foldersSummaryChildren.length > 0 && (
@@ -26,6 +52,7 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
               {folderDetails.foldersSummaryChildren.map((folder) => (
                 <li key={folder.id}>
                   <AssemblyCard
+                    onClick={() => handleNavigateFolder(folder)}
                     path={`/libraries/folders/${folder.id}`}
                     className="mt-5 folder__list-card px-3 py-4"
                     contentClassName="folder__list-card-content"
