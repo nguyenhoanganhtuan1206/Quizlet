@@ -19,12 +19,12 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
       {folderDetails.foldersSummaryChildren &&
         folderDetails.foldersSummaryChildren.length > 0 && (
           <div>
-            <h3 className="text-white text-4xl font-bold mt-5">Folder List</h3>
+            <h3 className="text-white text-4xl font-bold mt-5 mb-3">Folder List</h3>
             <ul>
               {folderDetails.foldersSummaryChildren.map((folder) => (
                 <li key={folder.id}>
                   <AssemblyCard
-                    // path={`/libraries/folders/${folder.id}`} // Uncomment if needed
+                    path={`/libraries/folders/${folder.id}`}
                     className="mt-5 folder__list-card"
                     contentClassName="folder__list-card-content"
                   >
@@ -56,7 +56,7 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
       {/* FlashSet List Section */}
       {folderDetails.flashSets && folderDetails.flashSets.length > 0 && (
         <div>
-          <h3 className="text-white text-4xl font-bold mt-10 border-t-2 pt-5 border-t-gray-500">
+          <h3 className="text-white text-4xl font-bold mt-10 border-t-2 pt-5 border-t-gray-500 mb-3">
             FlashSet List
           </h3>
           <ul>

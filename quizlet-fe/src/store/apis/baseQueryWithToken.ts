@@ -38,6 +38,8 @@ export const baseQueryWithToken: BaseQueryFn<
     const refreshToken = getCurrentRefreshToken();
 
     if (!refreshToken) {
+      console.error("Doesn't have refresh token {baseQueryWithToken}");
+
       store.dispatch(logout());
       return result;
     }
@@ -66,6 +68,8 @@ export const baseQueryWithToken: BaseQueryFn<
         store.dispatch(logout());
       }
     } catch (error) {
+      console.error("Error while calling api {baseQueryWithToken}", error);
+
       store.dispatch(logout());
     }
   }

@@ -4,6 +4,7 @@ import { useFetchFolderByIdQuery } from "../../store";
 import { ErrorComponent, Skeleton } from "../../shared/components";
 import {
   BreadCrumbNavigation,
+  FolderDetailHeader,
   FolderDetails,
 } from "../../components/your_library";
 
@@ -57,7 +58,10 @@ export default function FolderDetailsPage() {
 
   return (
     <div>
+      <FolderDetailHeader folderDetails={folderDetails.folder} />
+
       <BreadCrumbNavigation
+        wrapperClassName="px-2 py-10"
         currentPage={folderDetails.folder.name}
         allPages={allPages}
       />

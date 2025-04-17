@@ -7,7 +7,11 @@ import { toast } from "react-toastify";
 import { AppDispatch, fetchFlashSets, RootState } from "../../../../store";
 
 import AssemblyAvatar from "../../../AssemblyAvatar";
-import { AssemblyCard, ErrorComponent, Skeleton } from "../../../../shared/components";
+import {
+  AssemblyCard,
+  ErrorComponent,
+  Skeleton,
+} from "../../../../shared/components";
 import { decodeToken, getCurrentToken } from "../../../../utils";
 
 export default function FlashSetListSection() {
@@ -36,8 +40,6 @@ export default function FlashSetListSection() {
   }
 
   if (error) {
-    console.log("error", error);
-    
     toast.error("Something went wrong!! Please try it again!");
     return <ErrorComponent />;
   }

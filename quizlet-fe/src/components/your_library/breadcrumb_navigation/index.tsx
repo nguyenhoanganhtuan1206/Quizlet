@@ -11,21 +11,23 @@ type BreadCrumbItemNavigationType = {
 type BreadCrumbNavigationType = {
   currentPage: string;
   allPages: BreadCrumbItemNavigationType[];
+  wrapperClassName?:string;
   className?: string;
 };
 
 const BreadCrumbNavigation = ({
   currentPage,
   allPages,
-  className
+  className,
+  wrapperClassName
 }: BreadCrumbNavigationType) => {
   const finalClassNames = classNames('breadcrumb__item text-[1.6rem]', className)
   
   return (
-    <div className="flex gap-4">
+    <div className={`${wrapperClassName} flex gap-4`}>
       {allPages.map((page, index) => {
         return (
-          <div className="flex items-center gap-2">
+          <div key={page.title} className="flex items-center gap-2">
             <NavLink
               key={page.title}
               to={page.path}
@@ -42,7 +44,7 @@ const BreadCrumbNavigation = ({
 
             {/* Just display for the last element */}
             {index + 1 < allPages.length && (
-              <MdNavigateNext className="text-white text-[1.8rem] transform-[translateY(-1px)]" />
+              <MdNavigateNext className="text-white text-[1.8rem] translate-y-[-1px]" />
             )}
           </div>
         );

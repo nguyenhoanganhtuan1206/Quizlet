@@ -1,4 +1,14 @@
-export default function DashboardHeader() {
+import { ReactPropsChildren } from "../../../../type";
+
+type DashboardHeaderProps = {
+  title?: string;
+  children: ReactPropsChildren;
+};
+
+export default function DashboardHeader({
+  children,
+  title,
+}: DashboardHeaderProps) {
   return (
     <div>
       {/* HEADER */}
@@ -9,9 +19,10 @@ export default function DashboardHeader() {
       {/* HEADER */}
 
       {/* CONTENT */}
-      <div className="content">
-      </div>
+      <div className="content"></div>
       {/* CONTENT */}
+
+      {children}
     </div>
   );
 }
