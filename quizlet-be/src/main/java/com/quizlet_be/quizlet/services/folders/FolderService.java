@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyConflictException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
+import static com.quizlet_be.quizlet.error.CommonError.*;
 import static com.quizlet_be.quizlet.mapper.folders.FolderSummaryDTOMapper.toFolderSummaryDTO;
 import static com.quizlet_be.quizlet.utils.SortUtilities.createSingleSort;
 import static java.time.Instant.now;
@@ -83,7 +82,7 @@ public class FolderService {
      *
      * @param userId
      * @param sortDirection is the property to decide asc or desc
-     * */
+     */
     public List<FolderSummaryDTO> findByUserId(final UUID userId, final String sortDirection) {
         final Sort sort = createSingleSort(sortDirection, "createdAt");
         final List<Folder> folders = folderStore.findByUserId(userId, sort);
@@ -115,6 +114,22 @@ public class FolderService {
     }
 
     /**
+     * Retrieve list parent folders
+     * filter all the child folder from the folderParent table.
+     *
+     * @param userId.
+     * @return A list of FolderSummaryDTOs with counts of child folders and flash sets.
+     */
+    public List<FolderSummaryDTO> findParentFoldersByUserId(final UUID userId) {
+        try {
+            return mapFoldersToFolderSummaryDTOs(folderStore.findParentFoldersByUserId(userId));
+        } catch (Exception ex) {
+            System.out.println("ex: " + ex.getMessage());
+            throw supplyBadRequestException("Something went wrong while calling folders!! Please try it again").get();
+        }
+    }
+
+    /**
      * Maps a list of folders to their summary DTOs, including the count of child folders and flash sets.
      *
      * @param folders The list of folders to map.
@@ -124,20 +139,6 @@ public class FolderService {
         return folders.stream()
                 .map(this::mapFolderToFolderSummaryDTO)
                 .toList();
-    }
-
-    /**
-     * Retrieve list parent folders
-     * filter all the child folder from the folderParent table.
-     *
-     * @param userId.
-     * @return A list of FolderSummaryDTOs with counts of child folders and flash sets.
-     */
-    public List<Folder> findParentFoldersByUserId(final UUID userId) {
-        final List<FolderSummaryDTO> folders = findByUserId(userId, "asc");
-//        final List<Folder> parentFolders = folderParentsService.findByParentFolderId()
-
-        return folderParentsService.findByParentFolderId();
     }
 
     /**

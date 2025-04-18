@@ -42,8 +42,10 @@ public class FolderController {
     }
 
     @GetMapping("parent")
-    public List<FolderSummaryDTO> findParentFolderByUserId(final @RequestHeader(value = "Authorization") String authorizationHeader) {
-        return
+    public List<FolderSummaryDTO> findParentFoldersByUserId(final @RequestHeader(value = "Authorization") String authorizationHeader) {
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return folderService.findParentFoldersByUserId(userId);
     }
 
     @PostMapping

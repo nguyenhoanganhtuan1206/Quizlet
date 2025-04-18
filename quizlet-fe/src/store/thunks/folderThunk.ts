@@ -23,3 +23,21 @@ export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
     }
   }
 );
+
+export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
+  "folder/fetchParentFoldersByUserId",
+  async (_, { rejectWithValue }) => {
+    try {
+      await pause(600);
+
+      const response = await axiosInstance.get("folders/parent");
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while calling fetchFolders {folderThunk || fetchParentFoldersByUserId}:"
+      );
+      rejectWithValue(error);
+    }
+  }
+)

@@ -50,6 +50,11 @@ export {
   useFetchFolderByIdQuery,
 } from "./apis";
 
-export { fetchFolders, fetchFlashSets, doRefreshToken } from "./thunks/";
+export {
+  fetchFolders,
+  fetchParentFolders,
+  fetchFlashSets,
+  doRefreshToken,
+} from "./thunks/";
 
 export default store;

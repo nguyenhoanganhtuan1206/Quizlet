@@ -1,3 +1,3 @@
 export { fetchFlashSets } from "./flashsetThunk";
-export {  fetchFolders } from "./folderThunk";
+export { fetchFolders, fetchParentFolders } from "./folderThunk";
 export { doRefreshToken } from "./refreshTokenThunk";

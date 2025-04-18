@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { fetchFolders } from "../thunks/folderThunk";
+import { fetchFolders, fetchParentFolders } from "../thunks/folderThunk";
 import { ThunkState } from "../../type";
 import { FolderSummaryDTO } from "../../type/";
 
@@ -26,6 +26,19 @@ export const folderSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchFolders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(fetchParentFolders.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchParentFolders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchParentFolders.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

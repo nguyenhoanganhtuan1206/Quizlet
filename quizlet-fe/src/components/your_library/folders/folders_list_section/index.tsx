@@ -12,7 +12,7 @@ import {
   ErrorComponent,
   Skeleton,
 } from "../../../../shared/components";
-import { AppDispatch, fetchFolders, RootState } from "../../../../store";
+import { AppDispatch, fetchParentFolders, RootState } from "../../../../store";
 import {
   addMorePage,
   BreadcrumbNavigationItem,
@@ -25,7 +25,7 @@ export default function FolderListSection() {
   );
 
   useEffect(() => {
-    dispatch(fetchFolders());
+    dispatch(fetchParentFolders());
   }, [dispatch]);
 
   const handleNavigateFolder = (folder: Folder) => {
