@@ -1,6 +1,11 @@
-import { Control, FieldValues, Path } from 'react-hook-form';
+import { Control, FieldValues, Path } from "react-hook-form";
 
-type InputType = 'text' | 'password' | 'textarea';
+type InputType = "text" | "password" | "textarea";
+
+export type SelectOptionProps = {
+  title: string;
+  value: string;
+};
 
 interface ValidationObject {
   value?: number | string | RegExp;
@@ -9,7 +14,7 @@ interface ValidationObject {
 
 export type ValidationType = string | number | ValidationObject;
 
-export type InputVariant = 'mode-black';
+export type InputVariant = "mode-black" | "border-only";
 
 export interface InputProps<T extends FieldValues> {
   name: Path<T>;
@@ -24,4 +29,15 @@ export interface InputProps<T extends FieldValues> {
   onFocus?: () => void;
   rows?: number;
   cols?: number;
+}
+
+export interface SelectProps<T extends FieldValues> {
+  name: Path<T>;
+  control: Control<T>;
+  options: SelectOptionProps[];
+  variant?: InputVariant;
+  className?: string;
+  outsideClassName?: string;
+  label?: string;
+  isError?: boolean;
 }

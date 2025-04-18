@@ -27,15 +27,13 @@ public class FolderController {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping
-    public Folder createFolder(final @Valid @RequestBody FolderCreationDTO folderCreationDTO,
-                               final @RequestHeader(value = "Authorization") String authorizationHeader,
-                               final BindingResult bindingResult) {
-        handleValidationError(bindingResult);
-
+    @GetMapping
+    public List<FolderSummaryDTO> findByUserId(
+            final @RequestParam(value = "sort", defaultValue = "asc") String sort,
+            final @RequestHeader(value = "Authorization") String authorizationHeader
+    ) {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
-
-        return folderService.createFolder(userId, folderCreationDTO);
+        return folderService.findByUserId(userId, sort);
     }
 
     @GetMapping("{folderId}")
@@ -43,9 +41,21 @@ public class FolderController {
         return folderService.findFolderDetail(folderId);
     }
 
-    @GetMapping("{userId}/users")
-    public List<FolderSummaryDTO> findByUserId(final @PathVariable UUID userId,
-                                               final @RequestParam(value = "sort", defaultValue = "asc") String sort) {
-        return folderService.findByUserId(userId, sort);
+    @GetMapping("parent")
+    public List<FolderSummaryDTO> findParentFolderByUserId(final @RequestHeader(value = "Authorization") String authorizationHeader) {
+        return
+    }
+
+    @PostMapping
+    public Folder createFolder(
+            final @Valid @RequestBody FolderCreationDTO folderCreationDTO,
+            final @RequestHeader(value = "Authorization") String authorizationHeader,
+            final BindingResult bindingResult
+    ) {
+        handleValidationError(bindingResult);
+
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return folderService.createFolder(userId, folderCreationDTO);
     }
 }

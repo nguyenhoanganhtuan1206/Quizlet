@@ -13,22 +13,20 @@ import {
   Skeleton,
 } from "../../../../shared/components";
 import { AppDispatch, fetchFolders, RootState } from "../../../../store";
-import { decodeToken, getCurrentToken } from "../../../../utils";
 import {
   addMorePage,
   BreadcrumbNavigationItem,
 } from "../../../../store/slices/navigateBreadCrumbSlices";
 
 export default function FolderListSection() {
-  const currentUser = decodeToken(getCurrentToken());
   const dispatch = useDispatch<AppDispatch>();
   const { data, error, isLoading } = useSelector(
-    (state: RootState) => state.folder
+    (state: RootState) => state.folderSlice
   );
 
   useEffect(() => {
-    dispatch(fetchFolders(currentUser.user_id));
-  }, [currentUser.user_id, dispatch]);
+    dispatch(fetchFolders());
+  }, [dispatch]);
 
   const handleNavigateFolder = (folder: Folder) => {
     if (!folder) {

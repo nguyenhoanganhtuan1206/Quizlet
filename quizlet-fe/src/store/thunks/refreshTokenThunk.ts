@@ -8,7 +8,7 @@ export const doRefreshToken = createAsyncThunk<AuthResponseDTO, void>(
   async (_, { rejectWithValue }) => {
     const currentRefreshToken = getCurrentRefreshToken();
 
-    await pause(3000);
+    await pause(600);
     try {
       const response = await axios.post<AuthResponseDTO>(
         `${import.meta.env.VITE_API_ENDPOINT}/auths/refresh-token`,

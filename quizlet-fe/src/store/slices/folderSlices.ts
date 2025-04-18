@@ -13,7 +13,7 @@ const initialState: FolderSummaryState = {
 };
 
 export const folderSlice = createSlice({
-  name: "folder",
+  name: "folderSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -26,8 +26,8 @@ export const folderSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchFolders.rejected, (state, action) => {
-        state.error = action.payload;
         state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });

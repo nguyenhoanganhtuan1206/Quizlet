@@ -1,0 +1,23 @@
+.form--mode-black {
+  color: white;
+  background-color: var(--gray-100-gray-700);
+  border: 1px solid transparent;
+
+  &:focus {
+    border: 1px solid var(--ref-color-twilight300);
+    background: var(--ref-color-twilight900);
+  }
+
+  &::placeholder {
+    font-weight: 600;
+  }
+}
+
+.form--mode-border-only {
+  border: 1px solid var(--gray-700-gray-500);
+  background-color: transparent;
+
+  &:focus {
+    background-color: var(--ref-color-twilight100);
+  }
+}

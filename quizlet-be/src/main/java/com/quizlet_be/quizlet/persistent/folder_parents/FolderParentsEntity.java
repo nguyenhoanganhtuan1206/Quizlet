@@ -1,4 +1,4 @@
-package com.quizlet_be.quizlet.persistent.folders;
+package com.quizlet_be.quizlet.persistent.folder_parents;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,25 +7,23 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "folders")
+@Table(name = "folder_parents")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderEntity {
+public class FolderParentsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private String name;
+    @Column(name = "parent_folder_id")
+    private UUID parentFolderId;
 
-    private String description;
+    @Column(name = "children_folder_id")
+    private UUID childrenFolderId;
 
     private Instant createdAt;
-
-    private Instant updatedAt;
-
-    private UUID userId;
 }

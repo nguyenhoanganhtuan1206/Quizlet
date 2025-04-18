@@ -6,24 +6,20 @@ import { FolderSummaryDTO } from "../../type";
 
 import { pause } from "../../utils";
 
-export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], string>(
-  "folder/fetchFolders",
-  async (userId: string, { rejectWithValue }) => {
+export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
+  "folder/fetchFoldersByUserId",
+  async (_, { rejectWithValue }) => {
     try {
       await pause(600);
 
-      const response = await axiosInstance.get(`folders/${userId}/users`);
+      const response = await axiosInstance.get("folders");
 
       return response.data;
     } catch (error) {
       console.error(
-        "Error while calling {folderThunk || fetchFolders}: ",
-        error
+        "Error while calling fetchFolders {folderThunk || fetchFolders}:"
       );
-
       rejectWithValue(error);
     }
   }
 );
-
-// export const fetchFolderByI

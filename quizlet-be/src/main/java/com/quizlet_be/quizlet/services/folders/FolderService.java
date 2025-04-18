@@ -7,6 +7,8 @@ import com.quizlet_be.quizlet.error.NotFoundException;
 import com.quizlet_be.quizlet.persistent.folders.FolderStore;
 import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import com.quizlet_be.quizlet.services.flashset.FlashSetService;
+import com.quizlet_be.quizlet.services.folder_parents.FolderParents;
+import com.quizlet_be.quizlet.services.folder_parents.FolderParentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class FolderService {
     private final FolderStore folderStore;
 
     private final FlashSetService flashSetService;
+
+    private final FolderParentsService folderParentsService;
 
     /**
      * Retrieves the folder by ID
@@ -61,25 +65,28 @@ public class FolderService {
     }
 
     /**
-     * Retrieves list folders by folder parent Id
+     * Retrieves list children folders within the folder id
      *
      * @param parentId The ID of the parent folder to retrieve details for.
      * @return List<Folder>
      */
     public List<Folder> findByParentId(final UUID parentId) {
-        return folderStore.findByParent(parentId);
+        final List<FolderParents> folderParents = folderParentsService.findByParentFolderId(parentId);
+
+        return folderParents.stream()
+                .map(folder -> findById(folder.getChildrenFolderId()))
+                .toList();
     }
 
     /**
-     * Retrieves list folders by user Id
+     * Retrieves list all folders by user id (Including the parent and children folders)
      *
-     * @param userId The ID of the parent folder to retrieve details for.
-     * @param sortDirection to determine which field will be sorted.
-     * @return List<FolderSummaryDTO>
-     */
+     * @param userId
+     * @param sortDirection is the property to decide asc or desc
+     * */
     public List<FolderSummaryDTO> findByUserId(final UUID userId, final String sortDirection) {
         final Sort sort = createSingleSort(sortDirection, "createdAt");
-        final List<Folder> folders = folderStore.findByUserIdAndParentIdIsNull(userId, sort);
+        final List<Folder> folders = folderStore.findByUserId(userId, sort);
 
         return folders
                 .stream()
@@ -90,7 +97,7 @@ public class FolderService {
     /**
      * Create new folder
      *
-     * @param userId The ID of the parent folder to retrieve details for.
+     * @param userId         The ID of the parent folder to retrieve details for.
      * @param folderCreation to receive new information for new folder.
      * @return Folder
      */
@@ -102,7 +109,6 @@ public class FolderService {
                 .description(folderCreation.getDescription())
                 .createdAt(now())
                 .userId(userId)
-                .parentId(folderCreation.getParentId())
                 .build();
 
         return folderStore.save(folder);
@@ -121,13 +127,27 @@ public class FolderService {
     }
 
     /**
+     * Retrieve list parent folders
+     * filter all the child folder from the folderParent table.
+     *
+     * @param userId.
+     * @return A list of FolderSummaryDTOs with counts of child folders and flash sets.
+     */
+    public List<Folder> findParentFoldersByUserId(final UUID userId) {
+        final List<FolderSummaryDTO> folders = findByUserId(userId, "asc");
+//        final List<Folder> parentFolders = folderParentsService.findByParentFolderId()
+
+        return folderParentsService.findByParentFolderId();
+    }
+
+    /**
      * Converts a Folder to a FolderSummaryDTO, including counts of child folders and flash sets.
      *
      * @param folder The Folder entity to convert.
      * @return A FolderSummaryDTO with flashsets and folder children counts.
      */
     private FolderSummaryDTO mapFolderToFolderSummaryDTO(final Folder folder) {
-        final long numberChildrenFolders = folderStore.countByFolderParentId(folder.getId());
+        final long numberChildrenFolders = folderParentsService.countByParentFolderId(folder.getId());
         final long numberFlashSets = flashSetService.countByFolderId(folder.getId());
 
         final FolderSummaryDTO folderSummary = toFolderSummaryDTO(folder);

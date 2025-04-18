@@ -12,15 +12,7 @@ import java.util.UUID;
 @Repository
 public interface FolderRepository extends JpaRepository<FolderEntity, UUID> {
 
-    List<FolderEntity> findAll(final Sort sort);
-
-    List<FolderEntity> findByUserIdAndParentIdIsNull(final UUID userId, final Sort sort);
-
-    long countByParentId(final UUID parentId);
-
-    long countByUserIdAndParentId(final UUID userId, final UUID parentId);
+    List<FolderEntity> findByUserId(final UUID userId, final Sort sort);
 
     Optional<FolderEntity> findByName(final String name);
-
-    List<FolderEntity> findByParentId(final UUID parentId);
 }
