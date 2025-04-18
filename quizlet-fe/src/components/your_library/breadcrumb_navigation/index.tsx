@@ -20,8 +20,6 @@ const BreadCrumbNavigation = ({
   className,
   wrapperClassName,
 }: BreadCrumbNavigationType) => {
-  console.log("BreadCrumbNavigationType");
-
   const dispatch = useDispatch();
   const navigationListFolders = useSelector(
     (state: RootState) => state.navigationBreadCrumb

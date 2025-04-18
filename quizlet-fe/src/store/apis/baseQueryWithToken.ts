@@ -56,6 +56,11 @@ export const baseQueryWithToken: BaseQueryFn<
         extraOptions
       );
 
+      console.error(
+        "Error 401 refreshResult: {baseQueryWithToken}",
+        refreshResult
+      );
+
       if (refreshResult.data) {
         const response = refreshResult.data as AuthResponseDTO;
         store.dispatch(setCredentials(response));

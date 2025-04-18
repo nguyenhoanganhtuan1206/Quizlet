@@ -8,6 +8,7 @@ export type BreadcrumbNavigationItem = {
 interface BreadcrumbNavigationState {
   currentPage: BreadcrumbNavigationItem;
   allPages: BreadcrumbNavigationItem[];
+  isLoading?: boolean;
 }
 
 const initialState: BreadcrumbNavigationState = {
@@ -24,20 +25,18 @@ export const navigateBreadCrumbSlice = createSlice({
        * Verify whether it's existed
        * If user selected in previous page -> Remove the latest the page.
        */
-      const currentPagePos = state.allPages.findIndex((page, index) => {
-        if (
-          page.path === action.payload.path &&
-          page.title === action.payload.title
-        ) {
-          return index;
-        }
-      });
+      const titlePayload = action.payload.title.toLowerCase();
+      const pathPayload = action.payload.path.toLowerCase();
 
-      if (currentPagePos !== -1) {
-        state.currentPage = action.payload;
-        state.allPages = state.allPages.slice(0, currentPagePos + 1);
+      const positionPage = state.allPages.findIndex(
+        (page) =>
+          page.title.toLocaleLowerCase() === titlePayload &&
+          pathPayload === page.path.toLocaleLowerCase()
+      );
+
+      if (positionPage !== -1) {
+        state.allPages = state.allPages.slice(0, positionPage + 1);
       } else {
-        state.currentPage = action.payload;
         state.allPages = [...state.allPages, action.payload];
       }
     },

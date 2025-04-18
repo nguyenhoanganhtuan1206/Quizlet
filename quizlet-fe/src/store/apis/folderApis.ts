@@ -8,6 +8,8 @@ export const folderApis = createApi({
   endpoints: (builder) => ({
     fetchFolderById: builder.query<FolderFlashSetItemDetailsResponse, string>({
       query: (folderId) => {
+        console.log("folderId", folderId);
+
         return {
           url: `folders/${folderId}`,
           method: "GET",

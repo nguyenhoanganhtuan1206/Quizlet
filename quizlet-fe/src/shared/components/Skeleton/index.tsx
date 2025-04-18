@@ -1,10 +1,10 @@
-import './Skeleton.scss';
+import "./Skeleton.scss";
 
-import classNames from 'classnames';
+import classNames from "classnames";
 
-import { ReactPropsChildren } from '../../../type/ReactPropsChildren';
+import { ReactPropsChildren } from "../../../type/ReactPropsChildren";
 
-type SkeletonVariant = 'text' | 'icon' | 'button' | 'section';
+type SkeletonVariant = "text" | "icon" | "button" | "section";
 
 interface SkeletonProps {
   variant: SkeletonVariant;
@@ -26,6 +26,7 @@ const Skeleton = ({
   width,
   children,
 }: SkeletonProps) => {
+  console.log("Skeleton");
   const baseClassNames = classNames(
     `skeleton__affect skeleton-${variant}`,
     className
@@ -35,10 +36,10 @@ const Skeleton = ({
 
   const renderSkeletonElement = () => {
     switch (variant) {
-      case 'icon':
-      case 'button':
+      case "icon":
+      case "button":
         return <div className={baseClassNames} style={style}></div>;
-      case 'text':
+      case "text":
         return (
           <div className="skeleton__text-wrapper">
             {Array(textBars)
@@ -48,14 +49,14 @@ const Skeleton = ({
                   key={index}
                   className={classNames(
                     baseClassNames,
-                    'skeleton__text-wrapper'
+                    "skeleton__text-wrapper"
                   )}
                   style={style}
                 ></div>
               ))}
           </div>
         );
-      case 'section':
+      case "section":
         return (
           <>
             {Array(times)

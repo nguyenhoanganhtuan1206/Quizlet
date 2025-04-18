@@ -20,6 +20,9 @@ type FolderDetailsType = {
 export default function FolderDetails({ folderDetails }: FolderDetailsType) {
   const dispatch = useDispatch<AppDispatch>();
   const currentUser = decodeToken(getCurrentToken());
+  const navigationBreadCrumbState = useSelector(
+    (state: RootState) => state.navigationBreadCrumb
+  );
 
   const handleNavigateFolder = (folder: Folder) => {
     if (!folder) {
@@ -36,10 +39,12 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
 
   return (
     <>
-      <BreadCrumbNavigation
-        wrapperClassName="px-2 py-10"
-        currentPage={folderDetails.folder.name}
-      />
+      {navigationBreadCrumbState.allPages.length > 1 && (
+        <BreadCrumbNavigation
+          wrapperClassName="px-2 py-10"
+          currentPage={folderDetails.folder.name}
+        />
+      )}
 
       {/* Folder List Section */}
       {folderDetails.foldersSummaryChildren &&
