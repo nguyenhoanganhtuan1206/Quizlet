@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
 import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
@@ -31,6 +33,8 @@ public class FlashSetService {
     private final FlashSetItemService flashSetItemService;
 
     private final FolderFlashSetService folderFlashSetService;
+
+    private final Logger logger = Logger.getLogger(FlashSetService.class.getName());
 
     public FlashSet findById(final UUID flashSetId) {
         return flashSetStore.findById(flashSetId)
@@ -90,8 +94,8 @@ public class FlashSetService {
             folderFlashSetService.save(buildFolderFlashSet(flashSetCreationRequest.getFolderId(), flashSetCreation.getId()));
 
             return mapToFlashSEtDetailResponseDTO(flashSetCreation, flashSetItemsBuilder);
-        } catch (Exception exception) {
-            System.out.println("Message" + exception.getMessage());
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
             throw supplyBadRequestException("Something went wrong while creating new flash set!!! Could you please try it again!!!").get();
         }
     }
@@ -101,7 +105,7 @@ public class FlashSetService {
      * Creates a new flash set items.
      *
      * @param FlashSetUpdateRequestDTO The request containing the flash set details, items, and optional folder ID.
-     * @param userId                     The ID of the user creating the flash set.
+     * @param userId                   The ID of the user creating the flash set.
      * @return A DTO containing the details of the created flash set and its items.
      * @throws com.quizlet_be.quizlet.error.NotFoundException   If the specified folder does not exist.
      * @throws com.quizlet_be.quizlet.error.BadRequestException If the flash set cannot be created due to a constraint violation.

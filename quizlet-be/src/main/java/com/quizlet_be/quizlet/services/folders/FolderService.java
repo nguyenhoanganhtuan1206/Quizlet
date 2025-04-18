@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.quizlet_be.quizlet.error.CommonError.*;
 import static com.quizlet_be.quizlet.mapper.folders.FolderSummaryDTOMapper.toFolderSummaryDTO;
@@ -31,6 +33,8 @@ public class FolderService {
     private final FlashSetService flashSetService;
 
     private final FolderParentsService folderParentsService;
+
+    private static final Logger LOGGER = Logger.getLogger( FolderService.class.getName() );
 
     /**
      * Retrieves the folder by ID
@@ -124,7 +128,7 @@ public class FolderService {
         try {
             return mapFoldersToFolderSummaryDTOs(folderStore.findParentFoldersByUserId(userId));
         } catch (Exception ex) {
-            System.out.println("ex: " + ex.getMessage());
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
             throw supplyBadRequestException("Something went wrong while calling folders!! Please try it again").get();
         }
     }
