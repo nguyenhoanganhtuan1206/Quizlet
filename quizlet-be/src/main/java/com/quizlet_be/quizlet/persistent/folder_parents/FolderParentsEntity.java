@@ -22,8 +22,8 @@ public class FolderParentsEntity {
     @Column(name = "parent_folder_id")
     private UUID parentFolderId;
 
-    @Column(name = "children_folder_id")
-    private UUID childrenFolderId;
+    @Column(name = "child_folder_id")
+    private UUID childFolderId;
 
     private Instant createdAt;
 }

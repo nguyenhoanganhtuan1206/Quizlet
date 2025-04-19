@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
-import static com.quizlet_be.quizlet.mapper.folder_parents.FolderParentsMapper.toFolderParents;
+import static com.quizlet_be.quizlet.mapper.folder_parents.FolderParentsMapper.*;
 
 @Service
 @Slf4j
@@ -17,6 +17,15 @@ import static com.quizlet_be.quizlet.mapper.folder_parents.FolderParentsMapper.t
 public class FolderParentsService {
 
     private final FolderParentsRepository parentsRepository;
+
+    /**
+     * Create new @{@link FolderParents}
+     *
+     * @params @{@link FolderParents}
+     */
+    public FolderParents save(final FolderParents parents) {
+        return toFolderParent(parentsRepository.save(toFolderParentEntity(parents)));
+    }
 
     /**
      * Counts the number of child folders for a given parent folder.

@@ -5,7 +5,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE folders (
     id          UUID            PRIMARY KEY,
     name        VARCHAR(50)     NOT NULL,
-    description VARCHAR(50),
+    description VARCHAR(255),
     created_at  TIMESTAMP       NOT NULL        DEFAULT NOW(),
     updated_at  TIMESTAMP,
     user_id     UUID            NOT NULL,

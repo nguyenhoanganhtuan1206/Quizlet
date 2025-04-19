@@ -13,7 +13,7 @@ public class FolderParentsMapper {
         return FolderParents.builder()
                 .id(folderParentsEntity.getId())
                 .parentFolderId(folderParentsEntity.getParentFolderId())
-                .childrenFolderId(folderParentsEntity.getChildrenFolderId())
+                .childFolderId(folderParentsEntity.getChildFolderId())
                 .createdAt(folderParentsEntity.getCreatedAt())
                 .build();
     }
@@ -28,7 +28,7 @@ public class FolderParentsMapper {
         return FolderParentsEntity.builder()
                 .id(folderParent.getId())
                 .parentFolderId(folderParent.getParentFolderId())
-                .childrenFolderId(folderParent.getChildrenFolderId())
+                .childFolderId(folderParent.getChildFolderId())
                 .createdAt(folderParent.getCreatedAt())
                 .build();
     }

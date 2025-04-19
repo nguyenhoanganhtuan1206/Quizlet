@@ -16,7 +16,7 @@ public class FolderParents {
 
     private UUID parentFolderId;
 
-    private UUID childrenFolderId;
+    private UUID childFolderId;
 
     private Instant createdAt;
 }
