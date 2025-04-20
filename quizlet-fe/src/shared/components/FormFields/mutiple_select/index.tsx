@@ -1,17 +1,17 @@
 import "../FormFIelds.scss";
 
-import { SelectProps } from "../../../../type/form/Input";
+import { SelectOptionProps, SelectProps } from "../../../../type/form/Input";
 import classNames from "classnames";
 import { Controller, FieldValues } from "react-hook-form";
+import { Checkbox, ListItemText, MenuItem, Select } from "@mui/material";
 
-export default function Select<T extends FieldValues>({
+export default function MultipleSelect<T extends FieldValues>({
   control,
   name,
   variant,
   className,
   label,
   options,
-  isMultiple,
 }: Readonly<SelectProps<T>>) {
   const selectInputClassNames = classNames(
     className,
@@ -26,26 +26,36 @@ export default function Select<T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange } }) => {
+      render={({ field: { onChange, value } }) => {
         return (
           <div>
             <label className="text-[1.4rem] text-gray-700 font-[500] cursor-pointer">
               {label}
             </label>
 
-            <select
+            <Select
               onChange={onChange}
               className={selectInputClassNames}
-              multiple={isMultiple}
+              multiple
+              displayEmpty={true} // Display default text when selection empty
+              value={value}
+              renderValue={(selected: string[]) => {
+                console.log("selected", selected);
+                return (
+                  selected?.map((titleSelected) => titleSelected).join(", ") ||
+                  "Select some options"
+                );
+              }}
             >
               {options.map((option) => {
                 return (
-                  <option key={option.value} value={option.value}>
-                    {option.title}
-                  </option>
+                  <MenuItem key={option.title} value={option.value}>
+                    <Checkbox checked={value.indexOf(option.value) >= 0} />
+                    <ListItemText primary={option.value} />
+                  </MenuItem>
                 );
               })}
-            </select>
+            </Select>
           </div>
         );
       }}

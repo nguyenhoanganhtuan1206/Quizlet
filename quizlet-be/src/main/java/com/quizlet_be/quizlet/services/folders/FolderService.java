@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.services.folders;
 
-import com.quizlet_be.quizlet.dto.folders.FolderCreationDTO;
+import com.quizlet_be.quizlet.dto.folders.FolderCreateUpdateDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderFlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.error.ConflictException;
@@ -17,12 +17,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.quizlet_be.quizlet.error.CommonError.*;
 import static com.quizlet_be.quizlet.mapper.folders.FolderSummaryDTOMapper.toFolderSummaryDTO;
+import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateDuplicatedChildFolder;
+import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateRestrictFolderAccess;
 import static com.quizlet_be.quizlet.utils.SortUtilities.createSingleSort;
 import static java.time.Instant.now;
 
@@ -108,13 +112,13 @@ public class FolderService {
      * Create new folder
      *
      * @param userId  The ID of the parent folder to retrieve details for.
-     * @param @{@link FolderCreationDTO}
+     * @param @{@link FolderCreateUpdateDTO}
      * @return @{@link Folder}
      * @throws ConflictException                                if the Folder already existed.
      * @throws com.quizlet_be.quizlet.error.BadRequestException
      */
     @Transactional
-    public Folder createFolder(final UUID userId, final FolderCreationDTO folderCreation) {
+    public Folder createFolder(final UUID userId, final FolderCreateUpdateDTO folderCreation) {
         try {
             validateFolderIsExisted(folderCreation.getName());
 
@@ -123,7 +127,7 @@ public class FolderService {
             // Save Folder Children
             if (!folderCreation.getFolderChildIds().isEmpty()) {
                 folderCreation.getFolderChildIds()
-                        .forEach(folderChildrenId -> mapToFolderParents(folderCreated.getId(), folderChildrenId));
+                        .forEach(folderChildrenId -> saveAndBuildToFolderParents(folderCreated.getId(), folderChildrenId));
             }
 
             LOGGER.log(Level.FINEST, "Created folder %s successfully!", folderCreated.getName());
@@ -138,10 +142,72 @@ public class FolderService {
     }
 
     /**
+     * Update the folder
+     *
+     * @param @userId The ID of the parent folder to retrieve details for.
+     * @param @{@link FolderCreateUpdateDTO}
+     * @return @{@link Folder}
+     * @throws ConflictException                              if the Folder already existed.
+     * @throws com.quizlet_be.quizlet.error.NotFoundException
+     */
+    @Transactional
+    public Folder updateFolder(
+            final UUID userId,
+            final UUID folderId,
+            final FolderCreateUpdateDTO folderUpdateDTO
+    ) {
+        final Folder currentFolder = findById(folderId);
+
+        validateRestrictFolderAccess(userId, currentFolder.getUserId());
+        validateDuplicatedChildFolder(folderId, folderUpdateDTO.getFolderChildIds());
+
+        if (!folderUpdateDTO.getName().equalsIgnoreCase(currentFolder.getName())) {
+            validateFolderIsExisted(folderUpdateDTO.getName());
+            currentFolder.setName(folderUpdateDTO.getName());
+        }
+
+        try {
+            if (!folderUpdateDTO.getFolderChildIds().isEmpty()) {
+                final List<FolderParents> currentFolderParent = folderParentsService.findByParentFolderId(folderId);
+                final List<UUID> existingChildrenId = currentFolderParent.stream()
+                        .map(FolderParents::getChildFolderId)
+                        .toList();
+
+                // Get the children ID to add and remove
+                final Set<UUID> childrenToAdd = getDifferenceItemsInList(folderUpdateDTO.getFolderChildIds(), existingChildrenId);
+                final Set<UUID> childrenToRemove = getDifferenceItemsInList(existingChildrenId, folderUpdateDTO.getFolderChildIds());
+
+                if (!childrenToAdd.isEmpty()) {
+                    childrenToAdd
+                            .forEach(newFolderChildId -> {
+                                saveAndBuildToFolderParents(folderId, newFolderChildId);
+                            });
+                }
+
+                if (!childrenToRemove.isEmpty()) {
+                    childrenToRemove
+                            .forEach(childId -> folderParentsService.deleteByParentFolderId(folderId, childId));
+                }
+            }
+
+            currentFolder.setDescription(folderUpdateDTO.getDescription());
+            currentFolder.setUpdatedAt(now());
+
+            return save(currentFolder);
+        } catch (NotFoundException ex) {
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder}: " + ex.getMessage());
+            throw supplyNotFoundException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder}: " + ex.getMessage());
+            throw supplyBadRequestException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
+        }
+    }
+
+    /**
      * Retrieve list parent folders
      * filter all the child folder from the folderParent table.
      *
-     * @param userId.
+     * @param @userId.
      * @return A list of FolderSummaryDTOs with counts of child folders and flash sets.
      */
     public List<FolderSummaryDTO> findParentFoldersByUserId(final UUID userId) {
@@ -151,6 +217,15 @@ public class FolderService {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
             throw supplyBadRequestException("Something went wrong while calling folders!! Please try it again").get();
         }
+    }
+
+    /**
+     * Create new the Folder.
+     *
+     * @params @{@link Folder}
+     */
+    public Folder save(final Folder folder) {
+        return folderStore.save(folder);
     }
 
     /**
@@ -183,23 +258,9 @@ public class FolderService {
     }
 
     /**
-     * Validation to check whether folder is existed or not?
-     *
-     * @param name
-     * @throws ConflictException
+     * Save and Build @{@link FolderParents} by @parentFolderId and @childFolderId
      */
-    private void validateFolderIsExisted(final String name) {
-        final Optional<Folder> folder = folderStore.findByName(name);
-
-        if (folder.isPresent()) {
-            throw supplyConflictException("Folder with %s already taken", name).get();
-        }
-    }
-
-    /**
-     * Map to the @{@link FolderParents} by parentId {folderId} and childrenFolderId {folderId}
-     */
-    private void mapToFolderParents(final UUID parentFolderId, final UUID childFolderId) {
+    private void saveAndBuildToFolderParents(final UUID parentFolderId, final UUID childFolderId) {
         try {
             // Verify whether the folder is existed
             findById(childFolderId);
@@ -216,12 +277,41 @@ public class FolderService {
         }
     }
 
-    private Folder buildFolderCreation(final FolderCreationDTO folderCreation, final UUID userId) {
+    /**
+     * Build Folder by @{@link FolderCreateUpdateDTO} and @userId
+     */
+    private Folder buildFolderCreation(final FolderCreateUpdateDTO folderCreation, final UUID userId) {
         return Folder.builder()
                 .name(folderCreation.getName())
                 .description(folderCreation.getDescription())
                 .createdAt(now())
                 .userId(userId)
                 .build();
+    }
+
+    /**
+     * Get difference between 2 lists.
+     *
+     * @params @{@link List<UUID>}
+     * @return Set<UUID>
+     */
+    private Set<UUID> getDifferenceItemsInList(final List<UUID> firstListId, final List<UUID> secondListId) {
+        return firstListId.stream()
+                .filter(firstChildId -> !secondListId.contains(firstChildId))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Validation to check whether folder is existed or not?
+     *
+     * @param @name
+     * @throws ConflictException
+     */
+    private void validateFolderIsExisted(final String name) {
+        final Optional<Folder> folder = folderStore.findByName(name);
+
+        if (folder.isPresent()) {
+            throw supplyConflictException("Folder with %s already taken", name).get();
+        }
     }
 }

@@ -105,9 +105,11 @@ export default function ModalFolderCreation({
           />
 
           <Select
+            variant="mode-black"
             control={control}
             name="parent_id"
             options={initialFolderOptions}
+            isMultiple
           />
 
           <div className="flex justify-end mt-12">

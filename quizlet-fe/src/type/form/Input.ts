@@ -36,6 +36,7 @@ export interface SelectProps<T extends FieldValues> {
   control: Control<T>;
   options: SelectOptionProps[];
   variant?: InputVariant;
+  isMultiple?: boolean;
   className?: string;
   outsideClassName?: string;
   label?: string;

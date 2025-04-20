@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Builder
 @Getter
-public class FolderCreationDTO {
+public class FolderCreateUpdateDTO {
 
     @NotBlank(message = "Your folder name cannot be empty")
     @Size(min = 5, max = 150, message = "Your folder name must be at between 5 to 150 characters")
