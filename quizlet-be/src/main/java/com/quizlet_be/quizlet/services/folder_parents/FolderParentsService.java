@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
+import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
 import static com.quizlet_be.quizlet.mapper.folder_parents.FolderParentsMapper.*;
 
 @Service
@@ -25,6 +26,21 @@ public class FolderParentsService {
      */
     public FolderParents save(final FolderParents parents) {
         return toFolderParent(parentsRepository.save(toFolderParentEntity(parents)));
+    }
+
+    /**
+     * Delete the @{@link FolderParents} by parentFolderId and childFolderId
+     *
+     * @throw NotFoundException
+     */
+    public void deleteByParentFolderId(final UUID parentFolderId, final UUID childFolderId) {
+        try {
+            final FolderParents folderParent = findByParentFolderIdAndChildFolderId(parentFolderId, childFolderId);
+
+            parentsRepository.delete(toFolderParentEntity(folderParent));
+        } catch (Exception ex) {
+            throw supplyBadRequestException(ex.getMessage()).get();
+        }
     }
 
     /**
@@ -57,5 +73,17 @@ public class FolderParentsService {
             log.error("Unexpected error while list FolderParents by parentId {findByParentFolderId} {}: {}", parentFolderId, e.getMessage(), e);
             throw supplyBadRequestException("An unexpected error occurred while list folders. Please try again later.").get();
         }
+    }
+
+    /**
+     * Find @FolderParents by parentFolderId and childFolderId
+     *
+     * @param {@link UUID} parentFolderId and {@link UUID} childFolderId
+     * @return @{@link FolderParents}
+     * @throws com.quizlet_be.quizlet.error.NotFoundException
+     */
+    public FolderParents findByParentFolderIdAndChildFolderId(final UUID parentFolderId, final UUID childFolderId) {
+        return toFolderParent(parentsRepository.findByParentFolderIdAndChildFolderId(parentFolderId, childFolderId)
+                .orElseThrow(supplyNotFoundException("Not found the folder with parentId %s and childFolder %f", parentFolderId, childFolderId)));
     }
 }

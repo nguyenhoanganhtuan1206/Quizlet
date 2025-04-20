@@ -11,10 +11,11 @@ export default function Select<T extends FieldValues>({
   className,
   label,
   options,
+  isMultiple,
 }: Readonly<SelectProps<T>>) {
   const selectInputClassNames = classNames(
     className,
-    "border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] cursor-pointer outline-none focus:border-blue-500",
+    "border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] cursor-pointer outline-none duration-300 focus:border-blue-500",
     {
       "form--mode-black": variant === "mode-black",
       "form--mode-border-only": variant === "border-only",
@@ -32,7 +33,11 @@ export default function Select<T extends FieldValues>({
               {label}
             </label>
 
-            <select onChange={onChange} className={selectInputClassNames}>
+            <select
+              onChange={onChange}
+              className={selectInputClassNames}
+              multiple={isMultiple}
+            >
               {options.map((option) => {
                 return (
                   <option key={option.value} value={option.value}>

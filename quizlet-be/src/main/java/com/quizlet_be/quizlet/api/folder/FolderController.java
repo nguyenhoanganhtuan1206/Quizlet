@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.api.folder;
 
-import com.quizlet_be.quizlet.dto.folders.FolderCreationDTO;
+import com.quizlet_be.quizlet.dto.folders.FolderCreateUpdateDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderFlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.services.folders.Folder;
@@ -50,7 +50,7 @@ public class FolderController {
 
     @PostMapping
     public Folder createFolder(
-            final @Valid @RequestBody FolderCreationDTO folderCreationDTO,
+            final @Valid @RequestBody FolderCreateUpdateDTO folderCreationDTO,
             final @RequestHeader(value = "Authorization") String authorizationHeader,
             final BindingResult bindingResult
     ) {
@@ -59,5 +59,16 @@ public class FolderController {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
 
         return folderService.createFolder(userId, folderCreationDTO);
+    }
+
+    @PutMapping("{folderId}")
+    public Folder updateFolder(
+            final @PathVariable(name = "folderId") UUID folderId,
+            final @RequestBody FolderCreateUpdateDTO folderUpdateDTO,
+            final @RequestHeader(value = "Authorization") String authorizationHeader
+    ) {
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return folderService.updateFolder(userId, folderId, folderUpdateDTO);
     }
 }

@@ -1,9 +1,8 @@
 import { useForm } from "react-hook-form";
-import { Select } from "../../shared/components";
 import { SelectOptionProps } from "../../type/form/Input";
+import MultipleSelect from "@/shared/components/FormFields/mutiple_select";
 
 export default function DevPage() {
-  const selectForm = useForm();
   const initialOptionSelection: SelectOptionProps[] = [
     {
       title: "Lambor",
@@ -13,19 +12,27 @@ export default function DevPage() {
       title: "Lambor 2",
       value: "lambor 2",
     },
+    {
+      title: "Lambor 3",
+      value: "lambor 3",
+    },
+    {
+      title: "Lambor 4",
+      value: "lambor 4",
+    },
   ];
-
-  console.log("selectedForm", selectForm.watch("selectedForm"));
-  ;
+  const selectForm = useForm({
+    defaultValues: {
+      multipleSelect: [],
+    },
+  });
 
   return (
     <form>
-      <Select
+      <MultipleSelect
         control={selectForm.control}
-        name="selectedForm"
+        name="multipleSelect"
         options={initialOptionSelection}
-        variant="border-only"
-        className="duration-200"
       />
     </form>
   );

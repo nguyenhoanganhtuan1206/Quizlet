@@ -1,22 +1,30 @@
 package com.quizlet_be.quizlet.services.folders;
 
-import com.quizlet_be.quizlet.error.NotFoundException;
 import lombok.experimental.UtilityClass;
 
-import java.util.function.Supplier;
+import java.util.List;
+import java.util.UUID;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
+import static com.quizlet_be.quizlet.error.CommonError.supplyAccessDeniedError;
+import static com.quizlet_be.quizlet.error.CommonError.supplyConflictException;
 
 @UtilityClass
 public class FolderValidation {
 
-    /**
-     *
-     * @param type is the property in the Folder (e.g: name, id,...)
-     * @param value is the value of this property
-     * Eg @output: The $type folder with $value not found
-     */
-    public static <T, V> Supplier<NotFoundException> supplyFolderNotFound(final T type, final V value) {
-        throw supplyNotFoundException("The %t Folder with %v is not found", type, value).get();
+    public static void validateDuplicatedChildFolder(
+            final UUID folderId,
+            final List<UUID> folderChildIds
+    ) {
+        final boolean isDuplicatedChildFolderId = folderChildIds.contains(folderId);
+
+        if (isDuplicatedChildFolderId) {
+            throw supplyConflictException("Duplicate child folder IDs detected in update for folder ID: " + folderId).get();
+        }
+    }
+
+    public static void validateRestrictFolderAccess(final UUID currentUser, final UUID ownerIdFolder) {
+        if (!currentUser.toString().equalsIgnoreCase(ownerIdFolder.toString())) {
+            throw supplyAccessDeniedError().get();
+        }
     }
 }
