@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
 import { SelectOptionProps } from "../../type/form/Input";
+
 import MultipleSelect from "../../shared/components/FormFields/mutiple_select";
-import Button from "@mui/material/Button";
+
+interface FormData {
+  multipleSelect: (string | number)[];
+}
 
 export default function DevPage() {
   const initialOptionSelection: SelectOptionProps[] = [
@@ -22,24 +26,29 @@ export default function DevPage() {
       value: "lambor 4",
     },
   ];
-  const selectForm = useForm({
+  const selectForm = useForm<FormData>({
     defaultValues: {
       multipleSelect: [],
     },
   });
 
+  const handleOnSubmit = (data: FormData) => {
+    console.log("Submitted values:", data);
+  };
+
   return (
-    <form>
+    <form onSubmit={selectForm.handleSubmit(handleOnSubmit)}>
       <MultipleSelect
         isMultiple
         control={selectForm.control}
         name="multipleSelect"
         options={initialOptionSelection}
         variant="mode-black"
-        className="text-[2rem] duration-200"
       />
 
-      <Button variant="outlined">Hello world</Button>
+      <button type="submit" className="mt-10">
+        Submit
+      </button>
     </form>
   );
 }

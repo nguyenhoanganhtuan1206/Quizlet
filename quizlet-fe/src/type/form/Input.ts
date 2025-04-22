@@ -4,7 +4,7 @@ type InputType = "text" | "password" | "textarea";
 
 export type SelectOptionProps = {
   title: string;
-  value: string;
+  value: string | number;
 };
 
 interface ValidationObject {
@@ -38,6 +38,9 @@ export interface SelectProps<T extends FieldValues> {
   variant?: InputVariant;
   isMultiple?: boolean;
   className?: string;
+  selectClassName?: string;
+  optionWrapClassName?: string;
+  optionItemClassName?: string;
   outsideClassName?: string;
   label?: string;
   isError?: boolean;

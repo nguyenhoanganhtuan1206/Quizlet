@@ -1,61 +1,83 @@
-import "../FormFIelds.scss";
+import "../FormFields.scss";
 
-import { SelectOptionProps, SelectProps } from "../../../../type/form/Input";
+import "./MultipleSelect.scss";
+
+import { SelectProps } from "../../../../type/form/Input";
 import classNames from "classnames";
 import { Controller, FieldValues } from "react-hook-form";
-import { Checkbox, ListItemText, MenuItem, Select } from "@mui/material";
+import { useState } from "react";
 
 export default function MultipleSelect<T extends FieldValues>({
   control,
   name,
-  variant,
-  className,
-  label,
   options,
+  variant,
+  label,
+  selectClassName,
+  optionWrapClassName,
+  optionItemClassName,
 }: Readonly<SelectProps<T>>) {
-  const selectInputClassNames = classNames(
-    className,
-    "border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] cursor-pointer outline-none duration-300 focus:border-blue-500",
+  const [isShowListOptions, setIsShowListOptions] = useState<boolean>(false);
+
+  const selectClassNames = classNames(
+    selectClassName,
+    "multiple-selection border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] cursor-pointer outline-none duration-300 focus:border-blue-500"
+  );
+
+  const optionWrapClassNames = classNames(
+    optionWrapClassName,
+    "multiple-selection__options-wrapper top-[110%] left-0 w-full border-gray-300 rounded-[6px] overflow-hidden"
+  );
+
+  const optionItemClassNames = classNames(
+    optionItemClassName,
+    "multiple-selection__options-item border h-[45px] w-full w-full py-3 px-3.5 text-[1.4rem] cursor-pointer outline-none duration-300 focus:border-blue-500 hover:opacity-75",
     {
       "form--mode-black": variant === "mode-black",
       "form--mode-border-only": variant === "border-only",
-    }
+    },
+    isShowListOptions ? "flex" : "hidden"
   );
 
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange, value } }) => {
+      render={({ field: { onChange, value = [] } }) => {
+        const handleSelectOption = (valueInput: number | string) => {
+          const isValueSelected = value.includes(valueInput);
+          const newValue = isValueSelected
+            ? value.filter((item: string | number) => item !== valueInput)
+            : [...value, valueInput];
+
+          onChange(newValue);
+        };
         return (
           <div>
             <label className="text-[1.4rem] text-gray-700 font-[500] cursor-pointer">
               {label}
             </label>
-
-            <Select
-              onChange={onChange}
-              className={selectInputClassNames}
-              multiple
-              displayEmpty={true} // Display default text when selection empty
-              value={value}
-              renderValue={(selected: string[]) => {
-                console.log("selected", selected);
-                return (
-                  selected?.map((titleSelected) => titleSelected).join(", ") ||
-                  "Select some options"
-                );
-              }}
+            <div
+              className={selectClassNames}
+              onClick={() => setIsShowListOptions(!isShowListOptions)}
             >
-              {options.map((option) => {
-                return (
-                  <MenuItem key={option.title} value={option.value}>
-                    <Checkbox checked={value.indexOf(option.value) >= 0} />
-                    <ListItemText primary={option.value} />
-                  </MenuItem>
-                );
-              })}
-            </Select>
+              <div className={optionWrapClassNames}>
+                {options.map((option) => {
+                  return (
+                    <p
+                      className={optionItemClassNames}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectOption(option.value);
+                      }}
+                    >
+                      <input type="checkbox" />
+                      {option.title}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         );
       }}

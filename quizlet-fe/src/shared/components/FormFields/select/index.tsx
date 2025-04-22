@@ -1,4 +1,4 @@
-import "../FormFIelds.scss";
+import "../FormFields.scss";
 
 import { SelectProps } from "../../../../type/form/Input";
 import classNames from "classnames";

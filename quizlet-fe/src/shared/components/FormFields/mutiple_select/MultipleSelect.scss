@@ -1,0 +1,20 @@
+@use "../../../sass/base/animations" as *;
+
+.multiple-selection {
+  position: relative;
+
+  &__options-wrapper {
+    position: absolute;
+  }
+
+  &__options-item {
+    border-bottom: 1px solid var(--ref-color-twilight100);
+    align-items: center;
+
+    @include fadeIn($fadeMiddle: 0.7, $duration: 0.3s, $from: -50px);
+
+    input[type="checkbox"] {
+      height: 40px;
+    }
+  }
+}
