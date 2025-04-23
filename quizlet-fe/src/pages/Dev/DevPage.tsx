@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { SelectOptionProps } from "../../type/form/Input";
 
-import MultipleSelect from "../../shared/components/FormFields/mutiple_select";
+import MultipleSelect from "../../shared/components/FormFields/multiple_select";
 
 interface FormData {
   multipleSelect: (string | number)[];

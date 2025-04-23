@@ -73,18 +73,10 @@ export default function MultipleSelect<T extends FieldValues>({
 
         /* Display values selected */
         const renderSelectedValues = () => {
-          if (selectedValues.length === 0) {
-            return (
-              <span className="translate-[-50%, -50%]">
-                Select your options
-              </span>
-            );
-          }
-
           return (
             <p className="translate-[-50%, -50%]">
               {selectedValues.map((valSelected) => (
-                <span className="border border-gray-600 rounded-md p-2 mr-2 gap-2">
+                <span className="multiple-selection__items-labels">
                   {valSelected}
                 </span>
               ))}
@@ -94,20 +86,29 @@ export default function MultipleSelect<T extends FieldValues>({
 
         return (
           <div className="relative">
-            <div className={selectClassNames}>
+            <div className="flex flex-wrap min-h-[40px] p-2 bg-[var(--color-primary-sub)]">
               {/*Input*/}
-              <div className="inline-flex items-center bg-transparent text-white px-2 py-1 rounded mr-1 mb-1">
-                {renderSelectedValues()}
-              </div>
+              {selectedValues && selectedValues.length > 0 && (
+                <div className="inline-flex items-center bg-transparent text-white px-2 py-1 rounded mr-1 mb-1">
+                  {renderSelectedValues()}
+                </div>
+              )}
 
               {/*Input*/}
               <input
-                className={`flex flex-wrap gap-1 mr-2 bg-transparent`}
+                className="flex flex-1 h-[inherit] text-[1.4rem] p-2 text-white bg-transparent outline-none"
                 value={searchTerm}
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsShowListOptions(!isShowListOptions);
                 }}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setIsShowListOptions(true);
+                }}
+                placeholder={
+                  selectedValues.length === 0 ? "Select your options" : ""
+                }
               />
             </div>
 
@@ -131,49 +132,7 @@ export default function MultipleSelect<T extends FieldValues>({
                 );
               })}
             </div>
-            {/* <label className="text-[1.4rem] text-gray-700 font-[500] cursor-pointer">
-              {label}
-            </label> */}
-
-            {/* <div
-              className={selectClassNames}
-              onClick={() => setIsShowListOptions(!isShowListOptions)}
-            >
-              {renderSelectedValues()}
-            </div> */}
           </div>
-          // <div>
-          //   <label className="text-[1.4rem] text-gray-700 font-[500] cursor-pointer">
-          //     {label}
-          //   </label>
-          //   <div
-          //     className={selectClassNames}
-          //     onClick={() => setIsShowListOptions(!isShowListOptions)}
-          //   >
-          //     {renderSelectedValues()}
-
-          //     <div className={optionWrapClassNames}>
-          //       {options.map((option) => {
-          //         return (
-          //           <p
-          //             className={optionItemClassNames}
-          //             onClick={(e) => {
-          //               e.stopPropagation();
-          //               handleSelectOption(option.value);
-          //             }}
-          //           >
-          //             <input
-          //               className={inputCheckboxClassNames}
-          //               type="checkbox"
-          //               checked={value.includes(option.value)}
-          //             />
-          //             {option.title}
-          //           </p>
-          //         );
-          //       })}
-          //     </div>
-          //   </div>
-          // </div>
         );
       }}
     />

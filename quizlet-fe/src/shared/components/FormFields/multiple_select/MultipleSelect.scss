@@ -1,17 +1,23 @@
 @use "../../../sass/base/animations" as *;
 
 .multiple-selection {
-  // position: relative;
-
-  &__options-wrapper {
-  }
-
   &__options-item {
     border-bottom: 1px solid var(--ref-color-twilight100);
     align-items: center;
 
+    &:hover {
+      background-color: var(--color-primary-sub);
+    }
+
     @include fadeIn($fadeMiddle: 0.7, $duration: 0.3s, $from: -50px);
   }
+}
+
+/*
+  Item selected
+*/
+.multiple-selection__items-labels {
+  border: 1px solid var(--color-primary-sub);
 }
 
 .multiple-selection__options-checkbox {
