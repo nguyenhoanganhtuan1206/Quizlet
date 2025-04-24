@@ -1,8 +1,11 @@
 export { default as Header } from "./Header";
-export { default as Button } from "./FormFields/Button";
-export { default as Input } from "./FormFields/Input/";
-export { default as Select } from "./FormFields/select";
-export { default as MultipleSelect } from "./FormFields/multiple_select";
+export {
+  Button,
+  Input,
+  MultipleSelect,
+  Select,
+  ErrorMessage,
+} from "./FormFields";
 export { default as PopperWrapper } from "./PopperWrapper";
 export { default as AlertMessage } from "./AlertMessage";
 export { default as CardItem } from "./CardItem";

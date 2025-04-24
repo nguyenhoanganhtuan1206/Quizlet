@@ -1,7 +1,7 @@
 import { ReactPropsChildren } from "@/type";
 import classNames from "classnames";
 
-interface FormLabepProps {
+interface FormLabelProps {
   name: string;
   className?: string;
   children: ReactPropsChildren;
@@ -11,7 +11,7 @@ export default function FormLabel({
   name,
   className,
   children,
-}: FormLabepProps) {
+}: Readonly<FormLabelProps>) {
   const labelClassNames = classNames(
     "text-[1.4rem] text-gray-700 font-[600] cursor-pointer",
     className

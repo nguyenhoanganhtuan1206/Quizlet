@@ -1,6 +1,10 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithToken } from "./baseQueryWithToken";
-import { FolderFlashSetItemDetailsResponse } from "../../type";
+import {
+  Folder,
+  FolderCreationRequestDTO,
+  FolderFlashSetItemDetailsResponse,
+} from "@/type";
 
 export const folderApis = createApi({
   reducerPath: "folders",
@@ -8,15 +12,22 @@ export const folderApis = createApi({
   endpoints: (builder) => ({
     fetchFolderById: builder.query<FolderFlashSetItemDetailsResponse, string>({
       query: (folderId) => {
-        console.log("folderId", folderId);
-
         return {
           url: `folders/${folderId}`,
           method: "GET",
         };
       },
     }),
+    createFolder: builder.mutation<Folder, FolderCreationRequestDTO>({
+      query: (data) => {
+        return {
+          url: "folders",
+          body: data,
+          method: "POST",
+        };
+      },
+    }),
   }),
 });
 
-export const { useFetchFolderByIdQuery } = folderApis;
+export const { useFetchFolderByIdQuery, useCreateFolderMutation } = folderApis;

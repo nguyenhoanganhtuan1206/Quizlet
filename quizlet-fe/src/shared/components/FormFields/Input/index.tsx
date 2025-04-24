@@ -23,13 +23,16 @@ export default function Input<T extends FieldValues>({
   onFocus,
   variant,
   className,
-  label,
-  placeholder,
   outsideClassName,
+  placeholder,
   cols = 3,
   rows = 5,
 }: Readonly<InputProps<T>>) {
   const [isShowPassword, setIsShowPassword] = useState(false);
+
+  /**
+   * Define classnames
+   */
   const inputClassName = classNames(
     "input border h-[45px] border-gray-300 rounded-[6px] w-full py-3 px-3.5 text-[1.4rem] outline-none focus:border-blue-500",
     {
@@ -77,18 +80,9 @@ export default function Input<T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange }, fieldState: { error } }) => {
+      render={({ field: { onChange } }) => {
         return (
           <div className={`${outsideClassName} relative`}>
-            {label && (
-              <label
-                className="text-[1.4rem] text-gray-700 font-[500] cursor-pointer"
-                htmlFor={name}
-              >
-                {label}
-              </label>
-            )}
-
             {/**
              * Just display when have the hidden password
              */}
@@ -108,14 +102,6 @@ export default function Input<T extends FieldValues>({
             {/**
              * Just display when have the hidden password
              */}
-
-            {/*!
-             * Using to display the error message
-             * */}
-            {error && <span>{error.message}</span>}
-            {/*!
-             * Using to display the error message
-             * */}
           </div>
         );
       }}

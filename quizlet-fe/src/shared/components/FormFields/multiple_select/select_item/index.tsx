@@ -23,7 +23,7 @@ export default function SelectItem({
   onChange,
 }: SelectItemProps) {
   const selectItemWrapperClassNames = classNames(
-    "select-item__wrapper absolute top-[105%] left-0 felx flex-wrap w-full border-gray-300 rounded-[6px] overflow-hidden",
+    "select-item__wrapper absolute top-[105%] h-[250px] max-h-[450px] left-0 flex flex-wrap w-full border-gray-300 rounded-[6px] overflow-y-auto",
     isShowListOptions ? "flex" : "hidden",
     {
       "form--mode-black": variant === "mode-black",

@@ -37,7 +37,7 @@ export default function SelectSearchItem({
   );
 
   const inputSearchItemClassNames = classNames(
-    "flex flex-1 h-full text-[1.4rem] px-5 py-6 bg-transparent outline-none cursor-pointer"
+    "flex flex-1 h-full text-[1.4rem] placeholder-[font-weight:600] px-5 py-6 bg-transparent outline-none cursor-pointer"
   );
 
   const listSelectedValuesClassNames = classNames(
@@ -59,11 +59,11 @@ export default function SelectSearchItem({
   /* Display values selected */
   const renderSelectedValues = () => {
     return (
-      <div className="flex translate-[-50%, -50%]">
+      <div className="flex flex-wrap translate-[-50%, -50%]">
         {selectedValues.map((valSelected, index) => (
           <p
             key={index}
-            className="flex items-center p-3 mr-3 border border-gray-500 rounded-md text-xl cursor-pointer"
+            className="flex items-center p-3 mr-3 mt-3 border border-gray-500 rounded-md text-xl cursor-pointer"
           >
             <span>{valSelected.title}</span>
 

@@ -11,6 +11,7 @@ import ButtonLoginSocial from "../ButtonLoginSocial";
 import { AlertMessage, Button, Input } from "../../../shared/components";
 import { useRegisterMutation } from "../../../store";
 import { ApiErrorResponse } from "../../../type";
+import FormLabel from "@/shared/components/FormFields/form_label";
 
 function Register() {
   const { control, formState, handleSubmit } = useForm<FormRegisterValues>({
@@ -40,38 +41,38 @@ function Register() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <ButtonLoginSocial />
 
+      <FormLabel name="fullName">Full Name</FormLabel>
       <Input
         control={control}
         name="fullName"
         type="text"
-        label="Username"
         placeholder="Your username"
         outsideClassName="mt-5"
       />
 
+      <FormLabel name="confirmPassword">Email</FormLabel>
       <Input
         control={control}
         name="email"
         type="text"
-        label="Email"
         placeholder="Your Email"
         outsideClassName="mt-5"
       />
 
+      <FormLabel name="password">Password</FormLabel>
       <Input
         control={control}
         name="password"
         type="password"
-        label="Password"
         placeholder="Your Password"
         outsideClassName="mt-5"
       />
 
+      <FormLabel name="confirmPassword">Confirm Password</FormLabel>
       <Input
         control={control}
         name="confirmPassword"
         type="password"
-        label="Confirm Password"
         placeholder="Confirm Password"
         outsideClassName="mt-5"
       />

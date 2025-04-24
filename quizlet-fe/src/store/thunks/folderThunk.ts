@@ -40,4 +40,4 @@ export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
       rejectWithValue(error);
     }
   }
-)
+);

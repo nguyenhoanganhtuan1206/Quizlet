@@ -23,7 +23,6 @@ export interface InputProps<T extends FieldValues> {
   variant?: InputVariant;
   isShowError?: boolean;
   placeholder?: string;
-  label?: string;
   isError?: boolean;
   className?: string;
   outsideClassName?: string;

@@ -48,6 +48,7 @@ export {
   useRegisterMutation,
   useGetFlashSetQuery,
   useFetchFolderByIdQuery,
+  useCreateFolderMutation,
 } from "./apis";
 
 export {

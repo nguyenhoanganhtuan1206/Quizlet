@@ -8,13 +8,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { folderSchema } from "@/schemas";
 import {
   Button,
+  ErrorMessage,
   Input,
   Modal,
   MultipleSelect,
   Skeleton,
 } from "@/shared/components";
 import { SelectOptionProps } from "@/type/form/Input";
-import { AppDispatch, fetchFolders, RootState } from "@/store";
+import {
+  AppDispatch,
+  fetchFolders,
+  RootState,
+  useCreateFolderMutation,
+} from "@/store";
 
 type ModalFolderCreationProps = {
   isShowModal: boolean;
@@ -35,6 +41,7 @@ export default function ModalFolderCreation({
     (rootState: RootState) => rootState.folderSlice
   );
   const dispatch = useDispatch<AppDispatch>();
+  const [createFolder, { isSuccess }] = useCreateFolderMutation();
 
   useEffect(() => {
     if (isShowModal) {
@@ -42,7 +49,12 @@ export default function ModalFolderCreation({
     }
   }, [isShowModal, dispatch]);
 
-  const { control, handleSubmit, getValues } = useForm<FormModalCreationValues>({
+  const {
+    control,
+    handleSubmit,
+    getFieldState,
+    formState: { errors },
+  } = useForm<FormModalCreationValues>({
     resolver: zodResolver(folderSchema),
     defaultValues: {
       name: "",
@@ -59,8 +71,9 @@ export default function ModalFolderCreation({
   );
 
   const handleOnSubmit = () => {
-    console.log("getValues", getValues("name"));
-    
+    console.log("getValues", getFieldState("name"));
+
+    // createFolder()
   };
 
   return (
@@ -101,6 +114,7 @@ export default function ModalFolderCreation({
             type="text"
             className="mt-10 transition-all duration-700"
           />
+          <ErrorMessage message={errors.name?.message} />
 
           <Input
             control={control}
@@ -108,8 +122,9 @@ export default function ModalFolderCreation({
             type="textarea"
             placeholder="Description"
             variant="mode-black"
-            className="h-[200px] mt-5 transition-all duration-700"
+            className="min-h-[200px] mt-5 transition-all duration-700"
           />
+          <ErrorMessage message={errors.description?.message} />
 
           <MultipleSelect
             className="mt-3"
@@ -120,7 +135,11 @@ export default function ModalFolderCreation({
           />
 
           <div className="flex justify-end mt-12">
-            <Button variant="primary" type="submit" className="w-fit rounded-lg">
+            <Button
+              variant="primary"
+              type="submit"
+              className="flex justify-end w-fit rounded-lg"
+            >
               Create Folder
             </Button>
           </div>

@@ -21,4 +21,5 @@ export interface FolderSummaryDTO {
 export interface FolderCreationRequestDTO {
   name: string;
   description: string;
+  parent_id: string[];
 }
