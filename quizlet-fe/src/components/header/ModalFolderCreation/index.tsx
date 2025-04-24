@@ -1,19 +1,20 @@
 import "./ModalFolderCreation.scss";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
+import { folderSchema } from "@/schemas";
 import {
   Button,
   Input,
   Modal,
-  Skeleton,
   MultipleSelect,
-} from "../../../shared/components";
-import { AppDispatch, RootState } from "../../../store";
-import { fetchFolders } from "../../../store/thunks";
-import { SelectOptionProps } from "../../../type/form/Input";
+  Skeleton,
+} from "@/shared/components";
+import { SelectOptionProps } from "@/type/form/Input";
+import { AppDispatch, fetchFolders, RootState } from "@/store";
 
 type ModalFolderCreationProps = {
   isShowModal: boolean;
@@ -41,7 +42,8 @@ export default function ModalFolderCreation({
     }
   }, [isShowModal, dispatch]);
 
-  const { control } = useForm<FormModalCreationValues>({
+  const { control, handleSubmit, getValues } = useForm<FormModalCreationValues>({
+    resolver: zodResolver(folderSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -56,10 +58,15 @@ export default function ModalFolderCreation({
     })
   );
 
+  const handleOnSubmit = () => {
+    console.log("getValues", getValues("name"));
+    
+  };
+
   return (
     <Modal
       onClosed={onClosed}
-      className="modal__folder-creation h-[400px] overflow-hidden"
+      className="modal__folder-creation h-[400px] overflow-y-auto"
       isOpen={isShowModal}
       isShowCloseIcon={true}
     >
@@ -85,7 +92,7 @@ export default function ModalFolderCreation({
       )}
 
       {!fetchFoldersState.isLoading && (
-        <form>
+        <form onSubmit={handleSubmit(handleOnSubmit)}>
           <Input
             control={control}
             name="name"
@@ -101,10 +108,11 @@ export default function ModalFolderCreation({
             type="textarea"
             placeholder="Description"
             variant="mode-black"
-            className="h-[180px] mt-5 transition-all duration-700"
+            className="h-[200px] mt-5 transition-all duration-700"
           />
 
           <MultipleSelect
+            className="mt-3"
             control={control}
             name="parent_id"
             options={initialFolderOptions}
@@ -112,7 +120,7 @@ export default function ModalFolderCreation({
           />
 
           <div className="flex justify-end mt-12">
-            <Button variant="primary" className="w-fit rounded-lg">
+            <Button variant="primary" type="submit" className="w-fit rounded-lg">
               Create Folder
             </Button>
           </div>

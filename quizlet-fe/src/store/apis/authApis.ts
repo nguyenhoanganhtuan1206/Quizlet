@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { FormLoginValues, FormRegisterValues } from "../../schemas/authSchemas";
+import { FormLoginValues, FormRegisterValues } from "../../schemas/auth/authSchemas";
 
 import { AuthResponseDTO } from "../../type";
 import { baseQueryWithToken } from "./baseQueryWithToken";

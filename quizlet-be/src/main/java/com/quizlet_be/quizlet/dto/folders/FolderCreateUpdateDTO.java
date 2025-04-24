@@ -13,7 +13,7 @@ import java.util.UUID;
 public class FolderCreateUpdateDTO {
 
     @NotBlank(message = "Your folder name cannot be empty")
-    @Size(min = 5, max = 150, message = "Your folder name must be at between 5 to 150 characters")
+    @Size(max = 150, message = "Your folder name cannot larger than 150 characters")
     private String name;
 
     @Size(max = 255, message = "Your folder description cannot exceeded 255 characters")

@@ -1,13 +1,15 @@
 import "./Login.scss";
 
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { FormLoginValues, loginSchemas } from "../../../schemas/authSchemas";
+import {
+  FormLoginValues,
+  loginSchemas,
+} from "../../../schemas/auth/authSchemas";
 import { setCredentials, useLoginMutation } from "../../../store";
 
 import { AlertMessage, Input, Button } from "../../../shared/components";

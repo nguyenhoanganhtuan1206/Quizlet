@@ -21,6 +21,7 @@ export interface InputProps<T extends FieldValues> {
   control: Control<T>;
   type: InputType;
   variant?: InputVariant;
+  isShowError?: boolean;
   placeholder?: string;
   label?: string;
   isError?: boolean;
@@ -37,4 +38,5 @@ export interface SelectProps<T extends FieldValues> {
   options: SelectOptionProps[];
   variant: InputVariant;
   isError?: boolean;
+  className?: string;
 }

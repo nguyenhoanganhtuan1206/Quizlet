@@ -77,7 +77,7 @@ export default function Input<T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange } }) => {
+      render={({ field: { onChange }, fieldState: { error } }) => {
         return (
           <div className={`${outsideClassName} relative`}>
             {label && (
@@ -112,6 +112,7 @@ export default function Input<T extends FieldValues>({
             {/*!
              * Using to display the error message
              * */}
+            {error && <span>{error.message}</span>}
             {/*!
              * Using to display the error message
              * */}

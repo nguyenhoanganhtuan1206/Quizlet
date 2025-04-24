@@ -5,7 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import {
   FormRegisterValues,
   registerSchemas,
-} from "../../../schemas/authSchemas";
+} from "../../../schemas/auth/authSchemas";
 
 import ButtonLoginSocial from "../ButtonLoginSocial";
 import { AlertMessage, Button, Input } from "../../../shared/components";
