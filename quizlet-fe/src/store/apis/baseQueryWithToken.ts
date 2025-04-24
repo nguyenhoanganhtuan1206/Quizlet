@@ -1,14 +1,19 @@
+import { toast } from "react-toastify";
 import {
   BaseQueryFn,
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
-import { toast } from "react-toastify";
 
 import { logout, setCredentials } from "..";
 import { AuthResponseDTO } from "../../type";
-import { getCurrentRefreshToken, getCurrentToken, pause } from "../../utils";
+import {
+  getCurrentRefreshToken,
+  getCurrentToken,
+  navigateTo,
+  pause,
+} from "../../utils";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_ENDPOINT,
@@ -41,6 +46,7 @@ export const baseQueryWithToken: BaseQueryFn<
       console.error("Doesn't have refresh token {baseQueryWithToken}");
 
       store.dispatch(logout());
+      navigateTo("/auth");
       return result;
     }
 
@@ -70,12 +76,17 @@ export const baseQueryWithToken: BaseQueryFn<
         toast.error(
           "The seem your session is expired or invalid!! Please try to login again!!"
         );
+        navigateTo("/auth"); // Redirect to auth page
         store.dispatch(logout());
       }
     } catch (error) {
       console.error("Error while calling api {baseQueryWithToken}", error);
 
       store.dispatch(logout());
+      navigateTo("/auth"); // Redirect to auth page
+      throw new Error(
+        "The seem your session is expired or invalid!! Please try to login again!!"
+      );
     }
   }
 
