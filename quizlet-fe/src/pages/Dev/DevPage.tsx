@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { SelectOptionProps } from "../../type/form/Input";
 
 import MultipleSelect from "../../shared/components/FormFields/multiple_select";
+import FormLabel from "@/shared/components/FormFields/form_label";
 
 interface FormData {
   multipleSelect: (string | number)[];
@@ -25,6 +26,14 @@ export default function DevPage() {
       title: "Lambor 4",
       value: "lambor 4",
     },
+    {
+      title: "Lambor 4",
+      value: "lambor 5",
+    },
+    {
+      title: "Lambor 4",
+      value: "lambor 6",
+    },
   ];
   const selectForm = useForm<FormData>({
     defaultValues: {
@@ -37,9 +46,10 @@ export default function DevPage() {
   };
 
   return (
-    <form onSubmit={selectForm.handleSubmit(handleOnSubmit)}>
+    <form onSubmit={selectForm.handleSubmit(handleOnSubmit)} className="p-5">
+      <FormLabel name="multipleSelect">Label</FormLabel>
+
       <MultipleSelect
-        isMultiple
         control={selectForm.control}
         name="multipleSelect"
         options={initialOptionSelection}

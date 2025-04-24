@@ -8,8 +8,8 @@ import {
   Button,
   Input,
   Modal,
-  Select,
   Skeleton,
+  MultipleSelect,
 } from "../../../shared/components";
 import { AppDispatch, RootState } from "../../../store";
 import { fetchFolders } from "../../../store/thunks";
@@ -59,7 +59,7 @@ export default function ModalFolderCreation({
   return (
     <Modal
       onClosed={onClosed}
-      className="modal__folder-creation"
+      className="modal__folder-creation h-[400px] overflow-hidden"
       isOpen={isShowModal}
       isShowCloseIcon={true}
     >
@@ -104,12 +104,11 @@ export default function ModalFolderCreation({
             className="h-[180px] mt-5 transition-all duration-700"
           />
 
-          <Select
-            variant="mode-black"
+          <MultipleSelect
             control={control}
             name="parent_id"
             options={initialFolderOptions}
-            isMultiple
+            variant="mode-black"
           />
 
           <div className="flex justify-end mt-12">
