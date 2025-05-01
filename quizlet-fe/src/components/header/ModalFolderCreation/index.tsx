@@ -4,8 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import { folderSchema } from "@/schemas";
+import { FolderCreationRequestDTO } from "@/type";
 import {
   Button,
   ErrorMessage,
@@ -27,12 +29,6 @@ type ModalFolderCreationProps = {
   onClosed: () => void;
 };
 
-type FormModalCreationValues = {
-  name: string;
-  description: string;
-  parent_id: string[];
-};
-
 export default function ModalFolderCreation({
   isShowModal,
   onClosed,
@@ -41,7 +37,7 @@ export default function ModalFolderCreation({
     (rootState: RootState) => rootState.folderSlice
   );
   const dispatch = useDispatch<AppDispatch>();
-  const [createFolder, { isSuccess }] = useCreateFolderMutation();
+  const [createFolder] = useCreateFolderMutation();
 
   useEffect(() => {
     if (isShowModal) {
@@ -52,14 +48,14 @@ export default function ModalFolderCreation({
   const {
     control,
     handleSubmit,
-    getFieldState,
+    reset,
     formState: { errors },
-  } = useForm<FormModalCreationValues>({
+  } = useForm<FolderCreationRequestDTO>({
     resolver: zodResolver(folderSchema),
     defaultValues: {
       name: "",
       description: "",
-      parent_id: [],
+      folderChildIds: [],
     },
   });
 
@@ -70,10 +66,20 @@ export default function ModalFolderCreation({
     })
   );
 
-  const handleOnSubmit = () => {
-    console.log("getValues", getFieldState("name"));
-
-    // createFolder()
+  const handleOnSubmit = (data: FolderCreationRequestDTO) => {
+    createFolder(data)
+      .unwrap()
+      .then(() => {
+        reset();
+        toast.success("Create the new folder successfully!");
+      })
+      .catch((error) => {
+        console.error(
+          "Error while create the new Folder {ModelFolderCreation} ",
+          error.data.message
+        );
+        toast.error(error.data.message);
+      });
   };
 
   return (
@@ -129,8 +135,8 @@ export default function ModalFolderCreation({
           <MultipleSelect
             className="mt-3"
             control={control}
-            name="parent_id"
-            options={initialFolderOptions}
+            name="folderChildIds"
+            listOptions={initialFolderOptions}
             variant="mode-black"
           />
 
@@ -139,6 +145,7 @@ export default function ModalFolderCreation({
               variant="primary"
               type="submit"
               className="flex justify-end w-fit rounded-lg"
+              onSubmit={handleSubmit(handleOnSubmit)}
             >
               Create Folder
             </Button>

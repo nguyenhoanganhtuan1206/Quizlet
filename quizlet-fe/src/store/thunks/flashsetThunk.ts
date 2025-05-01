@@ -4,7 +4,6 @@ import axiosInstance from "../../hooks/useAxios";
 
 import { FlashSetSummaryDTO } from "../../type";
 import { pause } from "../../utils";
-import { AxiosError } from "axios";
 
 export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], string>(
   "flashsets/fetchFlashSets",
@@ -16,13 +15,12 @@ export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], string>(
 
       return response.data;
     } catch (error) {
-      const axiosError = error as AxiosError;
       console.error(
         "Error while calling {flashSetThunk || fetchFlashSets}: ",
         error
       );
 
-      return rejectWithValue(axiosError);
+      return rejectWithValue(error);
     }
   }
 );

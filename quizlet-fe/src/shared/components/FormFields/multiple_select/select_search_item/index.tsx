@@ -8,23 +8,23 @@ import { InputVariant, SelectOptionProps } from "@/type/form/Input";
 
 interface SelectSearchItemProps {
   variant: InputVariant;
-  selectedValues: SelectOptionProps[];
+  selectedOptions: SelectOptionProps[];
   isShowListOptions: boolean;
   setIsShowListOptions: (isShow: boolean) => void;
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  onChange: (options: SelectOptionProps[]) => void;
+  handleRemoveItem: (option: string | number) => void;
 }
 
 export default function SelectSearchItem({
   variant,
-  onChange,
-  selectedValues,
+  selectedOptions,
   isShowListOptions,
   setIsShowListOptions,
   searchTerm,
   setSearchTerm,
-}: SelectSearchItemProps) {
+  handleRemoveItem,
+}: Readonly<SelectSearchItemProps>) {
   /*
     Define classNames
   */
@@ -44,31 +44,21 @@ export default function SelectSearchItem({
     "inline-flex items-center bg-transparent px-2 py-1 rounded mr-1 mb-1"
   );
 
-  const handleRemoveItem = (itemRemove: SelectOptionProps) => {
-    if (!itemRemove || !selectedValues) {
-      return;
-    }
-
-    const updatedValues = selectedValues.filter(
-      (currentItem) => currentItem.value !== itemRemove.value
-    );
-
-    onChange(updatedValues);
-  };
-
+  console.log("selectedOptions", selectedOptions);
+  
   /* Display values selected */
   const renderSelectedValues = () => {
     return (
       <div className="flex flex-wrap translate-[-50%, -50%]">
-        {selectedValues.map((valSelected, index) => (
+        {selectedOptions.map((optionSelected, index) => (
           <p
             key={index}
             className="flex items-center p-3 mr-3 mt-3 border border-gray-500 rounded-md text-xl cursor-pointer"
           >
-            <span>{valSelected.title}</span>
+            <span>{optionSelected.title}</span>
 
             <IoCloseCircleOutline
-              onClick={() => handleRemoveItem(valSelected)}
+              onClick={() => handleRemoveItem(optionSelected.value)}
               className="ml-3 text-[1.6rem] h-[20px] w-[20px] hover:opacity-60"
             />
           </p>
@@ -79,7 +69,7 @@ export default function SelectSearchItem({
 
   return (
     <div className={selectSearchItemWrapperClassNames}>
-      {selectedValues && selectedValues.length > 0 && (
+      {selectedOptions && selectedOptions.length > 0 && (
         <div className={listSelectedValuesClassNames}>
           {renderSelectedValues()}
         </div>
@@ -98,7 +88,7 @@ export default function SelectSearchItem({
             setIsShowListOptions(true);
           }
         }}
-        placeholder={selectedValues.length === 0 ? "Select your options" : ""}
+        placeholder={selectedOptions.length === 0 ? "Select your options" : ""}
       />
     </div>
   );

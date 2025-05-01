@@ -34,7 +34,7 @@ export interface InputProps<T extends FieldValues> {
 export interface SelectProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
-  options: SelectOptionProps[];
+  listOptions: SelectOptionProps[];
   variant: InputVariant;
   isError?: boolean;
   className?: string;

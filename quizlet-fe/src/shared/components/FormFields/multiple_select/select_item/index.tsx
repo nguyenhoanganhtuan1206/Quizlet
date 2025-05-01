@@ -6,22 +6,22 @@ import { InputVariant, SelectOptionProps } from "@/type/form/Input";
 import classNames from "classnames";
 
 interface SelectItemProps {
-  options: SelectOptionProps[];
-  value: SelectOptionProps[];
+  listOptions: SelectOptionProps[];
   variant?: InputVariant;
   searchTerm?: string;
   isShowListOptions: boolean;
-  onChange: (value: SelectOptionProps[]) => void;
+  valueSelected: (string | number)[];
+  handleSelectOption: (value: string | number) => void;
 }
 
 export default function SelectItem({
   variant,
-  options,
-  value,
+  listOptions,
   searchTerm,
   isShowListOptions,
-  onChange,
-}: SelectItemProps) {
+  valueSelected,
+  handleSelectOption,
+}: Readonly<SelectItemProps>) {
   const selectItemWrapperClassNames = classNames(
     "select-item__wrapper absolute top-[105%] h-[250px] max-h-[450px] left-0 flex flex-wrap w-full border-gray-300 rounded-[6px] overflow-y-auto",
     isShowListOptions ? "flex" : "hidden",
@@ -47,25 +47,19 @@ export default function SelectItem({
     }
   );
 
-  /* Handle onChange */
-  const handleSelectOption = (valueInput: SelectOptionProps) => {
-    const isValueSelected = value.some((val) => val.value === valueInput.value);
-    const newValue = isValueSelected
-      ? value.filter((val) => val.value !== valueInput.value)
-      : [...value, valueInput];
-
-    onChange(newValue);
-  };
-
+  /**
+   * Filter items from search feature
+   *
+   */
   const filteredOptions = useMemo(() => {
     if (!searchTerm) {
-      return options;
+      return listOptions;
     }
 
-    return options.filter((option) =>
+    return listOptions.filter((option) =>
       option.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [options, searchTerm]);
+  }, [listOptions, searchTerm]);
 
   return (
     <div className={selectItemWrapperClassNames}>
@@ -77,13 +71,15 @@ export default function SelectItem({
               className={selectItemClassNames}
               onClick={(e) => {
                 e.stopPropagation();
-                handleSelectOption(option);
+                handleSelectOption(option.value);
               }}
             >
               <input
                 className={selectItemCheckBoxClassNames}
                 type="checkbox"
-                checked={value.some((val) => val.value === option.value)}
+                checked={valueSelected.some(
+                  (currentVal) => currentVal === option.value
+                )}
                 readOnly
               />
               {option.title}

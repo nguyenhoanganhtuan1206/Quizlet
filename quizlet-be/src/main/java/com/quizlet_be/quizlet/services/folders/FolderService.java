@@ -119,9 +119,9 @@ public class FolderService {
      */
     @Transactional
     public Folder createFolder(final UUID userId, final FolderCreateUpdateDTO folderCreation) {
-        try {
-            validateFolderIsExisted(folderCreation.getName());
+        validateFolderIsExisted(folderCreation.getName());
 
+        try {
             final Folder folderCreated = folderStore.save(buildFolderCreation(folderCreation, userId));
 
             // Save Folder Children

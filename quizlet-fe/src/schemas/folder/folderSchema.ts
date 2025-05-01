@@ -8,5 +8,5 @@ export const folderSchema = z.object({
   description: z
     .string()
     .max(255, "Your folder description cannot larger than 255 characters"),
-  parent_id: z.array(z.string()),
+  folderChildIds: z.array(z.string()),
 });

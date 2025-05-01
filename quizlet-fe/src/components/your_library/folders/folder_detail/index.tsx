@@ -41,10 +41,19 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
     <>
       {navigationBreadCrumbState.allPages.length > 1 && (
         <BreadCrumbNavigation
+          className="text-[1.7rem]"
           wrapperClassName="px-2 py-10"
           currentPage={folderDetails.folder.name}
         />
       )}
+
+      {!folderDetails.foldersSummaryChildren ||
+        (folderDetails.foldersSummaryChildren.length === 0 && (
+          <p className="text-white text-center text-[2rem] mt-10 font-bold">
+            This Folder is empty let add more Flashsets or Folders in the button
+            above !!
+          </p>
+        ))}
 
       {/* Folder List Section */}
       {folderDetails.foldersSummaryChildren &&

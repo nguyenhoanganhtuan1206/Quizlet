@@ -52,7 +52,8 @@ export default function Input<T extends FieldValues>({
   const renderInput = (
     onChange: (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => void
+    ) => void,
+    value: string
   ) => {
     return type === "textarea" ? (
       <textarea
@@ -61,6 +62,8 @@ export default function Input<T extends FieldValues>({
         cols={cols}
         rows={rows}
         onChange={onChange}
+        value={value}
+        defaultValue={value}
         onFocus={onFocus}
         placeholder={placeholder}
       />
@@ -71,6 +74,8 @@ export default function Input<T extends FieldValues>({
         type={showInputType()}
         onChange={onChange}
         onFocus={onFocus}
+        value={value}
+        defaultValue={value}
         placeholder={placeholder}
       />
     );
@@ -80,7 +85,9 @@ export default function Input<T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange } }) => {
+      render={({ field: { onChange, value } }) => {
+        console.log("value", value);
+        
         return (
           <div className={`${outsideClassName} relative`}>
             {/**
@@ -88,7 +95,7 @@ export default function Input<T extends FieldValues>({
              */}
             {type === "password" ? (
               <div className="relative">
-                {renderInput(onChange)}
+                {renderInput(onChange, value)}
                 <button
                   onClick={() => setIsShowPassword(!isShowPassword)}
                   className="absolute top-[50%] right-0 translate-x-[-50%] translate-y-[-50%] text-[1.7rem] cursor-pointer p-2"
@@ -97,7 +104,7 @@ export default function Input<T extends FieldValues>({
                 </button>
               </div>
             ) : (
-              renderInput(onChange)
+              renderInput(onChange, value)
             )}
             {/**
              * Just display when have the hidden password

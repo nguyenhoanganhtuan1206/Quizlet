@@ -11,7 +11,7 @@ import SelectItem from "./select_item";
 export default function MultipleSelect<T extends FieldValues>({
   control,
   name,
-  options,
+  listOptions,
   variant,
   className,
 }: Readonly<SelectProps<T>>) {
@@ -23,28 +23,70 @@ export default function MultipleSelect<T extends FieldValues>({
       control={control}
       name={name}
       render={({
-        field: { onChange, value = [] as SelectOptionProps[] },
+        field: { onChange, value = [] as (string | number)[] },
         fieldState: { error },
       }) => {
+        /**
+         * Handle remove item
+         */
+        const handleRemoveItem = (itemRemove: string | number) => {
+          if (!itemRemove || !value) {
+            return;
+          }
+
+          const updatedValues = value.filter(
+            (currentItem) => currentItem !== itemRemove
+          );
+
+          onChange(updatedValues);
+        };
+
+        /**
+         * Handle selected the item
+         */
+        const handleSelectOption = (optionSelected: string | number) => {
+          const isValueSelected = value.some(
+            (currentVal) => currentVal === optionSelected
+          );
+          console.log("isValueSelected", isValueSelected);
+
+          const newValue = isValueSelected
+            ? value.filter((currentVal) => currentVal !== optionSelected)
+            : [...value, optionSelected];
+          console.log("value", value);
+          console.log("newValue", newValue);
+          console.log("valueSelected", optionSelected);
+
+          onChange(newValue);
+          setSearchTerm("");
+        };
+
+        /**
+         * Map to display on the UI
+         */
+        const selectedOptions: SelectOptionProps[] = value
+          .map((val) => listOptions.find((option) => option.value === val))
+          .filter((option) => !!option); // Filter all the value is undefined
+
         return (
           <div className={`${className} relative`}>
             <SelectSearchItem
               variant={variant}
-              selectedValues={value}
-              onChange={onChange}
+              selectedOptions={selectedOptions}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               isShowListOptions={isShowListOptions}
               setIsShowListOptions={setIsShowListOptions}
+              handleRemoveItem={handleRemoveItem}
             />
 
             <SelectItem
               searchTerm={searchTerm}
               variant={variant}
               isShowListOptions={isShowListOptions}
-              options={options}
-              value={value}
-              onChange={onChange}
+              listOptions={listOptions}
+              valueSelected={value}
+              handleSelectOption={handleSelectOption}
             />
 
             {error && <span>{error.message}</span>}

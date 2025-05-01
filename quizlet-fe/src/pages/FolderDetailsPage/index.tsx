@@ -42,12 +42,15 @@ export default function FolderDetailsPage() {
   }
 
   if (!folderDetails) {
-    return <div>Is empty</div>;
+    return <div>This Folder is empty</div>;
   }
 
   return (
     <>
-      <FolderDetailHeader folderDetails={folderDetails.folder} />
+      <FolderDetailHeader
+        className="mt-10 mb-3"
+        folderDetails={folderDetails.folder}
+      />
 
       <FolderDetails folderDetails={folderDetails} />
     </>
