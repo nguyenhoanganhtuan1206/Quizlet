@@ -26,12 +26,12 @@ import {
 
 type ModalFolderCreationProps = {
   isShowModal: boolean;
-  onClosed: () => void;
+  onClose: () => void;
 };
 
 export default function ModalFolderCreation({
   isShowModal,
-  onClosed,
+  onClose,
 }: Readonly<ModalFolderCreationProps>) {
   const fetchFoldersState = useSelector(
     (rootState: RootState) => rootState.folderSlice
@@ -84,7 +84,7 @@ export default function ModalFolderCreation({
 
   return (
     <Modal
-      onClosed={onClosed}
+      onClose={onClose}
       className="modal__folder-creation h-[400px] overflow-y-auto"
       isOpen={isShowModal}
       isShowCloseIcon={true}

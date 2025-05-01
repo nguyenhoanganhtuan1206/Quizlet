@@ -98,7 +98,7 @@ function Header() {
 
       <ModalFolderCreation
         isShowModal={isShowCreateFolder}
-        onClosed={handleShowModalCreation}
+        onClose={handleShowModalCreation}
       />
     </>
   );

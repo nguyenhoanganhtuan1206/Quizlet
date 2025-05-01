@@ -8,7 +8,7 @@ import { ReactPropsChildren } from '../../../type';
 
 type ModalProps = {
   isOpen: boolean;
-  onClosed: () => void;
+  onClose: () => void;
   isShowCloseIcon?: boolean;
   className?: string;
   closeIconClassName?: string;
@@ -16,7 +16,7 @@ type ModalProps = {
 };
 export default function Modal({
   isOpen,
-  onClosed,
+  onClose,
   isShowCloseIcon,
   className,
   closeIconClassName,
@@ -24,7 +24,7 @@ export default function Modal({
 }: Readonly<ModalProps>) {
   const modalBackdropPortal = () =>
     ReactDOM.createPortal(
-      <div className="modal-backdrop" onClick={onClosed}></div>,
+      <div className="modal-backdrop" onClick={onClose}></div>,
       document.body
     );
 
@@ -34,7 +34,7 @@ export default function Modal({
 
       <div className={`modal ${isOpen ? 'modal--active' : ''} ${className}`}>
         {isShowCloseIcon && (
-          <button title="Close Modal" className="positive" onClick={onClosed}>
+          <button title="Close Modal" className="positive" onClick={onClose}>
             <IoMdClose className={`modal-close__icon ${closeIconClassName}`} />
           </button>
         )}

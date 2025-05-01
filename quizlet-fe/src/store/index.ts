@@ -11,7 +11,7 @@ import {
   navigateBreadCrumbReducer,
   navigateBreadCrumbSlice,
 } from "./slices/";
-import { flashSetApis, authApis, folderApis } from "./apis";
+import {  authApis, folderApis } from "./apis";
 
 const store = configureStore({
   reducer: {
@@ -20,15 +20,13 @@ const store = configureStore({
     [flashSetSlice.reducerPath]: flashSetReducer,
     [folderSlice.reducerPath]: folderSlice.reducer,
     [authApis.reducerPath]: authApis.reducer,
-    [flashSetApis.reducerPath]: flashSetApis.reducer,
     [folderApis.reducerPath]: folderApis.reducer,
     [navigateBreadCrumbSlice.reducerPath]: navigateBreadCrumbReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
       .concat(authApis.middleware)
-      .concat(folderApis.middleware)
-      .concat(flashSetApis.middleware);
+      .concat(folderApis.middleware);
   },
 });
 
@@ -46,7 +44,6 @@ export {
 export {
   useLoginMutation,
   useRegisterMutation,
-  useGetFlashSetQuery,
   useFetchFolderByIdQuery,
   useCreateFolderMutation,
 } from "./apis";

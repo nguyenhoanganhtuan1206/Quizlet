@@ -22,8 +22,8 @@ export default function FlashSetListSection() {
   );
 
   useEffect(() => {
-    dispatch(fetchFlashSets(currentUser.user_id));
-  }, [currentUser.user_id, dispatch]);
+    dispatch(fetchFlashSets());
+  }, [dispatch]);
 
   if (isLoading) {
     return (

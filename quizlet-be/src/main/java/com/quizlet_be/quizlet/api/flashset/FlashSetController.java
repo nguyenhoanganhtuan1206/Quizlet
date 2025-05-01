@@ -24,6 +24,13 @@ public class FlashSetController {
 
     private final JwtTokenUtil jwtTokenUtil;
 
+    @GetMapping
+    public List<FlashSetSummaryDTO> findAllByUserId(final @RequestHeader(value = "Authorization") String authorizationHeader) {
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return flashSetService.findByUserId(userId);
+    }
+
     @PostMapping
     public FlashSetDetailResponseDTO createFlashSet(
             final @RequestBody FlashSetCreationRequestDTO flashSetRequestDTO,
@@ -43,11 +50,6 @@ public class FlashSetController {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
 
         return flashSetService.updateFlashSet(userId, flashSetId, flashSetRequestDTO);
-    }
-
-    @GetMapping("{userId}/users")
-    public List<FlashSetSummaryDTO> findAllByUserId(final @PathVariable("userId") UUID userId) {
-        return flashSetService.findByUserId(userId);
     }
 
     @GetMapping("{folderId}/folder")

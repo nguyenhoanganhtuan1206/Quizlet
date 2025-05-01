@@ -1,28 +1,6 @@
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { Navigate } from "react-router-dom";
-
 import { PopularCardList, RecentCardsList } from "../../components/";
-import { decodeToken, getCurrentToken } from "../../utils";
-import { logout } from "../../store";
-import { AuthError } from "../../type";
 
 const HomePage = () => {
-  const token = getCurrentToken();
-  const dispatch = useDispatch();
-
-  let userId: string;
-  try {
-    const decodedToken = decodeToken(token);
-    userId = decodedToken.user_id;
-  } catch (error) {
-    const authError = error as AuthError;
-    console.error("Token decoding failed: ", error);
-    toast.error(authError.message);
-    dispatch(logout());
-    return <Navigate to="/auth" replace />;
-  }
-
   return (
     <>
       {/**
@@ -32,7 +10,7 @@ const HomePage = () => {
         Recent flashcards
       </h3>
 
-      <RecentCardsList userId={userId} />
+      <RecentCardsList />
 
       {/**
        * Popular flashset List

@@ -5,13 +5,13 @@ import axiosInstance from "../../hooks/useAxios";
 import { FlashSetSummaryDTO } from "../../type";
 import { pause } from "../../utils";
 
-export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], string>(
+export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], void>(
   "flashsets/fetchFlashSets",
-  async (userId: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       await pause(600);
 
-      const response = await axiosInstance.get(`flashsets/${userId}/users`);      
+      const response = await axiosInstance.get("flashsets");
 
       return response.data;
     } catch (error) {
