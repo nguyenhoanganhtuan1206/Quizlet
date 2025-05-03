@@ -6,11 +6,13 @@ import com.quizlet_be.quizlet.dto.flashsets.FlashSetSummaryDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetUpdateRequestDTO;
 import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import com.quizlet_be.quizlet.services.flashset.FlashSetService;
+import com.quizlet_be.quizlet.services.folder_flashset.FolderFlashSetService;
 import com.quizlet_be.quizlet.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +56,7 @@ public class FlashSetController {
 
     @GetMapping("{folderId}/folder")
     public List<FlashSet> findByFolderId(final @PathVariable UUID folderId) {
-        return flashSetService.findByFolderId(folderId);
+//        return folderFlashSetService.findByFolderId(folderId);
+        return new ArrayList<>();
     }
 }

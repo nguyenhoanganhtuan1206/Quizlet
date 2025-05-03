@@ -5,16 +5,19 @@ import com.quizlet_be.quizlet.dto.flashsets.FlashSetCreationRequestDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetSummaryDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetUpdateRequestDTO;
+import com.quizlet_be.quizlet.error.NotFoundException;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetStore;
 import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItem;
 import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemService;
 import com.quizlet_be.quizlet.services.folder_flashset.FolderFlashSet;
-import com.quizlet_be.quizlet.services.folder_flashset.FolderFlashSetService;
+import com.quizlet_be.quizlet.services.folders.Folder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,22 +35,13 @@ public class FlashSetService {
 
     private final FlashSetItemService flashSetItemService;
 
-    private final FolderFlashSetService folderFlashSetService;
+    private final FolderFlashSetManagerService folderFlashSetManagerService;
 
     private final Logger logger = Logger.getLogger(FlashSetService.class.getName());
 
     public FlashSet findById(final UUID flashSetId) {
         return flashSetStore.findById(flashSetId)
                 .orElseThrow(supplyNotFoundException("ID", flashSetId));
-    }
-
-    public List<FlashSet> findByFolderId(final UUID folderId) {
-        final List<FolderFlashSet> folderFlashSets = folderFlashSetService.findByFolderId(folderId);
-
-        return folderFlashSets
-                .stream()
-                .map(folderFlashSet -> findById(folderFlashSet.getFlashSetId()))
-                .toList();
     }
 
     public List<FlashSetSummaryDTO> findByUserId(final UUID userId) {
@@ -59,16 +53,12 @@ public class FlashSetService {
                 .toList();
     }
 
-    public long countByFolderId(final UUID folderId) {
-        return folderFlashSetService.countByFolderId(folderId);
-    }
-
     /**
      * Creates a new flash set.
      * Creates a new flash set items.
      *
-     * @param FlashSetCreationRequestDTO The request containing the flash set details, items, and optional folder ID.
-     * @param userId                     The ID of the user creating the flash set.
+     * @param @{@link FlashSetCreationRequestDTO} The request containing the flash set details, items, and optional folder ID.
+     * @param userId  The ID of the user creating the flash set.
      * @return A DTO containing the details of the created flash set and its items.
      * @throws com.quizlet_be.quizlet.error.NotFoundException   If the specified folder does not exist.
      * @throws com.quizlet_be.quizlet.error.BadRequestException If the flash set cannot be created due to a constraint violation.
@@ -79,7 +69,6 @@ public class FlashSetService {
             final UUID userId
     ) {
         validateFlashSetItemCreation(flashSetCreationRequest, userId);
-
         try {
             final FlashSet flashSetCreation = flashSetStore.save(buildFlashSetByRequestAndUserId(flashSetCreationRequest, userId));
 
@@ -91,9 +80,32 @@ public class FlashSetService {
             // Save all the FlashSet Item
             flashSetItemService.saveAll(flashSetItemsBuilder);
 
-            folderFlashSetService.save(buildFolderFlashSet(flashSetCreationRequest.getFolderId(), flashSetCreation.getId()));
+            // Save flashset to folders
+            if (!flashSetCreationRequest.getFolderIds().isEmpty()) {
+//                final Set<Folder> folders = folderService.findAllByIds(flashSetCreationRequest.getFolderIds());
+                final Set<Folder> folders = new HashSet<>();
 
-            return mapToFlashSEtDetailResponseDTO(flashSetCreation, flashSetItemsBuilder);
+                folders.forEach(folder -> {
+                    try {
+
+//                        folderFlashSetService.save(
+//                                buildFolderFlashSet(folder.getId(), flashSetCreation.getId())
+//                        );
+                    } catch (Exception ex) {
+                        logger.log(Level.WARNING,
+                                String.format("Failed to associate flash set %s with folder %s: %s",
+                                        flashSetCreation.getId(), folder.getId(), ex.getMessage()),
+                                ex);
+                        // Continue with other folders instead of failing the entire operation
+                    }
+                });
+            }
+
+            logger.log(Level.FINEST, String.format("Successfully created flash set %s by user %s", flashSetCreation.getId(), userId));
+            return mapToFlashSetDetailResponseDTO(flashSetCreation, flashSetItemsBuilder);
+        } catch (NotFoundException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            throw supplyBadRequestException(ex.getMessage()).get();
         } catch (Exception ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             throw supplyBadRequestException("Something went wrong while creating new flash set!!! Could you please try it again!!!").get();
@@ -104,8 +116,8 @@ public class FlashSetService {
      * Creates a new flash set.
      * Creates a new flash set items.
      *
-     * @param FlashSetUpdateRequestDTO The request containing the flash set details, items, and optional folder ID.
-     * @param userId                   The ID of the user creating the flash set.
+     * @param @{@link FlashSetUpdateRequestDTO} The request containing the flash set details, items, and optional folder ID.
+     * @param userId  The ID of the user creating the flash set.
      * @return A DTO containing the details of the created flash set and its items.
      * @throws com.quizlet_be.quizlet.error.NotFoundException   If the specified folder does not exist.
      * @throws com.quizlet_be.quizlet.error.BadRequestException If the flash set cannot be created due to a constraint violation.
@@ -149,6 +161,12 @@ public class FlashSetService {
                 .build();
     }
 
+    /**
+     * Build the @{@link FolderFlashSet}
+     *
+     * @param folderId
+     * @param flashSetId return @{@link FolderFlashSet}
+     */
     private FolderFlashSet buildFolderFlashSet(final UUID folderId, final UUID flashSetId) {
         return FolderFlashSet.builder()
                 .folderId(folderId)
@@ -179,7 +197,7 @@ public class FlashSetService {
                 .build();
     }
 
-    private FlashSetDetailResponseDTO mapToFlashSEtDetailResponseDTO(
+    private FlashSetDetailResponseDTO mapToFlashSetDetailResponseDTO(
             final FlashSet flashSet,
             final List<FlashSetItem> flashSetItems
     ) {

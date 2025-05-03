@@ -6,8 +6,6 @@ import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.error.ConflictException;
 import com.quizlet_be.quizlet.error.NotFoundException;
 import com.quizlet_be.quizlet.persistent.folders.FolderStore;
-import com.quizlet_be.quizlet.services.flashset.FlashSet;
-import com.quizlet_be.quizlet.services.flashset.FlashSetService;
 import com.quizlet_be.quizlet.services.folder_parents.FolderParents;
 import com.quizlet_be.quizlet.services.folder_parents.FolderParentsService;
 import jakarta.transaction.Transactional;
@@ -15,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -36,19 +31,43 @@ public class FolderService {
 
     private static final Logger LOGGER = Logger.getLogger(FolderService.class.getName());
     private final FolderStore folderStore;
-    private final FlashSetService flashSetService;
+
+    private final FolderFlashSetManagerService folderFlashSetManagerService;
+
     private final FolderParentsService folderParentsService;
 
     /**
-     * Retrieves the folder by ID
+     * Finds a folder by its ID.
      *
-     * @param folderId The ID of the folder to retrieve details for.
-     * @return Folder
-     * @throws NotFoundException If the folder with the specified ID does not exist.
+     * @param folderId The ID of the folder to find.
+     * @return The Folder entity.
+     * @throws @BadRequestException If the folder is not found.
      */
     public Folder findById(final UUID folderId) {
         return folderStore.findById(folderId)
                 .orElseThrow(supplyNotFoundException("The folder ID with %s not existed!", folderId));
+    }
+
+    /**
+     * Find folders by ids and verify all the folder is not existing
+     *
+     * @param @{@link Set}<UUID> folderId
+     * @return @{@link List<Folder>}
+     * @throws @{@link NotFoundException}
+     */
+    public Set<Folder> findAllByIds(final List<UUID> folderIds) {
+        final Set<UUID> uniqueFolderIds = new HashSet<>(folderIds);
+
+        // Remove all folders duplicated
+        if (uniqueFolderIds.size() != folderIds.size()) {
+            LOGGER.warning("Duplicate folder IDs detected, deduplicated to: " + uniqueFolderIds);
+        }
+
+        // Fetch all the folders
+        return uniqueFolderIds.stream()
+                .map(this::findById)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -62,12 +81,12 @@ public class FolderService {
         try {
             final Folder folder = findById(folderId);
             final List<Folder> childrenFolders = findByParentId(folder.getId());
-            final List<FlashSet> flashSets = flashSetService.findByFolderId(folderId);
+//            final List<FlashSet> flashSets = folderFlashSetService.handle(folderId);
 
             return FolderFlashSetDetailResponseDTO.builder()
                     .folder(folder)
                     .foldersSummaryChildren(mapFoldersToFolderSummaryDTOs(childrenFolders))
-                    .flashSets(flashSets)
+                    .flashSets(new ArrayList<>())
                     .build();
         } catch (NotFoundException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
@@ -248,12 +267,12 @@ public class FolderService {
      */
     private FolderSummaryDTO mapFolderToFolderSummaryDTO(final Folder folder) {
         final long numberChildrenFolders = folderParentsService.countByParentFolderId(folder.getId());
-        final long numberFlashSets = flashSetService.countByFolderId(folder.getId());
+//        final long numberFlashSets = folderFlashSetService.countByFolderId(folder.getId());
 
         final FolderSummaryDTO folderSummary = toFolderSummaryDTO(folder);
 
         folderSummary.setNumberOfChildrenFolders(numberChildrenFolders);
-        folderSummary.setNumberOfFlashSets(numberFlashSets);
+        folderSummary.setNumberOfFlashSets(0);
         return folderSummary;
     }
 
@@ -292,8 +311,8 @@ public class FolderService {
     /**
      * Get difference between 2 lists.
      *
-     * @params @{@link List<UUID>}
      * @return Set<UUID>
+     * @params @{@link List<UUID>}
      */
     private Set<UUID> getDifferenceItemsInList(final List<UUID> firstListId, final List<UUID> secondListId) {
         return firstListId.stream()

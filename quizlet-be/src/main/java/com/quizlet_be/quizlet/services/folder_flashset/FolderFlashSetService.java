@@ -1,9 +1,13 @@
 package com.quizlet_be.quizlet.services.folder_flashset;
 
 import com.quizlet_be.quizlet.repositories.folder_flashset.FolderFlashSetRepository;
+import com.quizlet_be.quizlet.services.flashset.FlashSet;
+import com.quizlet_be.quizlet.services.flashset.FlashSetService;
+import com.quizlet_be.quizlet.services.folders.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +20,18 @@ import static com.quizlet_be.quizlet.services.folder_flashset.FolderFlashSetMapp
 public class FolderFlashSetService {
 
     private final FolderFlashSetRepository folderFlashSetRepository;
+
+    private final FolderFlashSetManagerService folderFlashSetManagerService;
+
+    public List<FlashSet> handle(final UUID folderId) {
+        final List<FolderFlashSet> folderFlashSets = findByFolderId(folderId);
+
+//        return folderFlashSets
+//                .stream()
+//                .map(folderFlashSet -> flashSetService.findById(folderFlashSet.getFlashSetId()))
+//                .toList();
+        return new ArrayList<>();
+    }
 
     public FolderFlashSet save(final FolderFlashSet folderFlashSet) {
         return toFolderFlashSet(folderFlashSetRepository.save(toFolderFlashSetEntity(folderFlashSet)));

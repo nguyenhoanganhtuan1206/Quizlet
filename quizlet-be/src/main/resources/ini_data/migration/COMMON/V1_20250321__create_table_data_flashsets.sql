@@ -4,8 +4,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Create table: flashsets
 CREATE TABLE flashsets (
     id          UUID            PRIMARY KEY,
-    name        VARCHAR(50)     NOT NULL        UNIQUE,
-    description VARCHAR(50),
+    name        VARCHAR(255)     NOT NULL        UNIQUE,
+    description VARCHAR(255),
     created_at  TIMESTAMP       NOT NULL        DEFAULT NOW(),
     updated_at  TIMESTAMP,
     isDrafted   BOOLEAN         DEFAULT TRUE,

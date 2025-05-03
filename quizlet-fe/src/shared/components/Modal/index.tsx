@@ -1,10 +1,9 @@
 import './Modal.scss';
+import { ReactPropsChildren } from '@/type';
 
 import ReactDOM from 'react-dom';
 
 import { IoMdClose } from 'react-icons/io';
-
-import { ReactPropsChildren } from '../../../type';
 
 type ModalProps = {
   isOpen: boolean;
@@ -14,6 +13,7 @@ type ModalProps = {
   closeIconClassName?: string;
   children: ReactPropsChildren;
 };
+
 export default function Modal({
   isOpen,
   onClose,
@@ -24,7 +24,7 @@ export default function Modal({
 }: Readonly<ModalProps>) {
   const modalBackdropPortal = () =>
     ReactDOM.createPortal(
-      <div className="modal-backdrop" onClick={onClose}></div>,
+      <div className="modal-backdropdown" onClick={onClose}></div>,
       document.body
     );
 

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.quizlet_be.quizlet.persistent.folders.FolderEntityMapper.toFolderEntity;
-import static com.quizlet_be.quizlet.services.folders.FolderMapper.toFolder;
-import static com.quizlet_be.quizlet.services.folders.FolderMapper.toFolders;
+import static com.quizlet_be.quizlet.services.folders.FolderMapper.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,6 +27,10 @@ public class FolderStore {
 
     public List<Folder> findByUserId(final UUID userId, final Sort sort) {
         return toFolders(folderRepository.findByUserId(userId, sort));
+    }
+
+    public List<Folder> findAllByIds(final Iterable<UUID> folderIds) {
+        return toFolders(folderRepository.findAllById(folderIds));
     }
 
     public Optional<Folder> findById(final UUID id) {
@@ -45,7 +49,7 @@ public class FolderStore {
      * Finds all folders that are parents by User ID
      *
      * @return a list of folderEntity objects representing for parent folders
-     * */
+     */
     public List<Folder> findParentFoldersByUserId(final UUID userId) {
         return toFolders(folderRepository.findParentFoldersByUserId(userId));
     }
