@@ -2,8 +2,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create junction table: folder_flashsetitems (for many-to-many relationship between folders and flashsetitems)
 CREATE TABLE folder_flashset (
-    id             UUID             NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-    folder_id       UUID            NULL,
+    id              UUID            NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+    folder_id       UUID            NOT NULL,
     flashset_id     UUID            NOT NULL,
     CONSTRAINT  fk_folder
         FOREIGN KEY (folder_id)

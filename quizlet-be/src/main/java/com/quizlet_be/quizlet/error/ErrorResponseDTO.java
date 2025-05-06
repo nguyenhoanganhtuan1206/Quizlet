@@ -4,12 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Builder
-public class ErrorDTO {
+public class ErrorResponseDTO<T> {
 
-    private String message;
+    private T message;
 
     private Instant occurAt;
 }

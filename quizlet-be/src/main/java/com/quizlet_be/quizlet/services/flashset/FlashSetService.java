@@ -7,23 +7,23 @@ import com.quizlet_be.quizlet.dto.flashsets.FlashSetSummaryDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetUpdateRequestDTO;
 import com.quizlet_be.quizlet.error.NotFoundException;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetStore;
+import com.quizlet_be.quizlet.persistent.flashsetitem.FlashSetItemStore;
+import com.quizlet_be.quizlet.persistent.folder_flashset.FolderFlashSetStore;
+import com.quizlet_be.quizlet.persistent.folders.FolderStore;
 import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItem;
-import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemService;
 import com.quizlet_be.quizlet.services.folder_flashset.FolderFlashSet;
 import com.quizlet_be.quizlet.services.folders.Folder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
+import static com.quizlet_be.quizlet.services.flashset.FlashSetError.throwFlashSetNotFoundError;
 import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.*;
 import static java.time.Instant.now;
 
@@ -33,15 +33,17 @@ public class FlashSetService {
 
     private final FlashSetStore flashSetStore;
 
-    private final FlashSetItemService flashSetItemService;
+    private final FolderStore folderStore;
 
-    private final FolderFlashSetManagerService folderFlashSetManagerService;
+    private final FlashSetItemStore flashSetItemStore;
+
+    private final FolderFlashSetStore folderFlashSetStore;
 
     private final Logger logger = Logger.getLogger(FlashSetService.class.getName());
 
     public FlashSet findById(final UUID flashSetId) {
         return flashSetStore.findById(flashSetId)
-                .orElseThrow(supplyNotFoundException("ID", flashSetId));
+                .orElseThrow(throwFlashSetNotFoundError("ID", flashSetId));
     }
 
     public List<FlashSetSummaryDTO> findByUserId(final UUID userId) {
@@ -78,19 +80,17 @@ public class FlashSetService {
                     .toList();
 
             // Save all the FlashSet Item
-            flashSetItemService.saveAll(flashSetItemsBuilder);
+            flashSetItemStore.saveAll(flashSetItemsBuilder);
 
             // Save flashset to folders
             if (!flashSetCreationRequest.getFolderIds().isEmpty()) {
-//                final Set<Folder> folders = folderService.findAllByIds(flashSetCreationRequest.getFolderIds());
-                final Set<Folder> folders = new HashSet<>();
+                final List<Folder> folders = folderStore.findAllByIds(flashSetCreationRequest.getFolderIds());
 
                 folders.forEach(folder -> {
                     try {
-
-//                        folderFlashSetService.save(
-//                                buildFolderFlashSet(folder.getId(), flashSetCreation.getId())
-//                        );
+                        folderFlashSetStore.save(
+                                buildFolderFlashSet(folder.getId(), flashSetCreation.getId())
+                        );
                     } catch (Exception ex) {
                         logger.log(Level.WARNING,
                                 String.format("Failed to associate flash set %s with folder %s: %s",
@@ -175,7 +175,7 @@ public class FlashSetService {
     }
 
     private FlashSetSummaryDTO mapToFlashSetSummaryDTO(final FlashSet flashSet) {
-        final long flashSetItemCount = flashSetItemService.countByFlashsetId(flashSet.getId());
+        final long flashSetItemCount = flashSetItemStore.countByFlashSetId(flashSet.getId());
 
         return FlashSetSummaryDTO.builder()
                 .id(flashSet.getId())

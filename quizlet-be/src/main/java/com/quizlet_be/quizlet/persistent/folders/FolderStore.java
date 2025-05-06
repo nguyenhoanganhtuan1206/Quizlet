@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.quizlet_be.quizlet.persistent.folders.FolderEntityMapper.toFolderEntity;
-import static com.quizlet_be.quizlet.services.folders.FolderMapper.*;
+import static com.quizlet_be.quizlet.services.folders.FolderMapper.toFolder;
+import static com.quizlet_be.quizlet.services.folders.FolderMapper.toFolders;
 
 @Repository
 @RequiredArgsConstructor

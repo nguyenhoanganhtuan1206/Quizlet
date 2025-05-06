@@ -32,4 +32,8 @@ public class FlashSetStore {
     public List<FlashSet> findByUserId(final UUID userId) {
         return toFlashSets(flashSetRepository.findByUserId(userId));
     }
+
+    public List<FlashSet> findAllById(final List<UUID> flashSetIds) {
+        return toFlashSets(flashSetRepository.findAllById(flashSetIds));
+    }
 }

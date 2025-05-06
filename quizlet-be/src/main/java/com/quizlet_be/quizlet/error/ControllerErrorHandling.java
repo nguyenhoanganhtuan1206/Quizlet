@@ -12,8 +12,8 @@ import java.time.Instant;
 public class ControllerErrorHandling {
 
     @ExceptionHandler({DomainException.class})
-    public ResponseEntity<ErrorDTO> handleDomainError(final DomainException domainException) {
-        final var errorDTO = ErrorDTO.builder()
+    public ResponseEntity<ErrorResponseDTO> handleDomainError(final DomainException domainException) {
+        final var errorDTO = ErrorResponseDTO.builder()
                 .message(domainException.getMessage())
                 .occurAt(Instant.now())
                 .build();

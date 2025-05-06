@@ -9,13 +9,10 @@ import com.quizlet_be.quizlet.utils.JwtTokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import static com.quizlet_be.quizlet.error.ValidationErrorHandling.handleValidationError;
 
 @RestController
 @RequestMapping("/api/v1/folders")
@@ -51,11 +48,8 @@ public class FolderController {
     @PostMapping
     public Folder createFolder(
             final @Valid @RequestBody FolderCreateUpdateDTO folderCreationDTO,
-            final @RequestHeader(value = "Authorization") String authorizationHeader,
-            final BindingResult bindingResult
+            final @RequestHeader(value = "Authorization") String authorizationHeader
     ) {
-        handleValidationError(bindingResult);
-
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
 
         return folderService.createFolder(userId, folderCreationDTO);
