@@ -25,6 +25,8 @@ public class FlashSetItemEntity {
 
     private String answer;
 
+    private int orderPosition;
+
     private Instant createdAt;
 
     private Instant updatedAt;

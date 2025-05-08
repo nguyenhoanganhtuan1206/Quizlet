@@ -58,7 +58,7 @@ public class FolderController {
     @PutMapping("{folderId}")
     public Folder updateFolder(
             final @PathVariable(name = "folderId") UUID folderId,
-            final @RequestBody FolderCreateUpdateDTO folderUpdateDTO,
+            final @Valid @RequestBody FolderCreateUpdateDTO folderUpdateDTO,
             final @RequestHeader(value = "Authorization") String authorizationHeader
     ) {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);

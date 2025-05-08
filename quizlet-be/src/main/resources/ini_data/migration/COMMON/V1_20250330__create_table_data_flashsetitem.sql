@@ -3,9 +3,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE flashsetitems (
     id          UUID            PRIMARY KEY,
-    answer      VARCHAR(50)     NOT NULL,
-    question    VARCHAR(50)     NOT NULL,
-    order_position INT          NOT NULL    UNIQUE,
+    answer      VARCHAR(255)    NOT NULL,
+    question    VARCHAR(255)    NULL,
+    order_position INT          NOT NULL        UNIQUE,
     created_at  TIMESTAMP       NOT NULL        DEFAULT NOW(),
     updated_at  TIMESTAMP,
     flashset_id UUID            NOT NULL,
