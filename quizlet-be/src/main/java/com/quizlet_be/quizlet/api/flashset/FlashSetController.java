@@ -39,7 +39,8 @@ public class FlashSetController {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
 
         return flashSetService.createFlashSet(flashSetRequestDTO, userId);
-    }
+    }        final List<FlashSetItem> flashSetItems = findByFlashSetId(flashSetId);
+
 
     @PutMapping("{flashSetId}")
     public FlashSet updateFlashSet(

@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
-import static com.quizlet_be.quizlet.services.flashset.FlashSetError.throwFlashSetNotFoundError;
+import static com.quizlet_be.quizlet.services.flashset.FlashSetError.supplyFlashSetNotFoundException;
 import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.*;
 import static java.time.Instant.now;
 
@@ -43,7 +43,7 @@ public class FlashSetService {
 
     public FlashSet findById(final UUID flashSetId) {
         return flashSetStore.findById(flashSetId)
-                .orElseThrow(throwFlashSetNotFoundError("ID", flashSetId));
+                .orElseThrow(supplyFlashSetNotFoundException("ID", flashSetId));
     }
 
     public List<FlashSetSummaryDTO> findByUserId(final UUID userId) {

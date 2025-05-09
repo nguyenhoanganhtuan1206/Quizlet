@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.api.flashset_item;
 
-import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationDTO;
+import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationUpdateDTO;
 import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItem;
 import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemService;
 import jakarta.validation.Valid;
@@ -20,10 +20,19 @@ public class FlashSetItemController {
 
     @PostMapping("flashset/{flashSetId}")
     public FlashSetItem save(
-            final @Valid @RequestBody FlashSetItemCreationDTO flashSetItemCreationDTO,
+            final @Valid @RequestBody FlashSetItemCreationUpdateDTO flashSetItemCreationDTO,
             final @PathVariable UUID flashSetId
     ) {
         return flashSetItemService.createNewFlashSetItem(flashSetItemCreationDTO, flashSetId);
+    }
+
+    @PutMapping("{flashSetItemId}/flashset/{flashSetId}")
+    public FlashSetItem update(
+            final @PathVariable UUID flashSetItemId,
+            final @Valid @RequestBody FlashSetItemCreationUpdateDTO flashSetItemUpdateDTO,
+            final @PathVariable UUID flashSetId
+    ) {
+        return flashSetItemService.updateFlashSetItem(flashSetItemId, flashSetItemUpdateDTO, flashSetId);
     }
 
     @DeleteMapping("/{flashSetItemId}/flashset/{flashSetId}")

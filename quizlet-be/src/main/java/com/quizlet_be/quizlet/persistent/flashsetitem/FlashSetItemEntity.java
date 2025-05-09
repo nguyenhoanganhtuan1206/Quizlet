@@ -31,5 +31,6 @@ public class FlashSetItemEntity {
 
     private Instant updatedAt;
 
-    private UUID flashsetId;
+    @Column(name = "flashset_id")
+    private UUID flashSetId;
 }

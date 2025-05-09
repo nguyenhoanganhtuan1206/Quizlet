@@ -1,11 +1,13 @@
 package com.quizlet_be.quizlet.services.flashsetitem;
 
-import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationDTO;
+import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationUpdateDTO;
+import com.quizlet_be.quizlet.error.ConflictException;
 import com.quizlet_be.quizlet.error.NotFoundException;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetStore;
 import com.quizlet_be.quizlet.persistent.flashsetitem.FlashSetItemStore;
 import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +16,12 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyUnprocessableException;
+import static com.quizlet_be.quizlet.error.CommonError.*;
 import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemError.supplyFlashSetItemNotFoundException;
+import static java.lang.String.format;
 import static java.time.Instant.now;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FlashSetItemService {
@@ -41,22 +44,32 @@ public class FlashSetItemService {
     /**
      * Save @{@link FlashSetItem}
      *
-     * @param @{@link FlashSetItemCreationDTO}
+     * @param @{@link com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationUpdateDTO}
      * @param @{@UUID flashSetId}
      * @return @{@link FlashSetItem}
+     * @throws com.quizlet_be.quizlet.error.UnprocessableException
      */
     public FlashSetItem createNewFlashSetItem(
-            final FlashSetItemCreationDTO flashSetItemCreationDTO,
+            final FlashSetItemCreationUpdateDTO flashSetItemCreationDTO,
             final UUID flashSetId
     ) {
-        validateFlashSetCreation(flashSetId);
+        final List<FlashSetItem> flashSetItems = findByFlashSetId(flashSetId);
+
+        validateFlashItemDuplicated(flashSetId, flashSetItemCreationDTO);
+        validateFlashItemDuplicatedByPosition(flashSetItemCreationDTO.getOrderPosition(), flashSetId);
+        validateFlashSetItemSize(flashSetItems);
+        validateFlashSetExisted(flashSetId);
 
         try {
+            final int orderPosition = flashSetItemCreationDTO.getOrderPosition() != 0
+                    ? flashSetItemCreationDTO.getOrderPosition()
+                    : flashSetItems.size() + 1;
             final FlashSetItem flashSetItemCreation = FlashSetItem.builder()
                     .answer(flashSetItemCreationDTO.getAnswer())
                     .question(flashSetItemCreationDTO.getQuestion())
-                    .orderPosition(0)
+                    .orderPosition(orderPosition)
                     .createdAt(now())
+                    .flashsetId(flashSetId)
                     .build();
 
             return flashSetItemStore.save(flashSetItemCreation);
@@ -67,18 +80,58 @@ public class FlashSetItemService {
     }
 
     /**
+     * Update @{@link FlashSetItem}
+     *
+     * @param @{@link UUID flashSetItemId}
+     * @param @{@link FlashSetItemCreationUpdateDTO}
+     * @param @{@UUID flashSetId}
+     * @return @{@link FlashSetItem}
+     * @throws com.quizlet_be.quizlet.error.UnprocessableException
+     */
+    public FlashSetItem updateFlashSetItem(
+            final UUID flashSetItemId,
+            final FlashSetItemCreationUpdateDTO flashSetItemUpdateDTO,
+            final UUID flashSetId
+    ) {
+        final FlashSetItem currentFlashSetItem = findById(flashSetItemId);
+
+        validateFlashSetExisted(flashSetId);
+        validateFlashItemDuplicatedByPosition(flashSetItemUpdateDTO.getOrderPosition(), flashSetId);
+
+        try {
+            if (!flashSetItemUpdateDTO.getAnswer().equalsIgnoreCase(currentFlashSetItem.getAnswer()) ||
+                    !flashSetItemUpdateDTO.getQuestion().equalsIgnoreCase(currentFlashSetItem.getQuestion())) {
+                validateFlashItemDuplicated(flashSetId, flashSetItemUpdateDTO);
+
+                currentFlashSetItem.setAnswer(flashSetItemUpdateDTO.getAnswer());
+                currentFlashSetItem.setQuestion(flashSetItemUpdateDTO.getQuestion());
+                currentFlashSetItem.setUpdatedAt(now());
+            }
+
+            return flashSetItemStore.save(currentFlashSetItem);
+        } catch (ConflictException ex) {
+            logger.log(Level.SEVERE, format("FlashSetItem with ID %s already existed {updateFlashSetItem | FlashSetItemService}", flashSetItemId));
+            throw supplyConflictException(ex.getMessage()).get();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, format("Error while update the flash set item {updateFlashSetItem | FlashSetItemService}", ex.getMessage()));
+            throw supplyUnprocessableException("Unexpected error while update your flash set item. Please try it again").get();
+        }
+    }
+
+    /**
      * Find by Id
      *
      * @param flashSetItemId
      * @throws com.quizlet_be.quizlet.error.NotFoundException return {@link <FlashSetItem>}
      */
     public FlashSetItem findById(final UUID flashSetItemId) {
+        logger.log(Level.SEVERE, format("Flash Set Item with ID %s is not existed!", flashSetItemId));
         return flashSetItemStore.findById(flashSetItemId)
                 .orElseThrow(supplyFlashSetItemNotFoundException("ID", flashSetItemId));
     }
 
     /**
-     * Find by flashset Id
+     * Find by FlashSet Id
      *
      * @param flashSetId return {@link List<FlashSetItem>}
      */
@@ -87,7 +140,7 @@ public class FlashSetItemService {
     }
 
     /**
-     * Find by flashset Id
+     * Find by FlashSet Id
      *
      * @param flashSetId return {@link List<FlashSetItem>}
      *                   throw {@link NotFoundException}
@@ -98,7 +151,7 @@ public class FlashSetItemService {
 
         if (flashSetItems.size() <= 2) {
             logger.log(Level.SEVERE, "The dataSet at least 2 items {deleteByFlashSetIdAndItemId | FlashSetItemServer}");
-            throw supplyUnprocessableException("Your Flash Set it must have at lease 2 items.").get();
+            throw supplyUnprocessableException("Cannot delete your Flash Set it must be at lease 2 items").get();
         }
 
         try {
@@ -115,23 +168,61 @@ public class FlashSetItemService {
     }
 
     /**
-     * Find by flashset Id
+     * To validate whether @{@link FlashSetItem} is duplicated or not by Answer and Question
      *
-     * @param flashSetId return {@link List<FlashSetItem>}
-     *                   throw {@link NotFoundException}
-     *                   throw {@link com.quizlet_be.quizlet.error.UnprocessableException}
+     * @param flashSetId
+     * @param flashSetItemCreationUpdateDTO throw {@link com.quizlet_be.quizlet.error.ConflictException}
      */
-    private void validateFlashSetCreation(final UUID flashSetId) {
+    private void validateFlashItemDuplicated(
+            final UUID flashSetId,
+            final FlashSetItemCreationUpdateDTO flashSetItemCreationUpdateDTO
+    ) {
+        final Optional<FlashSetItem> flashSetItem = flashSetItemStore.findByAnswerAndQuestion(
+                flashSetItemCreationUpdateDTO.getAnswer(),
+                flashSetItemCreationUpdateDTO.getQuestion()
+        );
+        if (flashSetItem.isPresent()) {
+            logger.log(Level.SEVERE, format("FlashSetItem with ID %s already existed {validateFlashItemDuplicated | FlashSetItemService}", flashSetItem.get().getId()));
+            throw supplyConflictException("The Flash Set Item is already existed. Please look at another item", flashSetId).get();
+        }
+    }
+
+    /**
+     * To validate whether @{@link FlashSetItem} is duplicated or not by Answer and Question
+     *
+     * @param orderPosition
+     * @param flashSetId    throw {@link com.quizlet_be.quizlet.error.ConflictException}
+     */
+    private void validateFlashItemDuplicatedByPosition(final long orderPosition, final UUID flashSetId) {
+        final Optional<FlashSetItem> flashSetItem = flashSetItemStore.findByOrderPositionAndFlashSetId(orderPosition, flashSetId);
+        if (flashSetItem.isPresent()) {
+            logger.log(Level.SEVERE, format("The position of FlashSetItem with ID %s is taken {validateFlashItemDuplicatedByPosition | FlashSetItemService}", flashSetItem.get().getId()));
+            throw supplyConflictException("Unexpected update your flash set item. Could you please try it again").get();
+        }
+    }
+
+    /**
+     * To validate the @{@link FlashSetItem} already existed by ID
+     *
+     * @param flashSetId throw {@link NotFoundException}
+     */
+    private void validateFlashSetExisted(final UUID flashSetId) {
         final Optional<FlashSet> currentFlashSet = flashSetStore.findById(flashSetId);
+
         if (currentFlashSet.isEmpty()) {
-            logger.log(Level.SEVERE, "FlashSet %s is not existed {createNewFlashSetItem | FlashSetItemService}", flashSetId);
+            logger.log(Level.SEVERE, format("FlashSet with ID %s is not existed {validateFlashSetExisted | FlashSetItemService}", flashSetId));
             throw supplyNotFoundException("The Flash Set with ID is %s not found", flashSetId).get();
         }
+    }
 
-        final List<FlashSetItem> flashSetItems = findByFlashSetId(flashSetId);
-
+    /**
+     * To validate size of the {@link FlashSetItem}
+     *
+     * @param flashSetItems throw {@link com.quizlet_be.quizlet.error.UnprocessableException}
+     */
+    private void validateFlashSetItemSize(final List<FlashSetItem> flashSetItems) {
         if (flashSetItems.size() >= 100) {
-            logger.log(Level.SEVERE, "The Flash Set cannot exceed 100 items {createNewFlashSetItem | FlashSetItemService}");
+            logger.log(Level.SEVERE, "The Flash Set cannot exceed 100 items {validateFlashSetItemSize | FlashSetItemService}");
             throw supplyUnprocessableException("The Flash Set cannot exceed 100 items! Cannot create more.").get();
         }
     }

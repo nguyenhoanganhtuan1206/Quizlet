@@ -17,7 +17,7 @@ public class FlashSetItemEntityMapper {
                 .orderPosition(flashSetItem.getOrderPosition())
                 .createdAt(flashSetItem.getCreatedAt())
                 .updatedAt(flashSetItem.getUpdatedAt())
-                .flashsetId(flashSetItem.getFlashsetId())
+                .flashSetId(flashSetItem.getFlashsetId())
                 .build();
     }
 

@@ -162,7 +162,7 @@ public class FolderService {
             LOGGER.log(Level.SEVERE, "Conflict when creating the new folder: " + ex.getMessage(), ex);
             throw supplyBadRequestException(ex.getMessage()).get();
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE CREATING FOLDER: " + ex.getMessage(), ex);
+            LOGGER.log(Level.SEVERE, "Error while create folder: " + ex.getMessage(), ex);
             throw supplyBadRequestException("Unexpected while creating new Folder %s", folderCreation.getName()).get();
         }
     }
@@ -220,10 +220,10 @@ public class FolderService {
 
             return save(currentFolder);
         } catch (NotFoundException ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder}: " + ex.getMessage());
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} " + ex.getMessage());
             throw supplyNotFoundException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder}: " + ex.getMessage());
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} " + ex.getMessage());
             throw supplyBadRequestException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
         }
     }

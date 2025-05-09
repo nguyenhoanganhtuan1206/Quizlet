@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class FlashSetItemCreationDTO {
+public class FlashSetItemCreationUpdateDTO {
 
     @NotBlank(message = "Your answer cannot be empty")
     @Size(max = 200, message = "Your answer cannot exceed 200 characters")

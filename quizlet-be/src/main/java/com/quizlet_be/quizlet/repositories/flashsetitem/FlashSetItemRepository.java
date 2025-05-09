@@ -5,12 +5,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface FlashSetItemRepository extends JpaRepository<FlashSetItemEntity, UUID> {
 
-    long countByFlashsetId(final UUID flashSetId);
+    Optional<FlashSetItemEntity> findByAnswerAndQuestion(final String answer, final String question);
 
-    List<FlashSetItemEntity> findByFlashsetId(final UUID flashSetId);
+    Optional<FlashSetItemEntity> findByOrderPositionAndFlashSetId(final long orderPosition, final UUID flashSetId);
+
+    long countByFlashSetId(final UUID flashSetId);
+
+    List<FlashSetItemEntity> findByFlashSetId(final UUID flashSetId);
 }

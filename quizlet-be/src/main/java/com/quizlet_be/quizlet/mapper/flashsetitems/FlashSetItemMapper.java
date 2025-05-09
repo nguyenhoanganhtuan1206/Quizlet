@@ -12,9 +12,10 @@ public class FlashSetItemMapper {
                 .id(flashSetItemEntity.getId())
                 .answer(flashSetItemEntity.getAnswer())
                 .question(flashSetItemEntity.getQuestion())
+                .orderPosition(flashSetItemEntity.getOrderPosition())
                 .createdAt(flashSetItemEntity.getCreatedAt())
                 .updatedAt(flashSetItemEntity.getUpdatedAt())
-                .flashsetId(flashSetItemEntity.getFlashsetId())
+                .flashsetId(flashSetItemEntity.getFlashSetId())
                 .build();
     }
 
