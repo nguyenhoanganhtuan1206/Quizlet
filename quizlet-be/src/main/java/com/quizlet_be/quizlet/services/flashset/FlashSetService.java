@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.services.flashset;
 
-import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationDTO;
+import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationUpdateDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetCreationRequestDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetSummaryDTO;
@@ -188,7 +188,7 @@ public class FlashSetService {
                 .build();
     }
 
-    private FlashSetItem buildFlashSetItemByFlashSetIdAndCreation(FlashSetItemCreationDTO itemDTO, final UUID flashSetId) {
+    private FlashSetItem buildFlashSetItemByFlashSetIdAndCreation(FlashSetItemCreationUpdateDTO itemDTO, final UUID flashSetId) {
         return FlashSetItem.builder()
                 .answer(itemDTO.getAnswer())
                 .question(itemDTO.getQuestion())

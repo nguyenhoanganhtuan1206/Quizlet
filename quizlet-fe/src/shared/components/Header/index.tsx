@@ -17,12 +17,17 @@ import {
 } from "../../../components";
 
 import { Button, Input, PopperWrapper } from "../";
+import { JwtPayload } from "@/type";
 
 type HeaderFormSearchTerm = {
   term: string;
 };
 
-function Header() {
+type HeaderProps = {
+  currentUser?: JwtPayload | null;
+};
+
+function Header({ currentUser }: Readonly<HeaderProps>) {
   const { control } = useForm<HeaderFormSearchTerm>();
 
   const [isHiddenProfile, setIsHiddenProfile] = useState<boolean>(false);
@@ -60,39 +65,64 @@ function Header() {
         </form>
 
         <div className="relative flex items-center justify-end flex-1">
-          <div
-            className="header__plus border-none"
-            onClick={() => setIsDisplayMenu(!isDisplayMenu)}
-          >
-            <FiPlus className="header__plus-icon" />
-
-            <PopperWrapper
-              className="header__plus-popper"
-              isActive={isDisplayMenu}
-            >
-              <div className="header__plus-popper__item">
-                <PiCards className="text-[2rem] mr-3" />
-                Flashcard Set
-              </div>
+          {!currentUser && (
+            <>
               <Button
-                className="header__plus-popper__item"
-                onClick={handleShowModalCreation}
+                variant="primary"
+                path="/auth"
+                className="text-white mr-5"
               >
-                <FaRegFolder className="text-[2rem] mr-3" />
-                Folder
+                Sign Up
               </Button>
-            </PopperWrapper>
-          </div>
 
-          <AssemblyAvatar
-            height="40px"
-            width="40px"
-            imagePath="https://graph.facebook.com/1191245547971182/picture?type=large"
-            className="cursor-pointer"
-            onClick={() => setIsHiddenProfile(!isHiddenProfile)}
-          />
+              <Button variant="sub-primary" path="/auth">
+                Log In
+              </Button>
+            </>
+          )}
 
-          <HeaderProfilePopper isHidden={isHiddenProfile} />
+          {currentUser && (
+            <div
+              className="header__plus border-none"
+              onClick={() => setIsDisplayMenu(!isDisplayMenu)}
+            >
+              <FiPlus className="header__plus-icon" />
+
+              <PopperWrapper
+                className="header__plus-popper"
+                isActive={isDisplayMenu}
+              >
+                <div className="header__plus-popper__item">
+                  <PiCards className="text-[2rem] mr-3" />
+                  Flashcard Set
+                </div>
+                <Button
+                  className="header__plus-popper__item"
+                  onClick={handleShowModalCreation}
+                >
+                  <FaRegFolder className="text-[2rem] mr-3" />
+                  Folder
+                </Button>
+              </PopperWrapper>
+            </div>
+          )}
+
+          {currentUser && (
+            <>
+              <AssemblyAvatar
+                height="40px"
+                width="40px"
+                imagePath="https://graph.facebook.com/1191245547971182/picture?type=large"
+                className="cursor-pointer"
+                onClick={() => setIsHiddenProfile(!isHiddenProfile)}
+              />
+
+              <HeaderProfilePopper
+                currentUser={currentUser}
+                isHidden={isHiddenProfile}
+              />
+            </>
+          )}
         </div>
       </header>
 

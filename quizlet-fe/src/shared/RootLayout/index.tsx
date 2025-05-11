@@ -1,13 +1,47 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
+import { toast } from "react-toastify";
 
-import Header from '../components/Header';
-import Navbar from '../components/Navbar';
+import Header from "../components/Header";
+import Navbar from "../components/Navbar";
+import { JwtPayload } from "@/type";
+import { decodeToken, getCurrentToken } from "@/utils";
 
 const RootLayout = () => {
+  const [currentUser, setCurrentUser] = useState<JwtPayload | null>();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const initializeAuth = async () => {
+      try {
+        const currentToken = getCurrentToken();
+        if (currentToken) {
+          const decoded = decodeToken(currentToken);
+          if (isMounted) {
+            setCurrentUser(decoded);
+          }
+        }
+      } catch (error) {
+        console.error("Error decoding token in HeaderProfilePopper:", error);
+        toast.error(
+          "Your session is expired or invalid. Please try to login again."
+        );
+      }
+    };
+
+    initializeAuth();
+
+    // Cleanup to prevent memory leaks
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[var(--color-primary-sub)] grid grid-rows-[auto_1fr]">
       {/* Header */}
-      <Header />
+      <Header currentUser={currentUser} />
 
       {/* Main Layout */}
       <div className="row-span-1 grid grid-cols-1 md:grid-cols-12">
@@ -27,7 +61,7 @@ const RootLayout = () => {
           pt-16 md:pt-0
         `}
         >
-          <Navbar />
+          {currentUser && <Navbar />}
         </aside>
 
         {/* Main Content */}

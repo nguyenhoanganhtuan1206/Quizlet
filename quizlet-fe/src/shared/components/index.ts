@@ -1,3 +1,4 @@
+import { FormLabel } from "@/shared/components/FormFields/form_label";
 export { default as Header } from "./Header";
 export {
   Button,
@@ -5,6 +6,7 @@ export {
   MultipleSelect,
   Select,
   ErrorMessage,
+  FormLabel,
 } from "./FormFields";
 export { default as PopperWrapper } from "./PopperWrapper";
 export { default as AlertMessage } from "./AlertMessage";

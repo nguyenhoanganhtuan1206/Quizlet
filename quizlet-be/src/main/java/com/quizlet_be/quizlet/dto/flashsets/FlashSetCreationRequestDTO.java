@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.dto.flashsets;
 
-import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationDTO;
+import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationUpdateDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -26,5 +26,5 @@ public class FlashSetCreationRequestDTO {
 
     private List<UUID> folderIds;
 
-    private List<FlashSetItemCreationDTO> flashSetItems;
+    private List<FlashSetItemCreationUpdateDTO> flashSetItems;
 }

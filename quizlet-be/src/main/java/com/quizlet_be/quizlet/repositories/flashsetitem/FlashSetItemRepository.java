@@ -11,9 +11,11 @@ import java.util.UUID;
 @Repository
 public interface FlashSetItemRepository extends JpaRepository<FlashSetItemEntity, UUID> {
 
-    Optional<FlashSetItemEntity> findByAnswerAndQuestion(final String answer, final String question);
+    Optional<FlashSetItemEntity> findByAnswerAndQuestionAndFlashSetId(final String answer, final String question, final UUID flashSetId);
 
     Optional<FlashSetItemEntity> findByOrderPositionAndFlashSetId(final long orderPosition, final UUID flashSetId);
+
+    Optional<FlashSetItemEntity> findByIdAndFlashSetId(final UUID id, final UUID flashSetId);
 
     long countByFlashSetId(final UUID flashSetId);
 

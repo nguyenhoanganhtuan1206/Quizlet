@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthResponseDTO } from "../../type/auth/authTypes";
 import { doRefreshToken } from "../thunks/refreshTokenThunk";
+import { history } from "@/main";
 
 interface AuthProviderState {
   isLoading: boolean;
@@ -35,6 +36,8 @@ export const authProviderSlice = createSlice({
       state.token = null;
       state.refreshToken = null;
       localStorage.clear();
+
+      window.location.pathname = "auth";
     },
   },
   extraReducers: (builder) => {
@@ -49,6 +52,8 @@ export const authProviderSlice = createSlice({
       .addCase(doRefreshToken.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
+
+        window.location.pathname = "auth";
       });
   },
 });

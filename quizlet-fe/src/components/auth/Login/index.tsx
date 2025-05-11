@@ -12,7 +12,12 @@ import {
 } from "../../../schemas/auth/authSchemas";
 import { setCredentials, useLoginMutation } from "../../../store";
 
-import { AlertMessage, Input, Button } from "../../../shared/components";
+import {
+  AlertMessage,
+  Input,
+  Button,
+  FormLabel,
+} from "../../../shared/components";
 
 import { ApiErrorResponse } from "../../../type/";
 import ButtonLoginSocial from "../ButtonLoginSocial";
@@ -57,14 +62,38 @@ export default function Login() {
       <div className="my-10 flex justify-center login_break-line before:bg-gray-300">
         <p>or email</p>
       </div>
-      <Input control={control} name="email" type="text" label="Email" />
-      <Input
-        control={control}
-        name="password"
-        type="password"
-        label="Password"
-        outsideClassName="mt-5"
-      />
+      <>
+        <FormLabel
+          className="text-[1.4rem] text-[#586380] font-semibold"
+          name="email"
+        >
+          Email
+        </FormLabel>
+        <Input
+          control={control}
+          placeholder="Enter your email"
+          className="placeholder:text-gray-400 placeholder:text-[1.3rem] placeholder:font-medium"
+          name="email"
+          type="text"
+        />
+      </>
+
+      <>
+        <FormLabel
+          className="text-[1.4rem] text-[#586380] font-semibold mt-5"
+          name="password"
+        >
+          Password
+        </FormLabel>
+        <Input
+          control={control}
+          placeholder="Enter your password"
+          className="placeholder:text-gray-400 placeholder:text-[1.3rem] placeholder:font-medium"
+          name="password"
+          type="password"
+        />
+      </>
+
       {/* Display Error */}
       {formState.errors.email || formState.errors.password ? (
         <AlertMessage variant="error" className="mt-5">

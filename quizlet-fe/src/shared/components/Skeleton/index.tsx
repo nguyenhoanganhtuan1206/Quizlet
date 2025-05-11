@@ -26,7 +26,6 @@ const Skeleton = ({
   width,
   children,
 }: SkeletonProps) => {
-  console.log("Skeleton");
   const baseClassNames = classNames(
     `skeleton__affect skeleton-${variant}`,
     className

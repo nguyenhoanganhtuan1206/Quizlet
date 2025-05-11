@@ -25,7 +25,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class FlashSetItemStore {
 
-    private final Logger logger = Logger.getLogger(FlashSetStore.class.getName());
+    private final Logger logger = Logger.getLogger(FlashSetItemStore.class.getName());
 
     private final FlashSetItemRepository flashSetItemRepository;
 
@@ -47,8 +47,8 @@ public class FlashSetItemStore {
      * @param answer
      * @param question return {@link Optional<FlashSetItem>}
      */
-    public Optional<FlashSetItem> findByAnswerAndQuestion(final String answer, final String question) {
-        return flashSetItemRepository.findByAnswerAndQuestion(answer, question)
+    public Optional<FlashSetItem> findByAnswerAndQuestionAndFlashSetId(final String answer, final String question, final UUID flashSetId) {
+        return flashSetItemRepository.findByAnswerAndQuestionAndFlashSetId(answer, question, flashSetId)
                 .map(FlashSetItemMapper::toFlashSetItem);
     }
 
@@ -60,6 +60,17 @@ public class FlashSetItemStore {
      */
     public Optional<FlashSetItem> findByOrderPositionAndFlashSetId(final long orderPosition, final UUID flashSetId) {
         return flashSetItemRepository.findByOrderPositionAndFlashSetId(orderPosition, flashSetId)
+                .map(FlashSetItemMapper::toFlashSetItem);
+    }
+
+    /**
+     * Find by Id and FlashSetId
+     *
+     * @param id
+     * @param flashSetId return {@link Optional<FlashSetItem>}
+     */
+    public Optional<FlashSetItem> findByIdAndFlashSetId(final UUID id, final UUID flashSetId) {
+        return flashSetItemRepository.findByIdAndFlashSetId(id, flashSetId)
                 .map(FlashSetItemMapper::toFlashSetItem);
     }
 

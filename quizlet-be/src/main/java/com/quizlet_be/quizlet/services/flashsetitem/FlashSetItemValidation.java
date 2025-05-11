@@ -1,6 +1,6 @@
 package com.quizlet_be.quizlet.services.flashsetitem;
 
-import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationDTO;
+import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationUpdateDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetCreationRequestDTO;
 import com.quizlet_be.quizlet.dto.flashsets.FlashSetUpdateRequestDTO;
 import com.quizlet_be.quizlet.services.flashset.FlashSet;
@@ -31,7 +31,7 @@ public class FlashSetItemValidation {
             final FlashSetUpdateRequestDTO flashSetUpdateRequestDTO,
             final UUID userId,
             final FlashSet currentFlashSet
-            ) {
+    ) {
         if (!currentFlashSet.getUserId().toString().equalsIgnoreCase(userId.toString())) {
             throw supplyAccessDeniedException("You doesn't permission to perform this action!").get();
         }
@@ -45,7 +45,7 @@ public class FlashSetItemValidation {
         }
     }
 
-    private static void validateLengthFlashSetItem(final List<FlashSetItemCreationDTO> flashSetItems) {
+    private static void validateLengthFlashSetItem(final List<FlashSetItemCreationUpdateDTO> flashSetItems) {
         if (flashSetItems == null || flashSetItems.size() < 2) {
             throw supplyBadRequestException("You must have at least two cards to save your set").get();
         }

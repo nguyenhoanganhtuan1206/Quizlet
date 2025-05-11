@@ -48,14 +48,10 @@ export default function MultipleSelect<T extends FieldValues>({
           const isValueSelected = value.some(
             (currentVal) => currentVal === optionSelected
           );
-          console.log("isValueSelected", isValueSelected);
 
           const newValue = isValueSelected
             ? value.filter((currentVal) => currentVal !== optionSelected)
             : [...value, optionSelected];
-          console.log("value", value);
-          console.log("newValue", newValue);
-          console.log("valueSelected", optionSelected);
 
           onChange(newValue);
           setSearchTerm("");

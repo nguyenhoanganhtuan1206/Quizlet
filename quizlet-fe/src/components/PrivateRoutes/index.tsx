@@ -15,9 +15,8 @@ export default function PrivateRoutes() {
 
   useEffect(() => {
     if (!currentToken || !currentRefreshToken) {
-      console.log("Error login Private Routes");
       toast.error(
-        "Your session login is expired or invalid!! Please try to login again!"
+        "Your session login is expired or invalid. Please try to login again!"
       );
       navigate("/auth", { replace: true });
     }

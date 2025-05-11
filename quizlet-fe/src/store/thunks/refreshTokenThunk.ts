@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthResponseDTO } from "../../type";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getCurrentRefreshToken, pause } from "../../utils";
 
 export const doRefreshToken = createAsyncThunk<AuthResponseDTO, void>(
@@ -14,7 +14,6 @@ export const doRefreshToken = createAsyncThunk<AuthResponseDTO, void>(
         `${import.meta.env.VITE_API_ENDPOINT}/auths/refresh-token`,
         { refreshToken: currentRefreshToken }
       );
-
       return response.data;
     } catch (error) {
       console.error(

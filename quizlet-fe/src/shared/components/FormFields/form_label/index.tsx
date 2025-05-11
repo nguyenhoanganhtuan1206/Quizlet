@@ -13,7 +13,7 @@ export default function FormLabel({
   children,
 }: Readonly<FormLabelProps>) {
   const labelClassNames = classNames(
-    "text-[1.4rem] text-gray-700 font-[600] cursor-pointer",
+    "block text-[1.4rem] text-gray-700 font-[600] cursor-pointer",
     className
   );
 

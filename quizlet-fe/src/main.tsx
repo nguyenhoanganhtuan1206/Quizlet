@@ -5,15 +5,17 @@ import "./index.scss";
 
 import { Provider } from "react-redux";
 import App from "./App.tsx";
-import store, { doRefreshToken, setCredentials } from "./store/index.ts";
+import store, {
+  doRefreshToken,
+  logout,
+  setCredentials,
+} from "./store/index.ts";
 import axiosInstance from "./hooks/useAxios.ts";
-import { useNavigate } from "react-router-dom";
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     console.error("Error 401: Session is expired or invalid!!", error);
-    const navigate = useNavigate();
 
     if (error.response.status === 401) {
       try {
@@ -34,16 +36,18 @@ axiosInstance.interceptors.response.use(
         // Recall the api after refresh token
         return axiosInstance.request(error.config);
       } catch (error) {
-        console.error("Error while calling {doRefreshToken || axiosInstance.interceptors.response}", error)
-        navigate("/auth", {
-          replace: true,
-        });
+        // navigate("/auth", { replace: true });
+        // history.replace("/auth");
+        store.dispatch(logout());
+
+        // window.location.reload();
+        console.error(
+          "Error while calling {doRefreshToken || axiosInstance.interceptors.response}",
+          error
+        );
       }
       // Attempt token refresh, unwrap result
     }
-    navigate("/auth", {
-      replace: true,
-    });
     return Promise.reject(error);
   }
 );

@@ -93,7 +93,7 @@ public class FlashSetItemService {
             final FlashSetItemCreationUpdateDTO flashSetItemUpdateDTO,
             final UUID flashSetId
     ) {
-        final FlashSetItem currentFlashSetItem = findById(flashSetItemId);
+        final FlashSetItem currentFlashSetItem = findByIdAndFlashSetId(flashSetItemId, flashSetId);
 
         validateFlashSetExisted(flashSetId);
         validateFlashItemDuplicatedByPosition(flashSetItemUpdateDTO.getOrderPosition(), flashSetId);
@@ -113,7 +113,7 @@ public class FlashSetItemService {
             logger.log(Level.SEVERE, format("FlashSetItem with ID %s already existed {updateFlashSetItem | FlashSetItemService}", flashSetItemId));
             throw supplyConflictException(ex.getMessage()).get();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, format("Error while update the flash set item {updateFlashSetItem | FlashSetItemService}", ex.getMessage()));
+            logger.log(Level.SEVERE, "Error while update the flash set item {updateFlashSetItem | FlashSetItemService}", ex.getMessage());
             throw supplyUnprocessableException("Unexpected error while update your flash set item. Please try it again").get();
         }
     }
@@ -121,13 +121,26 @@ public class FlashSetItemService {
     /**
      * Find by Id
      *
-     * @param flashSetItemId
+     * @param id
      * @throws com.quizlet_be.quizlet.error.NotFoundException return {@link <FlashSetItem>}
      */
-    public FlashSetItem findById(final UUID flashSetItemId) {
-        logger.log(Level.SEVERE, format("Flash Set Item with ID %s is not existed!", flashSetItemId));
-        return flashSetItemStore.findById(flashSetItemId)
-                .orElseThrow(supplyFlashSetItemNotFoundException("ID", flashSetItemId));
+    public FlashSetItem findById(final UUID id) {
+        logger.log(Level.SEVERE, format("Flash Set Item with ID %s is not existed!", id));
+        return flashSetItemStore.findById(id)
+                .orElseThrow(supplyFlashSetItemNotFoundException("ID", id));
+    }
+
+    /**
+     * Find by Id
+     *
+     * @param flashSetId
+     * @throws com.quizlet_be.quizlet.error.NotFoundException return {@link <FlashSetItem>}
+     * @oaram id
+     */
+    public FlashSetItem findByIdAndFlashSetId(final UUID id, final UUID flashSetId) {
+        logger.log(Level.SEVERE, format("Flash Set Item with ID %s and Flash Set ID is %s is not existed!", id, flashSetId));
+        return flashSetItemStore.findByIdAndFlashSetId(id, flashSetId)
+                .orElseThrow(supplyNotFoundException("The current Flash Set Item is not existed."));
     }
 
     /**
@@ -177,13 +190,15 @@ public class FlashSetItemService {
             final UUID flashSetId,
             final FlashSetItemCreationUpdateDTO flashSetItemCreationUpdateDTO
     ) {
-        final Optional<FlashSetItem> flashSetItem = flashSetItemStore.findByAnswerAndQuestion(
+        final Optional<FlashSetItem> flashSetItem = flashSetItemStore.findByAnswerAndQuestionAndFlashSetId(
                 flashSetItemCreationUpdateDTO.getAnswer(),
-                flashSetItemCreationUpdateDTO.getQuestion()
+                flashSetItemCreationUpdateDTO.getQuestion(),
+                flashSetId
         );
+
         if (flashSetItem.isPresent()) {
             logger.log(Level.SEVERE, format("FlashSetItem with ID %s already existed {validateFlashItemDuplicated | FlashSetItemService}", flashSetItem.get().getId()));
-            throw supplyConflictException("The Flash Set Item is already existed. Please look at another item", flashSetId).get();
+            throw supplyConflictException("The Flash Set Item is already existed. Please look at another item").get();
         }
     }
 

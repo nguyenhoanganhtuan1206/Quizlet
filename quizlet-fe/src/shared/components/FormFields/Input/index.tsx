@@ -63,7 +63,6 @@ export default function Input<T extends FieldValues>({
         rows={rows}
         onChange={onChange}
         value={value}
-        defaultValue={value}
         onFocus={onFocus}
         placeholder={placeholder}
       />
@@ -75,7 +74,6 @@ export default function Input<T extends FieldValues>({
         onChange={onChange}
         onFocus={onFocus}
         value={value}
-        defaultValue={value}
         placeholder={placeholder}
       />
     );
@@ -86,8 +84,6 @@ export default function Input<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field: { onChange, value } }) => {
-        console.log("value", value);
-        
         return (
           <div className={`${outsideClassName} relative`}>
             {/**

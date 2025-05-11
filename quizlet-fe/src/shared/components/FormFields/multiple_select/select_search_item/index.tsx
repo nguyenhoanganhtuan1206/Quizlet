@@ -44,8 +44,6 @@ export default function SelectSearchItem({
     "inline-flex items-center bg-transparent px-2 py-1 rounded mr-1 mb-1"
   );
 
-  console.log("selectedOptions", selectedOptions);
-  
   /* Display values selected */
   const renderSelectedValues = () => {
     return (
