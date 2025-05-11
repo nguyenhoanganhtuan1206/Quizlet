@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -18,7 +17,11 @@ public interface FolderRepository extends JpaRepository<FolderEntity, UUID> {
 
     List<FolderEntity> findByUserId(final UUID userId, final Sort sort);
 
-    Optional<FolderEntity> findByName(final String name);
+    /**
+     * Find all Folders with userId but not including folderId
+     */
+    @Query(value = "SELECT f FROM FolderEntity f WHERE f.userId = :userId AND f.id != :folderId ORDER BY f.createdAt")
+    List<FolderEntity> findByUserIdAndNotFolderId(@Param("userId") UUID userId, @Param("folderId") UUID folderId);
 
     /**
      * Finds all folders that are parents by User ID

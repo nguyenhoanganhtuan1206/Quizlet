@@ -11,7 +11,11 @@ import {
   navigateBreadCrumbReducer,
   navigateBreadCrumbSlice,
 } from "./slices/";
-import {  authApis, folderApis } from "./apis";
+import { authApis, folderApis } from "./apis";
+import {
+  materialsModalReducer,
+  materialsModalSlice,
+} from "./slices/modalMaterialsSlices";
 
 const store = configureStore({
   reducer: {
@@ -22,6 +26,7 @@ const store = configureStore({
     [authApis.reducerPath]: authApis.reducer,
     [folderApis.reducerPath]: folderApis.reducer,
     [navigateBreadCrumbSlice.reducerPath]: navigateBreadCrumbReducer,
+    [materialsModalSlice.reducerPath]: materialsModalReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()

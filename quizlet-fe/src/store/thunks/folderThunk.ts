@@ -24,6 +24,27 @@ export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
   }
 );
 
+export const fetchFoldersSummaries = createAsyncThunk<
+  FolderSummaryDTO[],
+  string
+>(
+  "folder/fetchFoldersByUserIdAndNotId",
+  async (folderId, { rejectWithValue }) => {
+    try {
+      await pause(600);
+      const response = await axiosInstance.get<FolderSummaryDTO[]>(
+        `folder/${folderId}/summaries`
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error(
+        "Error while calling fetchParentFolders {folderThunk || fetchFoldersSummaries}:"
+      );
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
   "folder/fetchParentFoldersByUserId",
   async (_, { rejectWithValue }) => {
@@ -35,7 +56,7 @@ export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
       return response.data;
     } catch (error) {
       console.error(
-        "Error while calling fetchFolders {folderThunk || fetchParentFoldersByUserId}:"
+        "Error while calling fetchParentFolders {folderThunk || fetchParentFoldersByUserId}:"
       );
       rejectWithValue(error);
     }

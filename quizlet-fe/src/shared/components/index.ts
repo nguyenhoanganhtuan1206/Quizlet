@@ -1,4 +1,3 @@
-import { FormLabel } from "@/shared/components/FormFields/form_label";
 export { default as Header } from "./Header";
 export {
   Button,
@@ -18,5 +17,6 @@ export { default as FlipFlashCard } from "./FlipFlashCard";
 export { default as Modal } from "./Modal";
 export { default as TabsFilter } from "./TabsFilter";
 export { default as ErrorComponent } from "./ErrorComponent";
+export { default as EmptyComponent } from "./EmptyComponent";
 
 export { DashboardHeader } from "./dashboard/";

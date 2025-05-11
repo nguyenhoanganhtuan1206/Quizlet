@@ -1,11 +1,14 @@
 import { Modal, Skeleton } from "@/shared/components";
 
 import { ReactPropsChildren } from "@/type";
+import ModalMaterialsActions from "./modal_actions";
 
 /**
  * ? This Modal using to add more Folders or Flashsets
  * @param isShowModal
  * @param listMaterials (FlashSetSummaryDTO[] | FolderSummaryDTO[])
+ * @param onClose () => void; Close the Modal
+ * @param children Add the rest of component
  * @param
  */
 
@@ -58,7 +61,14 @@ export default function ModalAddMaterials({
           </Skeleton>
         )}
 
-        {children}
+        <>
+          {!isLoading && (
+            <>
+              <ModalMaterialsActions />
+              {children}
+            </>
+          )}
+        </>
       </div>
     </Modal>
   );

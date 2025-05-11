@@ -12,6 +12,8 @@ import {
   BreadcrumbNavigationItem,
 } from "../../../../store/slices/navigateBreadCrumbSlices";
 import BreadCrumbNavigation from "../../breadcrumb_navigation";
+import EmptyMaterials from "../../empty_materials";
+import classNames from "classnames";
 
 type FolderDetailsType = {
   folderDetails: FolderFlashSetItemDetailsResponse;
@@ -37,6 +39,17 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
     dispatch(addMorePage(newNavigation));
   };
 
+  const displayEmptyMaterials = () => {
+    if (
+      folderDetails.foldersSummaryChildren &&
+      folderDetails.foldersSummaryChildren.length === 0 &&
+      folderDetails.flashSets &&
+      folderDetails.flashSets.length === 0
+    ) {
+      return <EmptyMaterials />;
+    }
+  };
+
   return (
     <>
       {navigationBreadCrumbState.allPages.length > 1 && (
@@ -47,13 +60,7 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
         />
       )}
 
-      {!folderDetails.foldersSummaryChildren ||
-        (folderDetails.foldersSummaryChildren.length === 0 && (
-          <p className="text-white text-center text-[2rem] mt-10 font-bold">
-            This Folder is empty let add more Flashsets or Folders in the button
-            above !!
-          </p>
-        ))}
+      {displayEmptyMaterials()}
 
       {/* Folder List Section */}
       {folderDetails.foldersSummaryChildren &&
@@ -99,7 +106,12 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
       {/* FlashSet List Section */}
       {folderDetails.flashSets && folderDetails.flashSets.length > 0 && (
         <div>
-          <h3 className="text-white text-4xl font-bold mt-10 border-t-2 pt-5 border-t-gray-500 mb-3">
+          <h3
+            className={classNames("text-white text-4xl font-bold pt-5 mb-3", {
+              "mt-10 border-t-gray-500 border-t-2":
+                folderDetails.foldersSummaryChildren.length > 0,
+            })}
+          >
             FlashSet List
           </h3>
           <ul>

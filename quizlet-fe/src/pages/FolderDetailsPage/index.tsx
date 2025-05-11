@@ -1,11 +1,12 @@
 import { Navigate, useParams } from "react-router-dom";
 
 import { useFetchFolderByIdQuery } from "../../store";
-import { ErrorComponent, Skeleton } from "../../shared/components";
+import { Skeleton } from "../../shared/components";
 import {
   FolderDetailHeader,
   FolderDetails,
 } from "../../components/your_library";
+import { EmptyMaterials } from "@/components/your_library";
 
 export default function FolderDetailsPage() {
   const { folderId } = useParams<{ folderId: string }>();
@@ -24,7 +25,7 @@ export default function FolderDetailsPage() {
   }
 
   if (isError) {
-    return <ErrorComponent />;
+    return;
   }
 
   if (isLoading || isFetching) {
@@ -42,7 +43,7 @@ export default function FolderDetailsPage() {
   }
 
   if (!folderDetails) {
-    return <div>This Folder is empty</div>;
+    return <EmptyMaterials />;
   }
 
   return (

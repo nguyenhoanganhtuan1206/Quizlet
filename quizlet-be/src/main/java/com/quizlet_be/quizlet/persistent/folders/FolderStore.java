@@ -21,10 +21,6 @@ public class FolderStore {
 
     private final FolderRepository folderRepository;
 
-    public List<Folder> findByUserId(final UUID userId) {
-        return toFolders(folderRepository.findByUserId(userId));
-    }
-
     public List<Folder> findByUserId(final UUID userId, final Sort sort) {
         return toFolders(folderRepository.findByUserId(userId, sort));
     }
@@ -37,12 +33,12 @@ public class FolderStore {
         return folderRepository.findById(id).map(FolderMapper::toFolder);
     }
 
-    public Optional<Folder> findByName(final String name) {
-        return folderRepository.findByName(name).map(FolderMapper::toFolder);
-    }
-
     public Folder save(final Folder folder) {
         return toFolder(folderRepository.save(toFolderEntity(folder)));
+    }
+
+    public List<Folder> findByUserIdAndNotFolderId(final UUID userId, final UUID folderId) {
+        return toFolders(folderRepository.findByUserIdAndNotFolderId(userId, folderId));
     }
 
     /**

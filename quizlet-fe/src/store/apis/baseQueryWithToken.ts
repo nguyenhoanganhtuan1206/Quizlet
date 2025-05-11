@@ -5,10 +5,21 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 
-import { history } from "@/main";
 import { getCurrentRefreshToken, getCurrentToken, pause } from "../../utils";
 import { logout, setCredentials } from "../slices";
 import { AuthResponseDTO } from "@/type";
+
+/**
+ * BaseQuery with out header
+ * Not contain the token is expired to call `refreshToken` API
+ */
+const baseQueryWithoutHeader = fetchBaseQuery({
+  baseUrl: import.meta.env.VITE_API_ENDPOINT,
+  fetchFn: async (...args) => {
+    await pause(600);
+    return fetch(...args);
+  },
+});
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_ENDPOINT,
@@ -46,7 +57,7 @@ export const baseQueryWithToken: BaseQueryFn<
 
     // Try refreshing the token
     try {
-      const refreshResult = await baseQuery(
+      const refreshResult = await baseQueryWithoutHeader(
         {
           url: "/auths/refresh-token",
           method: "POST",
@@ -60,6 +71,7 @@ export const baseQueryWithToken: BaseQueryFn<
 
       if (refreshResult.data) {
         const response = refreshResult.data as AuthResponseDTO;
+
         store.dispatch(setCredentials(response));
 
         result = await baseQuery(args, store, extraOptions);

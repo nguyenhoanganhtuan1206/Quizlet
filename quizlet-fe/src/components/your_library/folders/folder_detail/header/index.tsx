@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PiCards } from "react-icons/pi";
@@ -7,10 +6,17 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { GoClock } from "react-icons/go";
 import { FaPlus } from "react-icons/fa";
 
+import { fetchFoldersSummaries } from "@/store/thunks/folderThunk";
+import { AppDispatch, fetchFlashSets, RootState } from "@/store";
+import {
+  setIsShowModalMaterials,
+  setListFlashSets,
+  setListFolders,
+} from "@/store/slices/modalMaterialsSlices";
+
 import { Folder } from "@/type";
 import { Button, CardItem } from "@/shared/components";
 import { ModalAddMaterials } from "@/components/your_library/";
-import { AppDispatch, fetchFlashSets, fetchFolders, RootState } from "@/store";
 
 type FolderDetailHeaderProps = {
   folderDetails: Folder;
@@ -21,25 +27,28 @@ export default function FolderDetailHeader({
   folderDetails,
   className,
 }: FolderDetailHeaderProps) {
-  const [isShowModalAddMaterials, setIsShowModalAddMaterials] =
-    useState<boolean>(false);
   // Redux state
   const dispatch = useDispatch<AppDispatch>();
+  const materialsModal = useSelector(
+    (state: RootState) => state.modalMaterialProvider
+  );
   const flashSetState = useSelector((state: RootState) => state.flashSetSlice);
   const folderState = useSelector((state: RootState) => state.folderSlice);
 
   const handleShowModalAddFlashSets = () => {
-    setIsShowModalAddMaterials(true);
+    dispatch(setIsShowModalMaterials(true));
     dispatch(fetchFlashSets());
+    dispatch(setListFlashSets(flashSetState.data));
   };
 
   const handleShowModalAddFolders = () => {
-    setIsShowModalAddMaterials(true);
-    dispatch(fetchFolders());
+    dispatch(setIsShowModalMaterials(true));
+    dispatch(fetchFoldersSummaries(folderDetails.id));
+    dispatch(setListFolders(folderState.data));
   };
 
   const handleCloseModal = () => {
-    setIsShowModalAddMaterials(false);
+    dispatch(setIsShowModalMaterials(false));
   };
 
   return (
@@ -81,7 +90,7 @@ export default function FolderDetailHeader({
           onClick={handleShowModalAddFlashSets}
         >
           <PiCards className="text-[1.8rem] mr-3" />
-          <span className="text-[1.2rem]">Add Flashset</span>
+          <span className="text-[1.2rem]">Add Flash Set</span>
         </Button>
 
         <Button
@@ -109,22 +118,22 @@ export default function FolderDetailHeader({
        */}
       <ModalAddMaterials
         isLoading={flashSetState.isLoading}
-        isShowModal={isShowModalAddMaterials}
+        isShowModal={materialsModal.isShowModalMaterials}
         onClose={handleCloseModal}
       >
         {/**
          * Folders List
          */}
-        {folderState &&
-          folderState.data.length > 0 &&
-          folderState.data.map((folder, index) => {
+        {materialsModal.listFolders &&
+          materialsModal.listFolders.length > 0 &&
+          materialsModal.listFolders.map((folder, index) => {
             return (
               <CardItem
                 key={index}
                 className="flex items-center duration-300 rounded-lg"
               >
                 <div className="flex w-full">
-                  <CiFolderOn className="p-[10px] h-[40px] w-[40px] rounded-[5px] bg-[var(--gray-300-gray-700)] text-[#51cfff]" />
+                  <CiFolderOn className="p-[10px] h-[40px] w-[40px] rounded-[5px] bg-[var(--gray-100-gray-700)] text-[#51cfff]" />
 
                   <div className="ml-4 text-white flex flex-col justify-between">
                     <p className="text-[1.4rem] font-extrabold">
@@ -157,16 +166,16 @@ export default function FolderDetailHeader({
         {/**
          * Flashsets List
          */}
-        {flashSetState &&
-          flashSetState.data.length > 0 &&
-          flashSetState.data.map((flashset, index) => {
+        {materialsModal.listFlashSets &&
+          materialsModal.listFlashSets.length > 0 &&
+          materialsModal.listFlashSets.map((flashset, index) => {
             return (
               <CardItem
                 key={index}
                 className="flex items-center duration-300 rounded-lg"
               >
                 <div className="flex w-full">
-                  <PiCards className="p-[10px] h-[40px] w-[40px] rounded-[5px] bg-[var(--gray-300-gray-700)] text-[#51cfff]" />
+                  <PiCards className="p-[10px] h-[40px] w-[40px] rounded-[5px] bg-[var(--gray-100-gray-700)] text-[#51cfff]" />
 
                   <div className="ml-4 text-white flex flex-col justify-between">
                     <p className="text-[1.4rem] font-extrabold">

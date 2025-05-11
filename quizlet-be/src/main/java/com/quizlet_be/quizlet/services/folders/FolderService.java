@@ -24,7 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.quizlet_be.quizlet.error.CommonError.*;
+import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
+import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
 import static com.quizlet_be.quizlet.mapper.folders.FolderSummaryDTOMapper.toFolderSummaryDTO;
 import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateDuplicatedChildFolder;
 import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateRestrictFolderAccess;
@@ -135,6 +136,22 @@ public class FolderService {
     }
 
     /**
+     * Retrieves list all folders by user id but not included FolderId
+     *
+     * @param userId
+     * @param folderId
+     * @return @{@link FolderSummaryDTO}
+     */
+    public List<FolderSummaryDTO> findByUserIdAndFolderId(final UUID userId, final UUID folderId) {
+        final List<Folder> folders = folderStore.findByUserIdAndNotFolderId(userId, folderId);
+
+        return folders
+                .stream()
+                .map(this::mapFolderToFolderSummaryDTO)
+                .toList();
+    }
+
+    /**
      * Create new folder
      *
      * @param userId  The ID of the parent folder to retrieve details for.
@@ -145,8 +162,6 @@ public class FolderService {
      */
     @Transactional
     public Folder createFolder(final UUID userId, final FolderCreateUpdateDTO folderCreation) {
-        validateFolderIsExisted(folderCreation.getName());
-
         try {
             final Folder folderCreated = folderStore.save(buildFolderCreation(folderCreation, userId));
 
@@ -188,7 +203,6 @@ public class FolderService {
         validateDuplicatedChildFolder(folderId, folderUpdateDTO.getFolderChildIds());
 
         if (!folderUpdateDTO.getName().equalsIgnoreCase(currentFolder.getName())) {
-            validateFolderIsExisted(folderUpdateDTO.getName());
             currentFolder.setName(folderUpdateDTO.getName());
         }
 
@@ -366,20 +380,6 @@ public class FolderService {
         return firstListId.stream()
                 .filter(firstChildId -> !secondListId.contains(firstChildId))
                 .collect(Collectors.toSet());
-    }
-
-    /**
-     * Validation to check whether folder is existed or not?
-     *
-     * @param @name
-     * @throws ConflictException
-     */
-    private void validateFolderIsExisted(final String name) {
-        final Optional<Folder> folder = folderStore.findByName(name);
-
-        if (folder.isPresent()) {
-            throw supplyConflictException("Folder with %s already taken", name).get();
-        }
     }
 
     /**

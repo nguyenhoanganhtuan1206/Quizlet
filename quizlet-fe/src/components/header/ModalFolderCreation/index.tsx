@@ -1,10 +1,11 @@
 import "./ModalFolderCreation.scss";
 
+import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import { folderSchema } from "@/schemas";
 import { FolderCreationRequestDTO } from "@/type";
@@ -26,18 +27,21 @@ import {
 
 type ModalFolderCreationProps = {
   isShowModal: boolean;
+  setIsShowModal: (isShow: boolean) => void;
   onClose: () => void;
 };
 
 export default function ModalFolderCreation({
   isShowModal,
+  setIsShowModal,
   onClose,
 }: Readonly<ModalFolderCreationProps>) {
   const fetchFoldersState = useSelector(
     (rootState: RootState) => rootState.folderSlice
   );
   const dispatch = useDispatch<AppDispatch>();
-  const [createFolder] = useCreateFolderMutation();
+  const navigate = useNavigate();
+  const [createFolder, { isLoading }] = useCreateFolderMutation();
 
   useEffect(() => {
     if (isShowModal) {
@@ -45,6 +49,9 @@ export default function ModalFolderCreation({
     }
   }, [isShowModal, dispatch]);
 
+  /*
+   * Define the FolderCreationDTO for @useForm
+   */
   const {
     control,
     handleSubmit,
@@ -66,12 +73,19 @@ export default function ModalFolderCreation({
     })
   );
 
+  /**
+   * Handle submit create new Folder
+   * @param data @FolderCreationRequestDTO
+   */
   const handleOnSubmit = (data: FolderCreationRequestDTO) => {
     createFolder(data)
       .unwrap()
-      .then(() => {
+      .then((data) => {
         reset();
         toast.success("Create the new folder successfully!");
+        setIsShowModal(false);
+
+        navigate(`/libraries/folders/${data.id}`, { replace: true });
       })
       .catch((error) => {
         console.error(
@@ -91,6 +105,9 @@ export default function ModalFolderCreation({
     >
       <h1 className="text-[2.6rem] font-bold leading-6">Create new folder</h1>
 
+      {/*
+       * Loading Folders
+       */}
       {fetchFoldersState.isLoading && (
         <Skeleton variant="section" className="w-full flex flex-col" times={1}>
           <Skeleton
@@ -109,6 +126,9 @@ export default function ModalFolderCreation({
           />
         </Skeleton>
       )}
+      {/*
+       * Loading Folders
+       */}
 
       {!fetchFoldersState.isLoading && (
         <form onSubmit={handleSubmit(handleOnSubmit)}>
@@ -146,6 +166,7 @@ export default function ModalFolderCreation({
               type="submit"
               className="flex justify-end w-fit rounded-lg"
               onSubmit={handleSubmit(handleOnSubmit)}
+              isLoading={isLoading}
             >
               Create Folder
             </Button>

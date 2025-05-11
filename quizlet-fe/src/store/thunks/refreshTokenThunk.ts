@@ -1,6 +1,6 @@
+import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthResponseDTO } from "../../type";
-import axios, { AxiosError } from "axios";
 import { getCurrentRefreshToken, pause } from "../../utils";
 
 export const doRefreshToken = createAsyncThunk<AuthResponseDTO, void>(

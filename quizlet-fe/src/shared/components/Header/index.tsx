@@ -126,10 +126,13 @@ function Header({ currentUser }: Readonly<HeaderProps>) {
         </div>
       </header>
 
-      <ModalFolderCreation
-        isShowModal={isShowCreateFolder}
-        onClose={handleShowModalCreation}
-      />
+      {currentUser && (
+        <ModalFolderCreation
+          isShowModal={isShowCreateFolder}
+          setIsShowModal={setIsShowCreateFolder}
+          onClose={handleShowModalCreation}
+        />
+      )}
     </>
   );
 }
