@@ -30,7 +30,7 @@ export default function FolderDetailHeader({
   // Redux state
   const dispatch = useDispatch<AppDispatch>();
   const materialsModal = useSelector(
-    (state: RootState) => state.modalMaterialProvider
+    (state: RootState) => state.modalMaterialSlices
   );
   const flashSetState = useSelector((state: RootState) => state.flashSetSlice);
   const folderState = useSelector((state: RootState) => state.folderSlice);
@@ -79,14 +79,14 @@ export default function FolderDetailHeader({
       <div className="flex items-center gap-4">
         <Button
           variant="borderOnly"
-          className="h-[40px] rounded-[5px] text-white hover:bg-[var(--twilight-100-gray-600)] duration-200"
+          className="h-[40px] rounded-[5px] text-white hover:bg-[var(--gray-300-gray-600)] duration-200"
         >
           Study
         </Button>
 
         <Button
           variant="borderOnly"
-          className="flex items-center text-white border border-gray-500 rounded-[5px] h-[40px] hover:bg-[var(--twilight-100-gray-600)] duration-100"
+          className="flex items-center text-white border border-gray-500 rounded-[5px] h-[40px] hover:bg-[var(--gray-300-gray-600)] duration-100"
           onClick={handleShowModalAddFlashSets}
         >
           <PiCards className="text-[1.8rem] mr-3" />
@@ -95,7 +95,7 @@ export default function FolderDetailHeader({
 
         <Button
           variant="borderOnly"
-          className="flex items-center text-white border border-gray-500 rounded-[5px] h-[40px] hover:bg-[var(--twilight-100-gray-600)] duration-100"
+          className="flex items-center text-white border border-gray-500 rounded-[5px] h-[40px] hover:bg-[var(--gray-300-gray-600)] duration-100"
           onClick={handleShowModalAddFolders}
         >
           <CiFolderOn className="text-[1.8rem] mr-3" />
@@ -104,7 +104,7 @@ export default function FolderDetailHeader({
 
         <Button
           variant="borderOnly"
-          className="text-white border border-gray-500 rounded-[50%] h-[40px] w-[40px] hover:bg-[var(--twilight-100-gray-600)] duration-100"
+          className="text-white border border-gray-500 rounded-[50%] h-[40px] w-[40px] hover:bg-[var(--gray-300-gray-600)] duration-100"
         >
           <HiOutlineDotsHorizontal />
         </Button>

@@ -1,7 +1,7 @@
 import { Modal, Skeleton } from "@/shared/components";
 
 import { ReactPropsChildren } from "@/type";
-import ModalMaterialsActions from "./modal_actions";
+import ModalMaterialsActions from "./modal_materials_selection";
 
 /**
  * ? This Modal using to add more Folders or Flashsets
