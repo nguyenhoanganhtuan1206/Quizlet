@@ -5,6 +5,15 @@ export {
   setCredentials,
 } from "./authProviderSlices";
 
+export {
+  TypeMaterialsSelection,
+  materialsModalReducer,
+  materialsModalSlice,
+  setIsShowModalMaterials,
+  setListFlashSets,
+  setListFolders
+} from "./modalMaterialsSlices";
+
 export { flashSetReducer, flashSetSlice } from "./flashsetsSlices";
 export { folderSlice, folderReducer } from "./folderSlices";
 export {

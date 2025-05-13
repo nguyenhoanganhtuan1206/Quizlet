@@ -10,12 +10,10 @@ import {
   authReducer,
   navigateBreadCrumbReducer,
   navigateBreadCrumbSlice,
+  materialsModalSlice,
+  materialsModalReducer,
 } from "./slices/";
 import { authApis, folderApis } from "./apis";
-import {
-  materialsModalReducer,
-  materialsModalSlice,
-} from "./slices/modalMaterialsSlices";
 
 const store = configureStore({
   reducer: {
@@ -45,6 +43,10 @@ export {
   addMorePage,
   authProviderSlice,
   flashSetReducer,
+  setListFlashSets,
+  setListFolders,
+  setIsShowModalMaterials,
+  TypeMaterialsSelection,
 } from "./slices";
 export {
   useLoginMutation,

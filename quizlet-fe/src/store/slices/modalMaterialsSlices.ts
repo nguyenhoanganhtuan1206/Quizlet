@@ -1,21 +1,24 @@
-import { FlashSetSummaryDTO, FolderSummaryDTO } from "@/type";
+import {
+  FlashSetSummaryDTO,
+  FolderSummaryDTO,
+} from "@/type";
 import { createSlice } from "@reduxjs/toolkit";
 
 export enum TypeMaterialsSelection {
-  FLASHSETCARD = "FLASHSET_CARD",
+  FLASHSETCARD = "FLASHSETCARD",
   FOLDER = "FOLDER",
 }
 
 interface MaterialsState {
   listFolders: FolderSummaryDTO[];
   listFlashSets: FlashSetSummaryDTO[];
-  materialTypeSelection: TypeMaterialsSelection;
+  materialTypeSelected: TypeMaterialsSelection;
   isShowModalMaterials: boolean;
 }
 
 const initialState: MaterialsState = {
   isShowModalMaterials: false,
-  materialTypeSelection: TypeMaterialsSelection.FLASHSETCARD,
+  materialTypeSelected: TypeMaterialsSelection.FLASHSETCARD,
   listFlashSets: [],
   listFolders: [],
 };
@@ -27,14 +30,14 @@ export const materialsModalSlice = createSlice({
     setIsShowModalMaterials: (state, action) => {
       state.isShowModalMaterials = action.payload;
     },
-    setListFlashSets: (state, action) => {
+    setListFlashSets: (state, action) => {      
       state.listFolders = [];
-      state.materialTypeSelection = TypeMaterialsSelection.FLASHSETCARD;
+      state.materialTypeSelected = TypeMaterialsSelection.FLASHSETCARD;
       state.listFlashSets = action.payload;
     },
     setListFolders: (state, action) => {
       state.listFlashSets = [];
-      state.materialTypeSelection = TypeMaterialsSelection.FOLDER;
+      state.materialTypeSelected = TypeMaterialsSelection.FOLDER;
       state.listFolders = action.payload;
     },
   },

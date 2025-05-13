@@ -6,13 +6,11 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { GoClock } from "react-icons/go";
 import { FaPlus } from "react-icons/fa";
 
-import { fetchFoldersSummaries } from "@/store/thunks/folderThunk";
-import { AppDispatch, fetchFlashSets, RootState } from "@/store";
 import {
+  AppDispatch,
+  RootState,
   setIsShowModalMaterials,
-  setListFlashSets,
-  setListFolders,
-} from "@/store/slices/modalMaterialsSlices";
+} from "@/store";
 
 import { Folder } from "@/type";
 import { Button, CardItem } from "@/shared/components";
@@ -35,18 +33,10 @@ export default function FolderDetailHeader({
   const flashSetState = useSelector((state: RootState) => state.flashSetSlice);
   const folderState = useSelector((state: RootState) => state.folderSlice);
 
-  const handleShowModalAddFlashSets = () => {
-    dispatch(setIsShowModalMaterials(true));
-    dispatch(fetchFlashSets());
-    dispatch(setListFlashSets(flashSetState.data));
+  const handleOnSelectMaterialOption = () => {
+    // need to handle in there
   };
-
-  const handleShowModalAddFolders = () => {
-    dispatch(setIsShowModalMaterials(true));
-    dispatch(fetchFoldersSummaries(folderDetails.id));
-    dispatch(setListFolders(folderState.data));
-  };
-
+  
   const handleCloseModal = () => {
     dispatch(setIsShowModalMaterials(false));
   };
@@ -87,19 +77,10 @@ export default function FolderDetailHeader({
         <Button
           variant="borderOnly"
           className="flex items-center text-white border border-gray-500 rounded-[5px] h-[40px] hover:bg-[var(--gray-300-gray-600)] duration-100"
-          onClick={handleShowModalAddFlashSets}
+          onClick={handleOnSelectMaterialOption}
         >
           <PiCards className="text-[1.8rem] mr-3" />
-          <span className="text-[1.2rem]">Add Flash Set</span>
-        </Button>
-
-        <Button
-          variant="borderOnly"
-          className="flex items-center text-white border border-gray-500 rounded-[5px] h-[40px] hover:bg-[var(--gray-300-gray-600)] duration-100"
-          onClick={handleShowModalAddFolders}
-        >
-          <CiFolderOn className="text-[1.8rem] mr-3" />
-          <span className="text-[1.2rem]">Add Folder</span>
+          <span className="text-[1.2rem]">Add Materials</span>
         </Button>
 
         <Button
@@ -117,7 +98,7 @@ export default function FolderDetailHeader({
        * Modal Add Materials
        */}
       <ModalAddMaterials
-        isLoading={flashSetState.isLoading}
+        isLoading={flashSetState.isLoading || folderState.isLoading}
         isShowModal={materialsModal.isShowModalMaterials}
         onClose={handleCloseModal}
       >
@@ -166,7 +147,7 @@ export default function FolderDetailHeader({
         {/**
          * Flashsets List
          */}
-        {materialsModal.listFlashSets &&
+        {materialsModal.materialTypeSelected &&
           materialsModal.listFlashSets.length > 0 &&
           materialsModal.listFlashSets.map((flashset, index) => {
             return (

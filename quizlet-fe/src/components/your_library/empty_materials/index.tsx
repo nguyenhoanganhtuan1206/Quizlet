@@ -4,11 +4,8 @@ import { FaFolderOpen } from "react-icons/fa";
 import { LuFolderHeart } from "react-icons/lu";
 
 import { Button, EmptyComponent } from "@/shared/components";
-import {
-  setIsShowModalMaterials,
-  setListFlashSets,
-} from "@/store/slices/modalMaterialsSlices";
-import { AppDispatch, fetchFlashSets, RootState } from "@/store";
+import { AppDispatch, fetchFlashSets, RootState,   setIsShowModalMaterials,
+  setListFlashSets, } from "@/store";
 
 export default function EmptyMaterials() {
   const dispatch = useDispatch<AppDispatch>();
