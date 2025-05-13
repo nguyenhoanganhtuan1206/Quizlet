@@ -1,20 +1,64 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { FolderSummaryDTO } from '../../type';
-import { createApiClient } from '../../hooks/useAxios';
+import axiosInstance from "../../hooks/useAxios";
 
-import { getAndValidateToken, getCurrentToken, pause } from '../../utils';
+import { FolderSummaryDTO } from "../../type";
 
-export const fetchFolders = createAsyncThunk<FolderSummaryDTO[], void>(
-  'folder/fetchFolders',
-  async () => {
-    const apiClient = await createApiClient();
-    const currentToken = getCurrentToken();
+import { pause } from "../../utils";
 
-    await pause(600);
-    const decoded = getAndValidateToken(currentToken);
-    const response = await apiClient.get(`folders/${decoded?.user_id}/users`);
+export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
+  "folder/fetchFoldersByUserId",
+  async (_, { rejectWithValue }) => {
+    try {
+      await pause(600);
 
-    return response.data;
+      const response = await axiosInstance.get("folders");
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while calling fetchFolders {folderThunk || fetchFolders}:"
+      );
+      rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchFoldersSummaries = createAsyncThunk<
+  FolderSummaryDTO[],
+  string
+>(
+  "folder/fetchFoldersByUserIdAndNotId",
+  async (folderId, { rejectWithValue }) => {
+    try {
+      await pause(600);
+      const response = await axiosInstance.get<FolderSummaryDTO[]>(
+        `folder/${folderId}/summaries`
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error(
+        "Error while calling fetchParentFolders {folderThunk || fetchFoldersSummaries}:"
+      );
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
+  "folder/fetchParentFoldersByUserId",
+  async (_, { rejectWithValue }) => {
+    try {
+      await pause(600);
+
+      const response = await axiosInstance.get("folders/parent");
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while calling fetchParentFolders {folderThunk || fetchParentFoldersByUserId}:"
+      );
+      rejectWithValue(error);
+    }
   }
 );

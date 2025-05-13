@@ -27,7 +27,5 @@ public class FolderEntity {
 
     private Instant updatedAt;
 
-    private UUID parentId;
-
     private UUID userId;
 }

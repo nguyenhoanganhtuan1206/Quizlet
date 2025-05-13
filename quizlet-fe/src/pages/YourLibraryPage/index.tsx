@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
-import { YourLibraryFilterSection } from '../../components';
-import { RootState } from '../../store';
+import { useSelector } from "react-redux";
+import { YourLibraryFilterSection } from "../../components";
+import { RootState } from "../../store";
 import {
   FlashSetListSection,
   FolderListSection,
-} from '../../components/YourLibrary';
+} from "../../components/your_library";
 
 export default function YourLibraryPage() {
   const { currentLibrary, filters } = useSelector(
@@ -21,9 +21,9 @@ export default function YourLibraryPage() {
     }
 
     switch (current.tags) {
-      case '#folder':
+      case "#folder":
         return <FolderListSection />;
-      case '#flashset':
+      case "#flashset":
         return <FlashSetListSection />;
     }
   };

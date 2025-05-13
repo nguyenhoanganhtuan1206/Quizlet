@@ -11,7 +11,7 @@ function Navbar() {
     <nav className="p-4">
       <ul className="space-y-4">
         <li>
-          <NavbarLinkItem path="/latest">
+          <NavbarLinkItem path="/">
             <AiOutlineHome className="navbar-icon" />
             <span>Home</span>
           </NavbarLinkItem>

@@ -25,9 +25,12 @@ public class FlashSetItemEntity {
 
     private String answer;
 
+    private int orderPosition;
+
     private Instant createdAt;
 
     private Instant updatedAt;
 
-    private UUID flashsetId;
+    @Column(name = "flashset_id")
+    private UUID flashSetId;
 }

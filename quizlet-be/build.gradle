@@ -23,11 +23,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// Database conf
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 
+	// Email
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	// Security conf
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -38,13 +41,16 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// Flyway
 	implementation 'org.flywaydb:flyway-core'
 	runtimeOnly group: 'org.flywaydb', name: 'flyway-database-postgresql', version: '10.19.0'
 
+	// JWT
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
+	// Lombok for reducing boilerplate
 	implementation 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 

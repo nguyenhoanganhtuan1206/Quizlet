@@ -1,8 +1,8 @@
-import './AssemblyCard.scss';
+import "./AssemblyCard.scss";
 
-import { ReactPropsChildren } from '../../../type/';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames';
+import { ReactPropsChildren } from "../../../type/";
+import { Link } from "react-router-dom";
+import classNames from "classnames";
 
 type AssemblyCardProps = {
   path?: string;
@@ -11,6 +11,7 @@ type AssemblyCardProps = {
   imageClassName?: string;
   imagePath?: string;
   headerContent?: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLDivElement>;
   children: ReactPropsChildren;
 };
 
@@ -21,9 +22,10 @@ export default function AssemblyCard({
   contentClassName,
   imageClassName,
   imagePath,
+  onClick,
   children,
 }: Readonly<AssemblyCardProps>) {
-  const assemblyCardClassName = classNames(className, 'assembly__card');
+  const assemblyCardClassName = classNames(className, "assembly__card");
 
   const renderContent = () => (
     <>
@@ -42,10 +44,12 @@ export default function AssemblyCard({
   );
 
   return path ? (
-    <Link to={path} className={assemblyCardClassName}>
+    <Link to={path} className={assemblyCardClassName} onClick={onClick}>
       {renderContent()}
     </Link>
   ) : (
-    <div className={assemblyCardClassName}>{renderContent()}</div>
+    <div onClick={onClick} className={assemblyCardClassName}>
+      {renderContent()}
+    </div>
   );
 }

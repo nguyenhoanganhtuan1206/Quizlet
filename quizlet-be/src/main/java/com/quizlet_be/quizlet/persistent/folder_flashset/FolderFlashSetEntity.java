@@ -20,5 +20,6 @@ public class FolderFlashSetEntity {
 
     private UUID folderId;
 
+    @Column(name = "flashset_id")
     private UUID flashSetId;
 }

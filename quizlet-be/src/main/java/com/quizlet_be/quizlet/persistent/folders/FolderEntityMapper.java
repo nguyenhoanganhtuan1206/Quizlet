@@ -14,7 +14,6 @@ public class FolderEntityMapper {
                 .createdAt(folder.getCreatedAt())
                 .updatedAt(folder.getUpdatedAt())
                 .userId(folder.getUserId())
-                .parentId(folder.getParentId())
                 .build();
     }
 }

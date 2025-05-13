@@ -1,15 +1,15 @@
-import React from 'react';
-import classnames from 'classnames';
+import React from "react";
+import classnames from "classnames";
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import './index.scss';
+import "./index.scss";
 
-import { ReactPropsChildren } from '../../../../type/';
+import { ReactPropsChildren } from "../../../../type/";
 
-type ButtonType = 'submit' | 'button' | 'reset';
+type ButtonType = "submit" | "button" | "reset";
 
-type ButtonVariants = 'primary' | 'borderOnly';
+type ButtonVariants = "primary" | "sub-primary" | "borderOnly";
 
 interface ButtonProps {
   variant?: ButtonVariants;
@@ -27,7 +27,7 @@ interface ButtonProps {
 
 export default function Button({
   variant,
-  type = 'button',
+  type = "button",
   path,
   isLoading,
   className,
@@ -39,13 +39,15 @@ export default function Button({
   onBlur,
 }: Readonly<ButtonProps>) {
   const buttonClassnames = classnames(
-    'flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 cursor-pointer transition-all duration-300',
+    "flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 cursor-pointer transition-all duration-300",
     className,
     {
-      'bg-primary text-white hover:bg-[var(--color-primary-sub)] hover:text-white':
-        variant === 'primary',
-      'bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white border-[var(--ref-color-twilight100)]':
-        variant === 'borderOnly',
+      "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-sub)] hover:text-white border-[var(--ref-color-twilight100)]":
+        variant === "primary",
+      "bg-transparent text-primary hover:bg-[var(--color-primary-sub)] hover:text-white border-[var(--ref-color-twilight100)]":
+        variant === "borderOnly",
+      "bg-[var(--color-primary-sub)] text-white hover:bg-[var(--color-primary)] hover:text-white border-[var(--ref-color-twilight100)]":
+        variant === "sub-primary",
     }
   );
 

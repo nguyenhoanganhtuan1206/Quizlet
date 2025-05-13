@@ -1,4 +1,4 @@
-@use '../../../shared/sass/base/utilities' as *;
+@use "../../../shared/sass/base/utilities" as *;
 
 :root {
   --max-height-assembly-card: 150px;
@@ -6,6 +6,7 @@
 
 .popular__assembly-card {
   height: var(--max-height-assembly-card);
+  padding: 5px 10px 8px 10px;
 }
 
 .popular__assembly-card-desc {

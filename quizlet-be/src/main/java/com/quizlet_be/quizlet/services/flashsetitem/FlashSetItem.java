@@ -17,6 +17,8 @@ public class FlashSetItem {
 
     private String answer;
 
+    private int orderPosition;
+
     private Instant createdAt;
 
     private Instant updatedAt;

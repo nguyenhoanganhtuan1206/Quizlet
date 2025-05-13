@@ -1,29 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
-
-import { logout, RootState } from '../../store';
-import { decodeToken } from '../../utils';
-import { PopularCardList, RecentCardsList } from '../../components/';
+import { PopularCardList, RecentCardsList } from "../../components/";
 
 const HomePage = () => {
-  const token = useSelector((state: RootState) => state.authProvider.token); // Updated field name
-  const dispatch = useDispatch();
-
-  // Handle unauthenticated state
-  if (!token) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  let userId: string;
-  try {
-    const decodedToken = decodeToken(token);
-    userId = decodedToken.user_id;
-  } catch (error) {
-    console.error('Token decoding failed:', error);
-    dispatch(logout());
-    return <Navigate to="/auth" replace />;
-  }
-
   return (
     <>
       {/**
@@ -33,7 +10,7 @@ const HomePage = () => {
         Recent flashcards
       </h3>
 
-      <RecentCardsList userId={userId} />
+      <RecentCardsList />
 
       {/**
        * Popular flashset List

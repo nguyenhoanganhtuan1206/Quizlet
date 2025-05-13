@@ -1,35 +1,31 @@
-import axios from 'axios';
+import axios from "axios";
+import { getCurrentToken } from "../utils";
 
-import { handleRefreshToken } from '../utils';
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_ENDPOINT,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export const createApiClient = async () => {
-  try {
-    const { token } = await handleRefreshToken();
+// Add request interceptor to include Authorization header
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getCurrentToken();
 
-    const apiClient = axios.create({
-      baseURL: import.meta.env.VITE_API_ENDPOINT,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers["Authorization"] = `Bearer ${token}`;
+      // config.headers[
+      //   "Authorization"
+      // ] = `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJfaWQiOiIyMzdjNzM2Yi05YWEzLTRjNGUtOGQ3ZS01NTgxNjZiYjNkNmIiLCJzdWIiOiJuZ3V5ZW5ob2FuZ2FuaHR1YW4xMjA2QGdtYWlsLmNvbSIsImlhdCI6MTc0Mzk5MjQ1NiwiZXhwIjoxNzQzOTk2MDU2fQ.lCpidZHxDT8BcBdxOyJXgv8pM42a6KyXyCIaMnGCs7o`;
+    }
 
-    /**
-     * Handle request to the API
-     * It included token
-     * */
-    apiClient.interceptors.request.use((config) => {
-      if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
-      }
-
-      return config;
-    });
-    return apiClient;
-  } catch (error) {
-    console.error(
-      'Error while processing call API {createApiClient | useAxios}: ',
-      error
-    );
-    throw new Error('Something went wrong! Please try to login again!');
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-};
+);
+
+export default axiosInstance;

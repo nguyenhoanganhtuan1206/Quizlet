@@ -44,3 +44,7 @@ body {
 a {
   text-decoration: none;
 }
+
+li::marker {
+  content: ""; /* Reset to default */
+}

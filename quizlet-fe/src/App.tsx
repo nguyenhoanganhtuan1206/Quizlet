@@ -1,10 +1,10 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import './App.scss';
+import "./App.scss";
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
-import RootLayout from './shared/RootLayout';
+import RootLayout from "./shared/RootLayout";
 
 import {
   AuthPage,
@@ -12,24 +12,25 @@ import {
   NotFoundPage,
   YourLibraryPage,
   FlashCardPage,
-} from './pages/';
-import { PrivateRoutes, PublicRoute } from './components';
+  FolderDetailsPage,
+} from "./pages/";
+import { PrivateRoutes, PublicRoute } from "./components";
 
 /* Just using for DEV Test */
-import DevPage from './pages/Dev/DevPage';
+import DevPage from "./pages/Dev/DevPage";
 
 function App() {
   const router = createBrowserRouter([
     /** Public Route */
     {
-      element: <PublicRoute restricted />,
+      element: <PublicRoute />,
       children: [
         {
-          path: '/auth',
+          path: "auth",
           element: <AuthPage />,
         },
         {
-          path: '/dev',
+          path: "dev",
           element: <DevPage />,
         },
       ],
@@ -42,36 +43,35 @@ function App() {
       element: <RootLayout />,
       children: [
         {
-          /*DEVELOPING*/
-          path: '/flashcard',
-          element: <FlashCardPage />,
-        },
-      ],
-    },
-    {
-      element: <RootLayout />,
-      children: [
-        {
           element: <PrivateRoutes />,
           children: [
             {
-              path: '/latest',
+              path: "/",
               element: <HomePage />,
             },
             {
-              path: '/libraries',
+              path: "/libraries",
               element: <YourLibraryPage />,
+            },
+            {
+              path: "/flashcard",
+              element: <FlashCardPage />,
+            },
+            {
+              path: "/libraries/folders/:folderId",
+              element: <FolderDetailsPage />,
             },
           ],
         },
         {
-          path: '*',
+          path: "*",
           element: <NotFoundPage />,
         },
       ],
     },
     /** Private Route */
   ]);
+
   return (
     <>
       <RouterProvider router={router} />

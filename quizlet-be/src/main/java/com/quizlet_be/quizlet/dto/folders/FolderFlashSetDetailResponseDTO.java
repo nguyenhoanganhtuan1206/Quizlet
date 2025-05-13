@@ -13,7 +13,7 @@ public class FolderFlashSetDetailResponseDTO {
 
     private Folder folder;
 
-    public List<Folder> foldersChildren;
+    public List<FolderSummaryDTO> foldersSummaryChildren;
 
     public List<FlashSet> flashSets;
 }

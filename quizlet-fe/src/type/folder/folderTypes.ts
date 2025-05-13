@@ -14,10 +14,12 @@ export interface FolderSummaryDTO {
   createdAt: string;
   updatedAt: string;
   userId: string;
-  flashSetCount: number;
+  numberOfChildrenFolders: number;
+  numberOfFlashSets: number;
 }
 
 export interface FolderCreationRequestDTO {
   name: string;
   description: string;
+  folderChildIds: string[];
 }

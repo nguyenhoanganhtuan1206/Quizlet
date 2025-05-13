@@ -1,63 +1,178 @@
-import './ModalFolderCreation.scss';
+import "./ModalFolderCreation.scss";
 
-import { Button, Input, Modal } from '../../../shared/components';
-import { useForm } from 'react-hook-form';
+import { toast } from "react-toastify";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { folderSchema } from "@/schemas";
+import { FolderCreationRequestDTO } from "@/type";
+import {
+  Button,
+  ErrorMessage,
+  Input,
+  Modal,
+  MultipleSelect,
+  Skeleton,
+} from "@/shared/components";
+import { SelectOptionProps } from "@/type/form/Input";
+import {
+  AppDispatch,
+  fetchFolders,
+  RootState,
+  useCreateFolderMutation,
+} from "@/store";
 
 type ModalFolderCreationProps = {
   isShowModal: boolean;
-  onClosed: () => void;
-};
-
-type FormModalCreationValues = {
-  name: string;
-  description: string;
+  setIsShowModal: (isShow: boolean) => void;
+  onClose: () => void;
 };
 
 export default function ModalFolderCreation({
   isShowModal,
-  onClosed,
+  setIsShowModal,
+  onClose,
 }: Readonly<ModalFolderCreationProps>) {
-  const { control } = useForm<FormModalCreationValues>({
+  const fetchFoldersState = useSelector(
+    (rootState: RootState) => rootState.folderSlice
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [createFolder, { isLoading }] = useCreateFolderMutation();
+
+  useEffect(() => {
+    if (isShowModal) {
+      dispatch(fetchFolders());
+    }
+  }, [isShowModal, dispatch]);
+
+  /*
+   * Define the FolderCreationDTO for @useForm
+   */
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FolderCreationRequestDTO>({
+    resolver: zodResolver(folderSchema),
     defaultValues: {
-      name: '',
-      description: '',
+      name: "",
+      description: "",
+      folderChildIds: [],
     },
   });
 
+  const initialFolderOptions: SelectOptionProps[] = fetchFoldersState.data.map(
+    (folder): SelectOptionProps => ({
+      title: folder.name,
+      value: folder.id,
+    })
+  );
+
+  /**
+   * Handle submit create new Folder
+   * @param data @FolderCreationRequestDTO
+   */
+  const handleOnSubmit = (data: FolderCreationRequestDTO) => {
+    createFolder(data)
+      .unwrap()
+      .then((data) => {
+        reset();
+        toast.success("Create the new folder successfully!");
+        setIsShowModal(false);
+
+        navigate(`/libraries/folders/${data.id}`, { replace: true });
+      })
+      .catch((error) => {
+        console.error(
+          "Error while create the new Folder {ModelFolderCreation} ",
+          error.data.message
+        );
+        toast.error(error.data.message);
+      });
+  };
+
   return (
     <Modal
-      onClosed={onClosed}
-      className="modal__folder-creation"
+      onClose={onClose}
+      className="modal__folder-creation h-[400px] overflow-y-auto"
       isOpen={isShowModal}
       isShowCloseIcon={true}
     >
       <h1 className="text-[2.6rem] font-bold leading-6">Create new folder</h1>
 
-      <form>
-        <Input
-          control={control}
-          name="name"
-          variant="mode-black"
-          placeholder="Title"
-          type="text"
-          className="mt-10 transition-all duration-700"
-        />
+      {/*
+       * Loading Folders
+       */}
+      {fetchFoldersState.isLoading && (
+        <Skeleton variant="section" className="w-full flex flex-col" times={1}>
+          <Skeleton
+            textBars={3}
+            className="mt-5"
+            variant="text"
+            height="45px"
+            width="100%"
+          />
 
-        <Input
-          control={control}
-          name="description"
-          type="textarea"
-          placeholder="Description"
-          variant="mode-black"
-          className="h-[150px] mt-5 transition-all duration-700"
-        />
+          <Skeleton
+            className="mt-5 items-end"
+            variant="button"
+            height="45px"
+            width="100px"
+          />
+        </Skeleton>
+      )}
+      {/*
+       * Loading Folders
+       */}
 
-        <div className="flex justify-end mt-12">
-          <Button variant="primary" className="w-fit rounded-lg">
-            Create Folder
-          </Button>
-        </div>
-      </form>
+      {!fetchFoldersState.isLoading && (
+        <form onSubmit={handleSubmit(handleOnSubmit)}>
+          <Input
+            control={control}
+            name="name"
+            variant="mode-black"
+            placeholder="Title"
+            type="text"
+            className="mt-10 transition-all duration-700"
+          />
+          <ErrorMessage message={errors.name?.message} />
+
+          <Input
+            control={control}
+            name="description"
+            type="textarea"
+            placeholder="Description"
+            variant="mode-black"
+            className="min-h-[200px] mt-5 transition-all duration-700"
+          />
+          <ErrorMessage message={errors.description?.message} />
+
+          <MultipleSelect
+            className="mt-3"
+            control={control}
+            name="folderChildIds"
+            listOptions={initialFolderOptions}
+            variant="mode-black"
+          />
+
+          <div className="flex justify-end mt-12">
+            <Button
+              variant="primary"
+              type="submit"
+              className="flex justify-end w-fit rounded-lg"
+              onSubmit={handleSubmit(handleOnSubmit)}
+              isLoading={isLoading}
+            >
+              Create Folder
+            </Button>
+          </div>
+        </form>
+      )}
     </Modal>
   );
 }

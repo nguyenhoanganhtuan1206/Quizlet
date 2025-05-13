@@ -1,0 +1,47 @@
+@use "../../../../sass/base/animations" as *;
+
+.select-item__wrapper {
+  @include fadeIn($fadeMiddle: 0.7, $duration: 0.3s, $from: -50px);
+}
+
+.select-item {
+  &.form--mode-black:hover {
+    background-color: var(--gray-300-gray-600);
+  }
+
+  &.form--mode-border-only:hover {
+    color: white;
+    background-color: var(--color-primary-sub);
+  }
+}
+
+.select-item__checkbox {
+  /*
+  * Hide the default checkbox
+  */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+
+  /* Style when checked */
+  position: relative;
+
+  /* Custom checkmark */
+  &:checked::after {
+    content: "\2713"; /* Unicode for checkmark */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Variant styles */
+  &.form--mode-black {
+    color: white;
+    border: 1px solid var(--ref-color-twilight300);
+  }
+
+  &.form--mode-border-only {
+  }
+}

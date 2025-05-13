@@ -1,19 +1,27 @@
-import classNames from 'classnames';
-import { ReactPropsChildren } from '../../../type';
+import classNames from "classnames";
+import { ReactPropsChildren } from "../../../type";
 
 type CardItemProps = {
   className?: string;
   children: ReactPropsChildren;
 };
 
+/**
+ * ? This is the CardItem to display the FlashSet
+ 
+ * @param className
+ * @param children
+ * @returns CardItem
+ */
+
 export default function CardItem({
   className,
   children,
 }: Readonly<CardItemProps>) {
-  const finalClassName = classNames(
-    'p-5 cursor-pointer rounded text-[var(--color-white-gray)] hover:bg-[var(--color-text-blacklight)]',
+  const finalClassNames = classNames(
+    "p-5 cursor-pointer rounded text-[var(--color-white-gray)] hover:bg-[var(--color-text-blacklight)]",
     className
   );
 
-  return <div className={finalClassName}>{children}</div>;
+  return <div className={finalClassNames}>{children}</div>;
 }

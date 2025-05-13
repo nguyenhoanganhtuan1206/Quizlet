@@ -1,14 +1,19 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import { authApis } from './apis/authApis';
-import { authProviderSlice, authReducer } from './slices/authProviderSlices';
-import { flashSetApis } from './apis/flashSetApis';
-import { folderSlice } from './slices/folderSlices';
 import {
   libraryFiltersReducer,
   libraryFiltersSlice,
-} from './slices/libraryFiltersSlices';
-import { flashSetReducer, flashSetSlice } from './slices/flashsetsSlices';
+  folderSlice,
+  flashSetReducer,
+  flashSetSlice,
+  authProviderSlice,
+  authReducer,
+  navigateBreadCrumbReducer,
+  navigateBreadCrumbSlice,
+  materialsModalSlice,
+  materialsModalReducer,
+} from "./slices/";
+import { authApis, folderApis } from "./apis";
 
 const store = configureStore({
   reducer: {
@@ -17,12 +22,14 @@ const store = configureStore({
     [flashSetSlice.reducerPath]: flashSetReducer,
     [folderSlice.reducerPath]: folderSlice.reducer,
     [authApis.reducerPath]: authApis.reducer,
-    [flashSetApis.reducerPath]: flashSetApis.reducer,
+    [folderApis.reducerPath]: folderApis.reducer,
+    [navigateBreadCrumbSlice.reducerPath]: navigateBreadCrumbReducer,
+    [materialsModalSlice.reducerPath]: materialsModalReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
       .concat(authApis.middleware)
-      .concat(flashSetApis.middleware);
+      .concat(folderApis.middleware);
   },
 });
 
@@ -32,13 +39,26 @@ export type RootState = ReturnType<typeof store.getState>;
 export {
   logout,
   setCredentials,
-  updateAccessToken,
-} from './slices/authProviderSlices';
-export { selectFilterLibraryItem } from './slices/libraryFiltersSlices';
-export { useLoginMutation, useRegisterMutation } from './apis/authApis';
-export { useGetFlashSetQuery } from './apis/flashSetApis';
+  selectFilterLibraryItem,
+  addMorePage,
+  authProviderSlice,
+  flashSetReducer,
+  setMaterialType,
+  setIsShowModalMaterials,
+  TypeMaterialsSelection,
+} from "./slices";
+export {
+  useLoginMutation,
+  useRegisterMutation,
+  useFetchFolderByIdQuery,
+  useCreateFolderMutation,
+} from "./apis";
 
-export { fetchFolders } from './thunks/folderThunk';
-export { fetchFlashSets } from './thunks/flashsetThunk';
+export {
+  fetchFolders,
+  fetchParentFolders,
+  fetchFlashSets,
+  doRefreshToken,
+} from "./thunks/";
 
 export default store;

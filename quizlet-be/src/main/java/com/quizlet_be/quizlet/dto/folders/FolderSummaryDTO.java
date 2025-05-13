@@ -1,12 +1,10 @@
 package com.quizlet_be.quizlet.dto.folders;
 
-import com.quizlet_be.quizlet.services.flashset.FlashSet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -26,5 +24,7 @@ public class FolderSummaryDTO {
 
     private UUID userId;
 
-    private long flashSetCount;
+    private long numberOfFlashSets;
+
+    private long numberOfChildrenFolders;
 }

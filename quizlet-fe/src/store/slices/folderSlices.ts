@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { fetchFolders } from "../thunks/folderThunk";
+import { fetchFolders, fetchParentFolders } from "../thunks/folderThunk";
 import { ThunkState } from "../../type";
-import { FolderSummaryDTO } from "../../type/folder/folderType";
+import { FolderSummaryDTO } from "../../type/";
 
 type FolderSummaryState = ThunkState<FolderSummaryDTO>;
 
 const initialState: FolderSummaryState = {
   data: [],
-  isError: false,
+  error: null,
   isLoading: false,
 };
 
 export const folderSlice = createSlice({
-  name: "folder",
+  name: "folderSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -26,12 +26,23 @@ export const folderSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchFolders.rejected, (state, action) => {
-        console.log("action", action);
-        
-        state.isError = true;
         state.isLoading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(fetchParentFolders.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchParentFolders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchParentFolders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export default folderSlice.reducer;
+export const folderReducer = folderSlice.reducer;

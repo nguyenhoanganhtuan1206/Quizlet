@@ -1,0 +1,24 @@
+@use "../../sass/base/animations" as *;
+
+.form--mode-black {
+  color: white;
+  background-color: var(--gray-100-gray-700);
+  border: 1px solid transparent;
+
+  &:focus,
+  &:active {
+    border: 1px solid var(--ref-color-twilight300);
+    background: var(--ref-color-twilight900);
+  }
+}
+
+.form--mode-border-only {
+  color: var(--color-primary-sub);
+  background-color: white;
+  border: 1px solid var(--gray-700-gray-500);
+
+  &:focus,
+  &:active {
+    background-color: var(--ref-color-twilight100);
+  }
+}
