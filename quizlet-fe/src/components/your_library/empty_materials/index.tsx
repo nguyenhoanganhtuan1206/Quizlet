@@ -1,20 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { FaFolderOpen } from "react-icons/fa";
 import { LuFolderHeart } from "react-icons/lu";
 
 import { Button, EmptyComponent } from "@/shared/components";
-import { AppDispatch, fetchFlashSets, RootState,   setIsShowModalMaterials,
-  setListFlashSets, } from "@/store";
+import { AppDispatch, setMaterialType, TypeMaterialsSelection } from "@/store";
 
 export default function EmptyMaterials() {
   const dispatch = useDispatch<AppDispatch>();
-  const flashSetState = useSelector((state: RootState) => state.flashSetSlice);
 
   const handleOpenModalMaterials = () => {
-    dispatch(fetchFlashSets());
-    dispatch(setListFlashSets(flashSetState.data));
-    dispatch(setIsShowModalMaterials(true));
+    dispatch(setMaterialType(TypeMaterialsSelection.FLASHSETCARD));
   };
 
   return (

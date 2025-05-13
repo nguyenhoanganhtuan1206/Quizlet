@@ -1,19 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 
 import { PiCards } from "react-icons/pi";
-import { CiFolderOn } from "react-icons/ci";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { GoClock } from "react-icons/go";
-import { FaPlus } from "react-icons/fa";
 
 import {
   AppDispatch,
   RootState,
   setIsShowModalMaterials,
+  setMaterialType,
+  TypeMaterialsSelection,
 } from "@/store";
 
 import { Folder } from "@/type";
-import { Button, CardItem } from "@/shared/components";
+import { Button } from "@/shared/components";
 import { ModalAddMaterials } from "@/components/your_library/";
 
 type FolderDetailHeaderProps = {
@@ -30,13 +30,11 @@ export default function FolderDetailHeader({
   const materialsModal = useSelector(
     (state: RootState) => state.modalMaterialSlices
   );
-  const flashSetState = useSelector((state: RootState) => state.flashSetSlice);
-  const folderState = useSelector((state: RootState) => state.folderSlice);
-
   const handleOnSelectMaterialOption = () => {
-    // need to handle in there
+    dispatch(setMaterialType(TypeMaterialsSelection.FLASHSETCARD));
+    dispatch(setIsShowModalMaterials(true));
   };
-  
+
   const handleCloseModal = () => {
     dispatch(setIsShowModalMaterials(false));
   };
@@ -98,88 +96,9 @@ export default function FolderDetailHeader({
        * Modal Add Materials
        */}
       <ModalAddMaterials
-        isLoading={flashSetState.isLoading || folderState.isLoading}
         isShowModal={materialsModal.isShowModalMaterials}
         onClose={handleCloseModal}
-      >
-        {/**
-         * Folders List
-         */}
-        {materialsModal.listFolders &&
-          materialsModal.listFolders.length > 0 &&
-          materialsModal.listFolders.map((folder, index) => {
-            return (
-              <CardItem
-                key={index}
-                className="flex items-center duration-300 rounded-lg"
-              >
-                <div className="flex w-full">
-                  <CiFolderOn className="p-[10px] h-[40px] w-[40px] rounded-[5px] bg-[var(--gray-100-gray-700)] text-[#51cfff]" />
-
-                  <div className="ml-4 text-white flex flex-col justify-between">
-                    <p className="text-[1.4rem] font-extrabold">
-                      {folder.name}
-                    </p>
-                    <span className="text-[1.2rem] font-[600]">
-                      {folder.description && (
-                        <>
-                          <span>{folder.description}</span>
-                          <span className="mx-3">-</span>
-                        </>
-                      )}
-                      <span>{folder.numberOfFlashSets} flashsets</span>
-                      <span className="mx-3">-</span>
-                      <span>{folder.numberOfChildrenFolders} folders</span>
-                    </span>
-                  </div>
-                </div>
-
-                <button className="flex justify-center items-center rounded-[50%] p-3 h-[40px] w-[40px] duration-700 bg-transparent hover:bg-[var(--gray-200-gray-900)]">
-                  <FaPlus className="flex justify-center items-center rounded-[50%] h-[24px] w-[24px] p-2 border-white border-2 text-[1rem]" />
-                </button>
-              </CardItem>
-            );
-          })}
-        {/**
-         * Folders List
-         */}
-
-        {/**
-         * Flashsets List
-         */}
-        {materialsModal.materialTypeSelected &&
-          materialsModal.listFlashSets.length > 0 &&
-          materialsModal.listFlashSets.map((flashset, index) => {
-            return (
-              <CardItem
-                key={index}
-                className="flex items-center duration-300 rounded-lg"
-              >
-                <div className="flex w-full">
-                  <PiCards className="p-[10px] h-[40px] w-[40px] rounded-[5px] bg-[var(--gray-100-gray-700)] text-[#51cfff]" />
-
-                  <div className="ml-4 text-white flex flex-col justify-between">
-                    <p className="text-[1.4rem] font-extrabold">
-                      {flashset.name}
-                    </p>
-                    <span className="text-[1.2rem] font-[600]">
-                      <span>{flashset.description}</span>
-                      <span className="mx-3">-</span>
-                      <span>{flashset.flashSetItemCount}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <button className="flex justify-center items-center rounded-[50%] p-3 h-[40px] w-[40px] duration-700 bg-transparent hover:bg-[var(--gray-200-gray-900)]">
-                  <FaPlus className="flex justify-center items-center rounded-[50%] h-[24px] w-[24px] p-2 border-white border-2 text-[1rem]" />
-                </button>
-              </CardItem>
-            );
-          })}
-        {/**
-         * Flashsets List
-         */}
-      </ModalAddMaterials>
+      />
     </div>
   );
 }

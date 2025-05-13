@@ -43,8 +43,7 @@ export {
   addMorePage,
   authProviderSlice,
   flashSetReducer,
-  setListFlashSets,
-  setListFolders,
+  setMaterialType,
   setIsShowModalMaterials,
   TypeMaterialsSelection,
 } from "./slices";

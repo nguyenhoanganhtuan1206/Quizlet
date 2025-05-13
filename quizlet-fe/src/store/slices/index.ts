@@ -10,8 +10,7 @@ export {
   materialsModalReducer,
   materialsModalSlice,
   setIsShowModalMaterials,
-  setListFlashSets,
-  setListFolders
+  setMaterialType,
 } from "./modalMaterialsSlices";
 
 export { flashSetReducer, flashSetSlice } from "./flashsetsSlices";

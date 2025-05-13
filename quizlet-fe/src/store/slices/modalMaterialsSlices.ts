@@ -1,7 +1,4 @@
-import {
-  FlashSetSummaryDTO,
-  FolderSummaryDTO,
-} from "@/type";
+import { FlashSetSummaryDTO, FolderSummaryDTO } from "@/type";
 import { createSlice } from "@reduxjs/toolkit";
 
 export enum TypeMaterialsSelection {
@@ -30,19 +27,12 @@ export const materialsModalSlice = createSlice({
     setIsShowModalMaterials: (state, action) => {
       state.isShowModalMaterials = action.payload;
     },
-    setListFlashSets: (state, action) => {      
-      state.listFolders = [];
-      state.materialTypeSelected = TypeMaterialsSelection.FLASHSETCARD;
-      state.listFlashSets = action.payload;
-    },
-    setListFolders: (state, action) => {
-      state.listFlashSets = [];
-      state.materialTypeSelected = TypeMaterialsSelection.FOLDER;
-      state.listFolders = action.payload;
+    setMaterialType: (state, action) => {
+      state.materialTypeSelected = action.payload;
     },
   },
 });
 
-export const { setListFlashSets, setListFolders, setIsShowModalMaterials } =
+export const { setMaterialType, setIsShowModalMaterials } =
   materialsModalSlice.actions;
 export const materialsModalReducer = materialsModalSlice.reducer;

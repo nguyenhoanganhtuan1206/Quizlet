@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import classNames from "classnames";
 
 import { TiTick } from "react-icons/ti";
@@ -6,12 +6,8 @@ import { TiTick } from "react-icons/ti";
 import { ReactPropsChildren } from "@/type";
 import {
   AppDispatch,
-  fetchFlashSets,
-  fetchFolders,
-  RootState,
   setIsShowModalMaterials,
-  setListFlashSets,
-  setListFolders,
+  setMaterialType,
   TypeMaterialsSelection,
 } from "@/store";
 
@@ -29,21 +25,10 @@ export default function MaterialSelectionItem({
   isSelected,
 }: Readonly<MaterialSelectionItemProps>) {
   const dispatch = useDispatch<AppDispatch>();
-  const flashSetState = useSelector((state: RootState) => state.flashSetSlice);
-  const folderState = useSelector((state: RootState) => state.folderSlice);
 
   const handleOnSelectMaterialOption = (type: TypeMaterialsSelection) => {
-    if (type === TypeMaterialsSelection.FLASHSETCARD) {
-      dispatch(fetchFlashSets());
-      dispatch(setListFlashSets(flashSetState.data));
-      dispatch(setIsShowModalMaterials(true));
-    }
-
-    if (type === TypeMaterialsSelection.FOLDER) {
-      dispatch(fetchFolders());
-      dispatch(setListFolders(folderState.data));
-      dispatch(setIsShowModalMaterials(true));
-    }
+    dispatch(setMaterialType(type));
+    dispatch(setIsShowModalMaterials(true));
   };
 
   return (
