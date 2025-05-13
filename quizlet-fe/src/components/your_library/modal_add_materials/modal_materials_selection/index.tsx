@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "@/store";
@@ -11,7 +12,6 @@ import { ReactPropsChildren } from "@/type";
 import { Button, PopperWrapper } from "@/shared/components";
 import { TypeMaterialsSelection } from "@/store/slices/modalMaterialsSlices";
 import MaterialSelectionItem from "./MaterialSelectionItem";
-import { useState } from "react";
 
 interface MaterialOptions {
   title: string;
@@ -40,13 +40,12 @@ export default function ModalMaterialsActions() {
     },
   ];
 
-  const titleFilter = () => {
+  const title = useMemo(() => {
     const option = materialOptions.find(
-      (option) => modalMaterialsType.materialTypeSelected === option.type
+      (opt) => opt.type === modalMaterialsType.materialTypeSelected
     );
-
-    return option?.title;
-  };
+    return option?.title || "Select Material Type";
+  }, [modalMaterialsType.materialTypeSelected, materialOptions]);
 
   return (
     <div className="flex items-center justify-between mt-[25px] mb-10">
@@ -54,7 +53,7 @@ export default function ModalMaterialsActions() {
         onClick={() => setIsShowDropdownFilter(!isShowDropdownFilter)}
         className="relative flex items-center text-[1.25rem] text-white px-6 py-3 border-2 border-transparent font-bold rounded-[50px] text-[var(--ref-color-twilight300)] cursor-pointer hover:text-white hover:bg-[var(--color-text-blacklight)] hover:border-[var(--ref-color-twilight300)] duration-200"
       >
-        <span>{titleFilter()}</span>
+        <span>{title}</span>
         <MdFilterList className="translate-y-[-2px] ml-3" />
 
         <PopperWrapper

@@ -2,10 +2,12 @@ package com.quizlet_be.quizlet.persistent.folder_flashset;
 
 import com.quizlet_be.quizlet.repositories.folder_flashset.FolderFlashSetRepository;
 import com.quizlet_be.quizlet.services.folder_flashset.FolderFlashSet;
+import com.quizlet_be.quizlet.services.folder_flashset.FolderFlashSetMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.quizlet_be.quizlet.persistent.folder_flashset.FolderFlashSetEntityMapper.toFolderFlashSetEntity;
@@ -18,8 +20,17 @@ public class FolderFlashSetStore {
 
     private final FolderFlashSetRepository folderFlashSetRepository;
 
+    public Optional<FolderFlashSet> findByFolderIdAndFlashSetId(final UUID folderId, final UUID flashSetId) {
+        return folderFlashSetRepository.findByFolderIdAndFlashSetId(folderId, flashSetId)
+                .map(FolderFlashSetMapper::toFolderFlashSet);
+    }
+
     public FolderFlashSet save(final FolderFlashSet folderFlashSet) {
         return toFolderFlashSet(folderFlashSetRepository.save(toFolderFlashSetEntity(folderFlashSet)));
+    }
+
+    public void delete(final FolderFlashSet folderFlashSet) {
+        folderFlashSetRepository.delete(toFolderFlashSetEntity(folderFlashSet));
     }
 
     public List<FolderFlashSet> findByFolderId(final UUID folderId) {

@@ -7,10 +7,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface FolderFlashSetRepository extends JpaRepository<FolderFlashSetEntity, UUID> {
+
+    Optional<FolderFlashSetEntity> findByFolderIdAndFlashSetId(final UUID folderId, final UUID flashSetId);
 
     List<FolderFlashSetEntity> findByFolderId(final UUID folderId);
 
