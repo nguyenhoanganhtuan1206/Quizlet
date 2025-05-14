@@ -175,7 +175,7 @@ public class FlashSetService {
     }
 
     private FlashSetSummaryDTO mapToFlashSetSummaryDTO(final FlashSet flashSet) {
-        final long flashSetItemCount = flashSetItemStore.countByFlashSetId(flashSet.getId());
+        final List<FlashSetItem> flashSetItems = flashSetItemStore.findByFlashSetId(flashSet.getId());
 
         return FlashSetSummaryDTO.builder()
                 .id(flashSet.getId())
@@ -184,7 +184,7 @@ public class FlashSetService {
                 .createdAt(flashSet.getCreatedAt())
                 .updatedAt(flashSet.getUpdatedAt())
                 .isDrafted(flashSet.isDrafted())
-                .flashSetItemCount(flashSetItemCount)
+                .flashSetItems(flashSetItems)
                 .build();
     }
 

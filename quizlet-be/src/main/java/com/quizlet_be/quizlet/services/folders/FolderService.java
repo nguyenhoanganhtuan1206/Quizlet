@@ -1,7 +1,6 @@
 package com.quizlet_be.quizlet.services.folders;
 
 import com.quizlet_be.quizlet.dto.folders.FolderCreateUpdateDTO;
-import com.quizlet_be.quizlet.dto.folders.FolderFlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.error.BadRequestException;
 import com.quizlet_be.quizlet.error.ConflictException;
@@ -66,18 +65,11 @@ public class FolderService {
      * @return A DTO containing the folder details, summaries of child folders, and associated flash sets.
      * @throws NotFoundException If the folder with the specified ID does not exist.
      */
-    public FolderFlashSetDetailResponseDTO findFolderDetail(final UUID folderId) {
+    public FolderSummaryDTO findFolderDetail(final UUID folderId) {
         final Folder folder = findById(folderId);
 
         try {
-            final List<Folder> childrenFolders = findByParentId(folder.getId());
-            final List<FolderFlashSet> folderFlashSets = folderFlashSetStore.findByFolderId(folderId);
-
-            return FolderFlashSetDetailResponseDTO.builder()
-                    .folder(folder)
-                    .foldersSummaryChildren(mapFoldersToFolderSummaryDTOs(childrenFolders))
-                    .flashSets(findFlashSetsByFolderFlashSets(folderFlashSets))
-                    .build();
+            return mapFolderToFolderSummaryDTO(folder);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
             throw supplyBadRequestException("Unexpected while get the Folder").get();
@@ -199,11 +191,11 @@ public class FolderService {
 
             return save(currentFolder);
         } catch (NotFoundException ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} " + ex.getMessage());
-            throw supplyNotFoundException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} ", ex.getMessage());
+            throw supplyNotFoundException("Unexpected error while updating the folder %s. Please try it again!", currentFolder.getName()).get();
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} " + ex.getMessage());
-            throw supplyBadRequestException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} ", ex.getMessage());
+            throw supplyBadRequestException("Unexpected error while updating the folder %s. Please try it again!", currentFolder.getName()).get();
         }
     }
 
@@ -272,13 +264,19 @@ public class FolderService {
      * @return A FolderSummaryDTO with flashsets and folder children counts.
      */
     private FolderSummaryDTO mapFolderToFolderSummaryDTO(final Folder folder) {
-        final long numberChildrenFolders = folderParentsStore.countByParentFolderId(folder.getId());
-        final long numberFlashSets = folderFlashSetStore.countByFolderId(folder.getId());
-
+        final List<UUID> childFolderIds = folderParentsStore.findChildIdsByParentFolderId(folder.getId());
+        final List<UUID> flashSetIds = folderFlashSetStore.findFlashSetIdsByFolderId(folder.getId());
         final FolderSummaryDTO folderSummary = toFolderSummaryDTO(folder);
 
-        folderSummary.setNumberOfChildrenFolders(numberChildrenFolders);
-        folderSummary.setNumberOfFlashSets(numberFlashSets);
+        final List<FlashSet> flashSets = flashSetIds.stream()
+                .map(this::findFlashSetById)
+                .toList();
+        final List<Folder> folders = childFolderIds.stream()
+                .map(this::findById)
+                .toList();
+
+        folderSummary.setFlashSets(flashSets);
+        folderSummary.setFoldersChild(folders);
         return folderSummary;
     }
 
@@ -343,8 +341,8 @@ public class FolderService {
                 .toList();
 
         // Get the children ID to add and remove
-        final Set<UUID> flashSetToAdd = getDifferenceItemsInList(folderUpdateDTO.getFolderChildIds(), currentFlashSetIds);
-        final Set<UUID> childrenToRemove = getDifferenceItemsInList(currentFlashSetIds, folderUpdateDTO.getFolderChildIds());
+        final Set<UUID> flashSetToAdd = getDifferenceItemsInList(folderUpdateDTO.getFlashSetIds(), currentFlashSetIds);
+        final Set<UUID> childrenToRemove = getDifferenceItemsInList(currentFlashSetIds, folderUpdateDTO.getFlashSetIds());
 
         if (!flashSetToAdd.isEmpty()) {
             flashSetToAdd
@@ -374,29 +372,20 @@ public class FolderService {
     }
 
     /**
-     * Save and Build @{@link FolderFlashSet} by @folderId and @flashSetId
+     * Find @FlashSet by flashSetId
      *
-     * @throws @{@link NotFoundException}
-     * @throws @{@link BadRequestException}
+     * @param flashSetId
+     * @return FlashSet
      */
-    private void saveAndBuildToFolderFlashSet(final UUID folderId, final UUID flashSetId) {
+    private FlashSet findFlashSetById(final UUID flashSetId) {
         final Optional<FlashSet> flashSet = flashSetStore.findById(flashSetId);
 
         if (flashSet.isEmpty()) {
-            LOGGER.log(Level.SEVERE, format("Flash set with ID %s {saveAndBuildToFolderParents | FolderService} not found", flashSetId));
+            LOGGER.log(Level.SEVERE, format("Flash set with ID %s {findFlashSetById | FolderService} not found", flashSetId));
             throw supplyNotFoundException("The current Flash Set is not existed!").get();
         }
 
-        try {
-            final FolderFlashSet folderFlashSet = FolderFlashSet.builder()
-                    .folderId(folderId)
-                    .flashSetId(flashSet.get().getId())
-                    .build();
-            folderFlashSetStore.save(folderFlashSet);
-        } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE CREATING FOLDER PARENT: " + ex.getMessage(), ex);
-            throw supplyBadRequestException("Unexpected while creating new Folder").get();
-        }
+        return flashSet.get();
     }
 
     /**
@@ -425,6 +414,25 @@ public class FolderService {
         return firstListId.stream()
                 .filter(firstChildId -> !secondListId.contains(firstChildId))
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * Save and Build @{@link FolderFlashSet} by @folderId and @flashSetId
+     *
+     * @throws @{@link NotFoundException}
+     * @throws @{@link BadRequestException}
+     */
+    private void saveAndBuildToFolderFlashSet(final UUID folderId, final UUID flashSetId) {
+        try {
+            final FolderFlashSet folderFlashSet = FolderFlashSet.builder()
+                    .folderId(folderId)
+                    .flashSetId(findFlashSetById(flashSetId).getId())
+                    .build();
+            folderFlashSetStore.save(folderFlashSet);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "ERROR WHILE CREATING FOLDER PARENT: " + ex.getMessage(), ex);
+            throw supplyBadRequestException("Unexpected while creating new Folder").get();
+        }
     }
 
     /**

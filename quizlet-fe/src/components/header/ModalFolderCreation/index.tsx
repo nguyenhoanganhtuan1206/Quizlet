@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { folderSchema } from "@/schemas";
-import { FolderCreationRequestDTO } from "@/type";
+import { FolderCreateUpdateRequestDTO } from "@/type";
 import {
   Button,
   ErrorMessage,
@@ -57,7 +57,7 @@ export default function ModalFolderCreation({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FolderCreationRequestDTO>({
+  } = useForm<FolderCreateUpdateRequestDTO>({
     resolver: zodResolver(folderSchema),
     defaultValues: {
       name: "",
@@ -75,9 +75,9 @@ export default function ModalFolderCreation({
 
   /**
    * Handle submit create new Folder
-   * @param data @FolderCreationRequestDTO
+   * @param data @FolderCreateUpdateRequestDTO
    */
-  const handleOnSubmit = (data: FolderCreationRequestDTO) => {
+  const handleOnSubmit = (data: FolderCreateUpdateRequestDTO) => {
     createFolder(data)
       .unwrap()
       .then((data) => {

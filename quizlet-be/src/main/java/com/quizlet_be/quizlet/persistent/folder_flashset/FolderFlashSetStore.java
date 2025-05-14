@@ -33,15 +33,27 @@ public class FolderFlashSetStore {
         folderFlashSetRepository.delete(toFolderFlashSetEntity(folderFlashSet));
     }
 
+    /**
+     * Return @{@link @FolderFlashSet} by folderId
+     *
+     * @param folderId
+     * return List
+     * */
     public List<FolderFlashSet> findByFolderId(final UUID folderId) {
         return toFolderFlashSets(folderFlashSetRepository.findByFolderId(folderId));
     }
 
-    public List<FolderFlashSet> findByFlashSetId(final UUID flashSetId) {
-        return toFolderFlashSets(folderFlashSetRepository.findByFlashSetId(flashSetId));
+    /**
+     * Return @{@link @FolderFlashSet} by folderId
+     *
+     * @param folderId
+     * @return List<UUID>
+     * */
+    public List<UUID> findFlashSetIdsByFolderId(final UUID folderId) {
+        return folderFlashSetRepository.findFlashSetIdsByFolderId(folderId);
     }
 
-    public long countByFolderId(final UUID folderId) {
-        return folderFlashSetRepository.countByFolderIdAndFlashSetIdIsNotNull(folderId);
+    public List<FolderFlashSet> findByFlashSetId(final UUID flashSetId) {
+        return toFolderFlashSets(folderFlashSetRepository.findByFlashSetId(flashSetId));
     }
 }

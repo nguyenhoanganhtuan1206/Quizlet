@@ -4,7 +4,7 @@ import { FC, useEffect } from "react";
 import { CiFolderOn } from "react-icons/ci";
 import { PiCards } from "react-icons/pi";
 import { LuFolderHeart } from "react-icons/lu";
-import { FaFolderOpen, FaPlus } from "react-icons/fa";
+import { FaCheck, FaFolderOpen, FaPlus } from "react-icons/fa";
 
 import ModalMaterialsActions from "./modal_materials_selection";
 import { CardItem, EmptyComponent, Modal, Skeleton } from "@/shared/components";
@@ -16,20 +16,23 @@ import {
   RootState,
   TypeMaterialsSelection,
 } from "@/store";
+import classNames from "classnames";
 
 type FlashSetState = ThunkState<FlashSetSummaryDTO>;
 type FolderState = ThunkState<FolderSummaryDTO>;
 
 interface DisplayContentProps {
+  currentItem: FolderSummaryDTO;
   fetchFoldersState: FolderState;
   fetchFlashSetsState: FlashSetState;
   materialTypeSelected: TypeMaterialsSelection;
-  onAddItem?: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void;
+  onToggleItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void;
 }
 
 type ModalAddMaterialsProps = {
   isShowModal: boolean;
   onClose: () => void;
+  currentItem: FolderSummaryDTO;
 };
 
 // Empty component
@@ -55,10 +58,16 @@ const LoadingState: FC = () => (
   </Skeleton>
 );
 
+const iconClassNames = classNames(
+  "flex justify-center items-center rounded-[50%] h-[24px] w-[24px] p-2 border-white border-2"
+);
+
 // Card item renderer
 const renderCardItem = (
+  isItemSelected: boolean,
   item: FolderSummaryDTO | FlashSetSummaryDTO,
-  isFolder: boolean
+  isFolder: boolean,
+  onAddItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void
 ) => (
   <CardItem key={item.id} className="flex items-center duration-300 rounded-lg">
     <div className="flex w-full">
@@ -78,35 +87,55 @@ const renderCardItem = (
                 <span className="mx-3">-</span>
               </>
             )}
-            <span>
-              {(item as FolderSummaryDTO).numberOfFlashSets} flashsets
-            </span>
+            <span>{(item as FolderSummaryDTO).flashSets.length} flashsets</span>
             <span className="mx-3">-</span>
             <span>
-              {(item as FolderSummaryDTO).numberOfChildrenFolders} folders
+              {(item as FolderSummaryDTO).foldersChild.length} folders
             </span>
           </div>
         ) : (
           <div className="text-[1.2rem] font-[600]">
             <span>{(item as FlashSetSummaryDTO).description}</span>
             <span className="mx-3">-</span>
-            <span>{(item as FlashSetSummaryDTO).flashSetItemCount} cards</span>
+            <span>
+              {(item as FlashSetSummaryDTO).flashSetItems.length} cards
+            </span>
           </div>
         )}
       </div>
     </div>
 
-    <button className="flex justify-center items-center rounded-[50%] p-3 h-[40px] w-[40px] duration-700 bg-transparent hover:bg-[var(--gray-200-gray-900)]">
-      <FaPlus className="flex justify-center items-center rounded-[50%] h-[24px] w-[24px] p-2 border-white border-2 text-[1rem]" />
+    <button
+      onClick={() => onAddItem(item)}
+      className="flex justify-center items-center rounded-[50%] p-3 h-[40px] w-[40px] duration-700 bg-transparent hover:bg-[var(--gray-200-gray-900)]"
+    >
+      {!isItemSelected && (
+        <FaPlus
+          className={classNames(
+            iconClassNames,
+            " bg-transparent border-2 text-[1rem]"
+          )}
+        />
+      )}
+      {isItemSelected && (
+        <FaCheck
+          className={classNames(
+            iconClassNames,
+            "bg-white text-[1.4rem] text-[var(--color-primary)]"
+          )}
+        />
+      )}
     </button>
   </CardItem>
 );
 
 // DisplayContent component: Renders content based on folder/flash set states and material selection
 const DisplayContent: FC<DisplayContentProps> = ({
+  currentItem,
   fetchFoldersState,
   fetchFlashSetsState,
   materialTypeSelected,
+  onToggleItem,
 }) => {
   // Handle loading state
   if (fetchFoldersState.isLoading || fetchFlashSetsState.isLoading) {
@@ -129,9 +158,28 @@ const DisplayContent: FC<DisplayContentProps> = ({
       ? fetchFoldersState.data
       : fetchFlashSetsState.data;
 
-  return items.map((item) =>
-    renderCardItem(item, materialTypeSelected === TypeMaterialsSelection.FOLDER)
-  );
+  // Check whether this item selected or not
+  const isSelectedItem = (
+    item: FolderSummaryDTO | FlashSetSummaryDTO
+  ): boolean => {
+    if (!item) return false;
+
+    const selectedItems =
+      materialTypeSelected === TypeMaterialsSelection.FOLDER
+        ? currentItem.foldersChild
+        : currentItem.flashSets;
+
+    return selectedItems.some((selectedItem) => selectedItem.id === item.id);
+  };
+
+  return items.map((item) => {
+    return renderCardItem(
+      isSelectedItem(item),
+      item,
+      materialTypeSelected === TypeMaterialsSelection.FOLDER,
+      onToggleItem
+    );
+  });
 };
 
 /**
@@ -139,12 +187,11 @@ const DisplayContent: FC<DisplayContentProps> = ({
  * @param isShowModal
  * @param listMaterials (FlashSetSummaryDTO[] | FolderSummaryDTO[])
  * @param onClose () => void; Close the Modal
- * @param children Add the rest of component
- * @param
  */
 const ModalAddMaterials = ({
   isShowModal,
   onClose,
+  currentItem,
 }: Readonly<ModalAddMaterialsProps>) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -158,6 +205,10 @@ const ModalAddMaterials = ({
   const foldersState = useSelector(
     (rootState: RootState) => rootState.folderSlice
   );
+
+  const handleAddItem = (item: FlashSetSummaryDTO | FolderSummaryDTO) => {
+    console.log("item", item);
+  };
 
   useEffect(() => {
     if (
@@ -187,9 +238,11 @@ const ModalAddMaterials = ({
         <ModalMaterialsActions />
 
         <DisplayContent
+          currentItem={currentItem}
           materialTypeSelected={modalMaterialsOption.materialTypeSelected}
           fetchFoldersState={foldersState}
           fetchFlashSetsState={fetchFlashSetsState}
+          onToggleItem={handleAddItem}
         />
       </div>
     </Modal>

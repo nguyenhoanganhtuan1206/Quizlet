@@ -43,17 +43,6 @@ public class FolderParentsStore {
     }
 
     /**
-     * Counts the number of child folders for a given parent folder.
-     *
-     * @param parentFolderId The ID of the parent folder.
-     * @return The number of child folders.
-     * @throws com.quizlet_be.quizlet.error.BadRequestException
-     */
-    public long countByParentFolderId(final UUID parentFolderId) {
-        return parentsRepository.countByParentFolderId(parentFolderId);
-    }
-
-    /**
      * List all the {@link FolderParents} by parentFolderId
      *
      * @param parentFolderId The ID of the parent folder.
@@ -62,6 +51,17 @@ public class FolderParentsStore {
      */
     public List<FolderParents> findByParentFolderId(final UUID parentFolderId) {
         return toFolderParents(parentsRepository.findByParentFolderId(parentFolderId));
+    }
+
+    /**
+     * List all child folders id by parentFolderId
+     *
+     * @param parentFolderId The ID of the parent folder.
+     * @return The number of child folders.
+     * @throws com.quizlet_be.quizlet.error.BadRequestException
+     */
+    public List<UUID> findChildIdsByParentFolderId(final UUID parentFolderId) {
+        return parentsRepository.findChildIdsByParentFolderId(parentFolderId);
     }
 
     /**

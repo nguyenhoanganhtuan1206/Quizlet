@@ -12,12 +12,12 @@ import {
   TypeMaterialsSelection,
 } from "@/store";
 
-import { Folder } from "@/type";
+import {  FolderSummaryDTO } from "@/type";
 import { Button } from "@/shared/components";
 import { ModalAddMaterials } from "@/components/your_library/";
 
 type FolderDetailHeaderProps = {
-  folderDetails: Folder;
+  folderDetails: FolderSummaryDTO;
   className?: string;
 };
 
@@ -38,6 +38,9 @@ export default function FolderDetailHeader({
   const handleCloseModal = () => {
     dispatch(setIsShowModalMaterials(false));
   };
+
+  console.log("folderDetails", folderDetails);
+  
 
   return (
     <div className={`${className} flex justify-between items-start text-white`}>
@@ -98,6 +101,7 @@ export default function FolderDetailHeader({
       <ModalAddMaterials
         isShowModal={materialsModal.isShowModalMaterials}
         onClose={handleCloseModal}
+        currentItem={folderDetails}
       />
     </div>
   );

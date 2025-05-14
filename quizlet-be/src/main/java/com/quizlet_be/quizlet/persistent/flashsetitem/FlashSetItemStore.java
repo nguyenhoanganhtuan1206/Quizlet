@@ -117,13 +117,4 @@ public class FlashSetItemStore {
     public void delete(final FlashSetItem flashSetItem) {
         flashSetItemRepository.delete(toFlashSetItemEntity(flashSetItem));
     }
-
-    /**
-     * Count by Flash Set Id
-     *
-     * @param flashSetId return @long
-     */
-    public long countByFlashSetId(final UUID flashSetId) {
-        return flashSetItemRepository.countByFlashSetId(flashSetId);
-    }
 }

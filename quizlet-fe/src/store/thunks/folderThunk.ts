@@ -2,10 +2,17 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import axiosInstance from "../../hooks/useAxios";
 
-import { FolderSummaryDTO } from "../../type";
+import {
+  Folder,
+  FolderCreateUpdateRequestDTO,
+  FolderSummaryDTO,
+} from "../../type";
 
 import { pause } from "../../utils";
 
+/**
+ * Fetch all folders by UserID
+ */
 export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
   "folder/fetchFoldersByUserId",
   async (_, { rejectWithValue }) => {
@@ -24,6 +31,11 @@ export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
   }
 );
 
+/**
+ * Fetch folders by userId and Not Cunrret FolderID
+ * @param userId
+ * @param folderId
+ */
 export const fetchFoldersSummaries = createAsyncThunk<
   FolderSummaryDTO[],
   string
@@ -36,7 +48,7 @@ export const fetchFoldersSummaries = createAsyncThunk<
         `folder/${folderId}/summaries`
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error(
         "Error while calling fetchParentFolders {folderThunk || fetchFoldersSummaries}:"
       );
@@ -45,6 +57,10 @@ export const fetchFoldersSummaries = createAsyncThunk<
   }
 );
 
+/**
+ * Fetch parents folder by UserID
+ * @param userId
+ */
 export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
   "folder/fetchParentFoldersByUserId",
   async (_, { rejectWithValue }) => {
@@ -62,3 +78,27 @@ export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
     }
   }
 );
+
+/**
+ * Fetch parents folder by UserID
+ * @param userId
+ */
+export const updateFolder = createAsyncThunk<
+  Folder, // Return Type
+  FolderCreateUpdateRequestDTO // Argunmen Type
+>("folder/updateFolder", async (folderUpdateData, { rejectWithValue }) => {
+  try {
+    await pause(600);
+
+    const response = await axiosInstance.put(
+      `folders/${folderUpdateData.id}`,
+      folderUpdateData
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error while updating the Folder {folderThunk || updateFolder}:"
+    );
+    rejectWithValue(error);
+  }
+});

@@ -6,7 +6,7 @@ export type {
 } from "./auth/authTypes";
 export type {
   Folder,
-  FolderCreationRequestDTO,
+  FolderCreateUpdateRequestDTO,
   FolderSummaryDTO,
 } from "./folder/folderTypes";
 export type { FolderFlashSetItemDetailsResponse } from "./folder/folderFlashSetItemDetails";

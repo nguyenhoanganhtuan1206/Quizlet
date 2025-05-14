@@ -2,15 +2,15 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithToken } from "./baseQueryWithToken";
 import {
   Folder,
-  FolderCreationRequestDTO,
-  FolderFlashSetItemDetailsResponse,
+  FolderCreateUpdateRequestDTO,
+  FolderSummaryDTO,
 } from "@/type";
 
 export const folderApis = createApi({
   reducerPath: "folders",
   baseQuery: baseQueryWithToken,
   endpoints: (builder) => ({
-    fetchFolderById: builder.query<FolderFlashSetItemDetailsResponse, string>({
+    fetchFolderById: builder.query<FolderSummaryDTO, string>({
       query: (folderId) => {
         return {
           url: `folders/${folderId}`,
@@ -18,7 +18,7 @@ export const folderApis = createApi({
         };
       },
     }),
-    createFolder: builder.mutation<Folder, FolderCreationRequestDTO>({
+    createFolder: builder.mutation<Folder, FolderCreateUpdateRequestDTO>({
       query: (data) => {
         return {
           url: "folders",

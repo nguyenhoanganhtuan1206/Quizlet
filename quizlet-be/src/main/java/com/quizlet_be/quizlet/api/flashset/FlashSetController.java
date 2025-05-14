@@ -41,7 +41,6 @@ public class FlashSetController {
         return flashSetService.createFlashSet(flashSetRequestDTO, userId);
     }
 
-
     @PutMapping("{flashSetId}")
     public FlashSet updateFlashSet(
             final @PathVariable UUID flashSetId,

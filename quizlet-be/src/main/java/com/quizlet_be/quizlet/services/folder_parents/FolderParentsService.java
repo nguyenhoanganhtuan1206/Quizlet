@@ -42,22 +42,6 @@ public class FolderParentsService {
     }
 
     /**
-     * Counts the number of child folders for a given parent folder.
-     *
-     * @param parentFolderId The ID of the parent folder.
-     * @return The number of child folders.
-     * @throws com.quizlet_be.quizlet.error.BadRequestException
-     */
-    public long countByParentFolderId(final UUID parentFolderId) {
-        try {
-            return folderParentsStore.countByParentFolderId(parentFolderId);
-        } catch (Exception e) {
-            log.error("Unexpected error while counting child folders for parent folder ID {}: {}", parentFolderId, e.getMessage(), e);
-            throw supplyBadRequestException("An unexpected error occurred while counting child folders. Please try again later.").get();
-        }
-    }
-
-    /**
      * List all the {@link FolderParents} by parentFolderId
      *
      * @param parentFolderId The ID of the parent folder.

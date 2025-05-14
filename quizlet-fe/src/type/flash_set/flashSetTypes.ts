@@ -1,3 +1,5 @@
+import { FlashSetItem } from "../flash_set_item/flashSetItemType";
+
 export interface FlashSet {
   id: string;
   name: string;
@@ -18,5 +20,5 @@ export interface FlashSetSummaryDTO {
   userId: string;
   folderId: string;
   drafted: boolean;
-  flashSetItemCount: number;
+  flashSetItems: FlashSetItem[];
 }
