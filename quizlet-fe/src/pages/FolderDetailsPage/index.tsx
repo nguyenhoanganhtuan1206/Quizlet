@@ -50,7 +50,7 @@ export default function FolderDetailsPage() {
     <>
       <FolderDetailHeader
         className="mt-10 mb-3"
-        folderDetails={folderDetails.folder}
+        folderDetails={folderDetails}
       />
 
       <FolderDetails folderDetails={folderDetails} />
