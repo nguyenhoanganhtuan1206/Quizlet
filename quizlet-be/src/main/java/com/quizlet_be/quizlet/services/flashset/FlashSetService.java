@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
 import static com.quizlet_be.quizlet.services.flashset.FlashSetError.supplyFlashSetNotFoundException;
 import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.*;
+import static com.quizlet_be.quizlet.services.folders.FolderError.supplyFolderNotFoundException;
 import static java.time.Instant.now;
 
 @Service
@@ -53,6 +54,29 @@ public class FlashSetService {
                 .stream()
                 .map(this::mapToFlashSetSummaryDTO)
                 .toList();
+    }
+
+    public FolderFlashSet addMoreMaterialToFolder(final UUID flashSetId, final UUID folderId) {
+        final FlashSet flashSet = findById(flashSetId);
+        final Folder folder = findFolderById(folderId);
+
+        final FolderFlashSet folderFlashSetCreation = FolderFlashSet.builder()
+                .flashSetId(flashSet.getId())
+                .folderId(folder.getId())
+                .build();
+
+        return folderFlashSetStore.save(folderFlashSetCreation);
+    }
+
+    /**
+     * Find Folder by ID
+     *
+     * @param folderId
+     * @return @{@link Folder}
+     */
+    private Folder findFolderById(final UUID folderId) {
+        return folderStore.findById(folderId)
+                .orElseThrow(supplyFolderNotFoundException("ID", folderId));
     }
 
     /**
@@ -148,15 +172,22 @@ public class FlashSetService {
         }
     }
 
+    /**
+     * Build FlashSet by @FlashSetCreationRequestDTO request DTO
+     *
+     * @param requestDTO
+     * @param userId
+     * @return @FlashSet
+     */
     private FlashSet buildFlashSetByRequestAndUserId(
-            final FlashSetCreationRequestDTO request,
+            final FlashSetCreationRequestDTO requestDTO,
             final UUID userId
     ) {
         return FlashSet.builder()
-                .name(request.getName())
-                .description(request.getDescription())
+                .name(requestDTO.getName())
+                .description(requestDTO.getDescription())
                 .createdAt(now())
-                .isDrafted(request.isDrafted())
+                .isDrafted(requestDTO.isDrafted())
                 .userId(userId)
                 .build();
     }

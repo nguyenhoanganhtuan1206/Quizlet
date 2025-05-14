@@ -8,10 +8,10 @@ import { MdFilterList } from "react-icons/md";
 import { PiCards } from "react-icons/pi";
 import { FaRegFolder } from "react-icons/fa6";
 
+import MaterialSelectionItem from "./MaterialSelectionItem";
 import { ReactPropsChildren } from "@/type";
 import { Button, PopperWrapper } from "@/shared/components";
 import { TypeMaterialsSelection } from "@/store/slices/modalMaterialsSlices";
-import MaterialSelectionItem from "./MaterialSelectionItem";
 
 interface MaterialOptions {
   title: string;
