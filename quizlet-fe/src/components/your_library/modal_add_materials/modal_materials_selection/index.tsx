@@ -28,14 +28,12 @@ export default function ModalMaterialsActions() {
   const materialOptions: MaterialOptions[] = [
     {
       title: "Flashcard Sets",
-      icon: <PiCards className="text-[1.6rem] translate-y-[-2px] mr-3" />,
+      icon: <PiCards className="text-[1.6rem] -translate-y-0.5 mr-3" />,
       type: TypeMaterialsSelection.FLASHSETCARD,
     },
     {
       title: "Folders",
-      icon: (
-        <FaRegFolder className="flex-none translate-y-[-2px] text-[1.5rem] mr-3" />
-      ),
+      icon: <FaRegFolder className="text-[1.5rem] -translate-y-0.5 mr-3" />,
       type: TypeMaterialsSelection.FOLDER,
     },
   ];
@@ -45,7 +43,7 @@ export default function ModalMaterialsActions() {
       (opt) => opt.type === modalMaterialsType.materialTypeSelected
     );
     return option?.title || "Select Material Type";
-  }, [modalMaterialsType.materialTypeSelected, materialOptions]);
+  }, [materialOptions]);
 
   return (
     <div className="flex items-center justify-between mt-[25px] mb-10">

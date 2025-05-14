@@ -18,5 +18,3 @@ export { default as Modal } from "./Modal";
 export { default as TabsFilter } from "./TabsFilter";
 export { default as ErrorComponent } from "./ErrorComponent";
 export { default as EmptyComponent } from "./EmptyComponent";
-
-export { DashboardHeader } from "./dashboard/";
