@@ -25,6 +25,9 @@ export default function ModalMaterialsActions() {
     (rootState: RootState) => rootState.modalMaterialSlices
   );
 
+  /**
+   * Define materials option
+   */
   const materialOptions: MaterialOptions[] = [
     {
       title: "Flashcard Sets",

@@ -51,12 +51,4 @@ public class FlashSetController {
 
         return flashSetService.updateFlashSet(userId, flashSetId, flashSetRequestDTO);
     }
-
-    @PostMapping("{flashSetId}/update-material/{folderId}")
-    public FlashSet addMoreFlashSetToFolder(
-            final @PathVariable UUID folderId,
-            final @PathVariable UUID flashSetId
-    ) {
-        return flashSetService.addMoreMaterialToFolder(folderId, flashSetId);
-    }
 }

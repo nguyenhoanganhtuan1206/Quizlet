@@ -118,6 +118,9 @@ const FoldersList: FC<FolderListProps> = ({
   );
 };
 
+/**
+ * Display Folder Details content
+ */
 export default function FolderDetails({ folderDetails }: FolderDetailsType) {
   const dispatch = useDispatch<AppDispatch>();
   const currentUser = decodeToken(getCurrentToken());

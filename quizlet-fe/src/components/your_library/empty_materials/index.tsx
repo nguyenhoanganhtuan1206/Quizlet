@@ -15,8 +15,6 @@ export default function EmptyMaterials() {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleOpenModalMaterials = () => {
-    console.log("handleOpenModalMaterials");
-    
     dispatch(setMaterialType(TypeMaterialsSelection.FLASHSETCARD));
     dispatch(setIsShowModalMaterials(true));
   };

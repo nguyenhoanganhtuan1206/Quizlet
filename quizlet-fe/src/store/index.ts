@@ -13,7 +13,7 @@ import {
   materialsModalSlice,
   materialsModalReducer,
 } from "./slices/";
-import { authApis, folderApis } from "./apis";
+import { authApis, folderApis, folderFlashSetApi } from "./apis";
 
 const store = configureStore({
   reducer: {
@@ -21,15 +21,17 @@ const store = configureStore({
     [libraryFiltersSlice.reducerPath]: libraryFiltersReducer,
     [flashSetSlice.reducerPath]: flashSetReducer,
     [folderSlice.reducerPath]: folderSlice.reducer,
-    [authApis.reducerPath]: authApis.reducer,
-    [folderApis.reducerPath]: folderApis.reducer,
     [navigateBreadCrumbSlice.reducerPath]: navigateBreadCrumbReducer,
     [materialsModalSlice.reducerPath]: materialsModalReducer,
+    [authApis.reducerPath]: authApis.reducer,
+    [folderApis.reducerPath]: folderApis.reducer,
+    [folderFlashSetApi.reducerPath]: folderFlashSetApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
       .concat(authApis.middleware)
-      .concat(folderApis.middleware);
+      .concat(folderApis.middleware)
+      .concat(folderFlashSetApi.middleware);
   },
 });
 
@@ -52,6 +54,8 @@ export {
   useRegisterMutation,
   useFetchFolderByIdQuery,
   useCreateFolderMutation,
+  useAddFlashSetToFolderMutation,
+  useRemoveFlashSetFromFolderMutation,
 } from "./apis";
 
 export {

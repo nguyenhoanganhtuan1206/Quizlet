@@ -12,18 +12,20 @@ import {
   TypeMaterialsSelection,
 } from "@/store";
 
-import {  FolderSummaryDTO } from "@/type";
+import { FolderSummaryDTO } from "@/type";
 import { Button } from "@/shared/components";
 import { ModalAddMaterials } from "@/components/your_library/";
 
 type FolderDetailHeaderProps = {
   folderDetails: FolderSummaryDTO;
   className?: string;
+  refresh: () => void;
 };
 
 export default function FolderDetailHeader({
   folderDetails,
   className,
+  refresh,
 }: FolderDetailHeaderProps) {
   // Redux state
   const dispatch = useDispatch<AppDispatch>();
@@ -38,9 +40,6 @@ export default function FolderDetailHeader({
   const handleCloseModal = () => {
     dispatch(setIsShowModalMaterials(false));
   };
-
-  console.log("folderDetails", folderDetails);
-  
 
   return (
     <div className={`${className} flex justify-between items-start text-white`}>
@@ -102,6 +101,7 @@ export default function FolderDetailHeader({
         isShowModal={materialsModal.isShowModalMaterials}
         onClose={handleCloseModal}
         currentItem={folderDetails}
+        refresh={refresh}
       />
     </div>
   );

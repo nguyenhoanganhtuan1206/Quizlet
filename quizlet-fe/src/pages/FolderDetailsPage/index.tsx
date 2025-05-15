@@ -10,12 +10,12 @@ import { EmptyMaterials } from "@/components/your_library";
 
 export default function FolderDetailsPage() {
   const { folderId } = useParams<{ folderId: string }>();
-
   const {
     data: folderDetails,
     isError,
     isLoading,
     isFetching,
+    refetch
   } = useFetchFolderByIdQuery(folderId ?? "", {
     skip: !folderId, // Skip the query if folderId is undefined
   });
@@ -51,6 +51,7 @@ export default function FolderDetailsPage() {
       <FolderDetailHeader
         className="mt-10 mb-3"
         folderDetails={folderDetails}
+        refresh={refetch}
       />
 
       <FolderDetails folderDetails={folderDetails} />

@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { FC, useEffect } from "react";
 
@@ -8,15 +9,25 @@ import { FaCheck, FaFolderOpen, FaPlus } from "react-icons/fa";
 
 import ModalMaterialsActions from "./modal_materials_selection";
 import { CardItem, EmptyComponent, Modal, Skeleton } from "@/shared/components";
-import { FlashSetSummaryDTO, FolderSummaryDTO, ThunkState } from "@/type";
+import {
+  ApiErrorResponse,
+  FlashSetSummaryDTO,
+  FolderSummaryDTO,
+  ThunkState,
+} from "@/type";
 import {
   AppDispatch,
   fetchFlashSets,
   fetchFolders,
   RootState,
   TypeMaterialsSelection,
+  useAddFlashSetToFolderMutation,
 } from "@/store";
-import classNames from "classnames";
+import {
+  AddFlashSetToFolderPayload,
+  useRemoveFlashSetFromFolderMutation,
+} from "@/store/apis/folderFlashSetApis";
+import { toast } from "react-toastify";
 
 type FlashSetState = ThunkState<FlashSetSummaryDTO>;
 type FolderState = ThunkState<FolderSummaryDTO>;
@@ -26,13 +37,15 @@ interface DisplayContentProps {
   fetchFoldersState: FolderState;
   fetchFlashSetsState: FlashSetState;
   materialTypeSelected: TypeMaterialsSelection;
-  onToggleItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void;
+  onAddItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void;
+  onRemoveItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void;
 }
 
 type ModalAddMaterialsProps = {
   isShowModal: boolean;
   onClose: () => void;
   currentItem: FolderSummaryDTO;
+  refresh: () => void;
 };
 
 // Empty component
@@ -58,6 +71,10 @@ const LoadingState: FC = () => (
   </Skeleton>
 );
 
+// Define classNames
+const buttonClassNames = classNames(
+  "flex justify-center items-center rounded-[50%] p-3 h-[40px] w-[40px] duration-700 bg-transparent hover:bg-[var(--gray-200-gray-900)]"
+);
 const iconClassNames = classNames(
   "flex justify-center items-center rounded-[50%] h-[24px] w-[24px] p-2 border-white border-2"
 );
@@ -67,7 +84,8 @@ const renderCardItem = (
   isItemSelected: boolean,
   item: FolderSummaryDTO | FlashSetSummaryDTO,
   isFolder: boolean,
-  onAddItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void
+  onAddItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void,
+  onRemoveItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void
 ) => (
   <CardItem key={item.id} className="flex items-center duration-300 rounded-lg">
     <div className="flex w-full">
@@ -105,27 +123,27 @@ const renderCardItem = (
       </div>
     </div>
 
-    <button
-      onClick={() => onAddItem(item)}
-      className="flex justify-center items-center rounded-[50%] p-3 h-[40px] w-[40px] duration-700 bg-transparent hover:bg-[var(--gray-200-gray-900)]"
-    >
-      {!isItemSelected && (
+    {!isItemSelected && (
+      <button onClick={() => onAddItem(item)} className={buttonClassNames}>
         <FaPlus
           className={classNames(
             iconClassNames,
             " bg-transparent border-2 text-[1rem]"
           )}
         />
-      )}
-      {isItemSelected && (
+      </button>
+    )}
+
+    {isItemSelected && (
+      <button onClick={() => onRemoveItem(item)} className={buttonClassNames}>
         <FaCheck
           className={classNames(
             iconClassNames,
             "bg-white text-[1.4rem] text-[var(--color-primary)]"
           )}
         />
-      )}
-    </button>
+      </button>
+    )}
   </CardItem>
 );
 
@@ -135,7 +153,8 @@ const DisplayContent: FC<DisplayContentProps> = ({
   fetchFoldersState,
   fetchFlashSetsState,
   materialTypeSelected,
-  onToggleItem,
+  onAddItem,
+  onRemoveItem,
 }) => {
   // Handle loading state
   if (fetchFoldersState.isLoading || fetchFlashSetsState.isLoading) {
@@ -177,7 +196,8 @@ const DisplayContent: FC<DisplayContentProps> = ({
       isSelectedItem(item),
       item,
       materialTypeSelected === TypeMaterialsSelection.FOLDER,
-      onToggleItem
+      onAddItem,
+      onRemoveItem
     );
   });
 };
@@ -192,6 +212,7 @@ const ModalAddMaterials = ({
   isShowModal,
   onClose,
   currentItem,
+  refresh,
 }: Readonly<ModalAddMaterialsProps>) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -205,11 +226,50 @@ const ModalAddMaterials = ({
   const foldersState = useSelector(
     (rootState: RootState) => rootState.folderSlice
   );
+  const [addFlashSetToFolder] = useAddFlashSetToFolderMutation();
+  const [removeFlashSetFromFolder] = useRemoveFlashSetFromFolderMutation();
 
-  const handleAddItem = (item: FlashSetSummaryDTO | FolderSummaryDTO) => {
-    console.log("item", item);
+  const handleOnAddItem = async (
+    item: FlashSetSummaryDTO | FolderSummaryDTO
+  ) => {
+    const payload: AddFlashSetToFolderPayload = {
+      folderId: currentItem.id,
+      flashSetId: item.id,
+    };
+
+    await addFlashSetToFolder(payload)
+      .unwrap()
+      .then(() => {
+        refresh();
+      })
+      .catch((error) => {
+        const apiError = error as ApiErrorResponse;
+        toast.error(apiError.data.message);
+      });
   };
 
+  const handleOnRemoveItem = async (
+    item: FlashSetSummaryDTO | FolderSummaryDTO
+  ) => {
+    const payload: AddFlashSetToFolderPayload = {
+      folderId: currentItem.id,
+      flashSetId: item.id,
+    };
+
+    await removeFlashSetFromFolder(payload)
+      .unwrap()
+      .then(() => {
+        refresh();
+      })
+      .catch((error) => {
+        const apiError = error as ApiErrorResponse;
+        toast.error(apiError.data.message);
+      });
+  };
+
+  /**
+   * Re-render when select another materials
+   */
   useEffect(() => {
     if (
       modalMaterialsOption.materialTypeSelected ===
@@ -242,7 +302,8 @@ const ModalAddMaterials = ({
           materialTypeSelected={modalMaterialsOption.materialTypeSelected}
           fetchFoldersState={foldersState}
           fetchFlashSetsState={fetchFlashSetsState}
-          onToggleItem={handleAddItem}
+          onAddItem={handleOnAddItem}
+          onRemoveItem={handleOnRemoveItem}
         />
       </div>
     </Modal>

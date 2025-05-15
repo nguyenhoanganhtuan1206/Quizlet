@@ -4,3 +4,8 @@ export {
   useFetchFolderByIdQuery,
   useCreateFolderMutation,
 } from "./folderApis";
+export {
+  folderFlashSetApi,
+  useAddFlashSetToFolderMutation,
+  useRemoveFlashSetFromFolderMutation,
+} from "./folderFlashSetApis";

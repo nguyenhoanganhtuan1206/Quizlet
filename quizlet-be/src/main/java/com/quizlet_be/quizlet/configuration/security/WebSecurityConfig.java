@@ -36,7 +36,8 @@ public class WebSecurityConfig {
     private static final String[] API_USERS_ALLOWED = {
             "/api/v1/users/**",
             "/api/v1/folders/**",
-            "/api/v1/flashsets/**"
+            "/api/v1/flashsets/**",
+            "/api/v1/folder_flashsets/**"
     };
 
     private static final String[] API_ADMIN_ALLOWED = {
