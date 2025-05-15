@@ -13,7 +13,7 @@ import {
   materialsModalSlice,
   materialsModalReducer,
 } from "./slices/";
-import { authApis, folderApis, folderFlashSetApi } from "./apis";
+import { authApis, folderApis } from "./apis";
 
 const store = configureStore({
   reducer: {
@@ -25,13 +25,11 @@ const store = configureStore({
     [materialsModalSlice.reducerPath]: materialsModalReducer,
     [authApis.reducerPath]: authApis.reducer,
     [folderApis.reducerPath]: folderApis.reducer,
-    [folderFlashSetApi.reducerPath]: folderFlashSetApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
       .concat(authApis.middleware)
-      .concat(folderApis.middleware)
-      .concat(folderFlashSetApi.middleware);
+      .concat(folderApis.middleware);
   },
 });
 

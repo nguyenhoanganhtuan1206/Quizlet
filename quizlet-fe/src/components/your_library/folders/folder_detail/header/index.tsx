@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { PiCards } from "react-icons/pi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
@@ -6,7 +6,6 @@ import { GoClock } from "react-icons/go";
 
 import {
   AppDispatch,
-  RootState,
   setIsShowModalMaterials,
   setMaterialType,
   TypeMaterialsSelection,
@@ -14,31 +13,22 @@ import {
 
 import { FolderSummaryDTO } from "@/type";
 import { Button } from "@/shared/components";
-import { ModalAddMaterials } from "@/components/your_library/";
 
 type FolderDetailHeaderProps = {
   folderDetails: FolderSummaryDTO;
   className?: string;
-  refresh: () => void;
 };
 
 export default function FolderDetailHeader({
   folderDetails,
   className,
-  refresh,
 }: FolderDetailHeaderProps) {
   // Redux state
   const dispatch = useDispatch<AppDispatch>();
-  const materialsModal = useSelector(
-    (state: RootState) => state.modalMaterialSlices
-  );
+
   const handleOnSelectMaterialOption = () => {
     dispatch(setMaterialType(TypeMaterialsSelection.FLASHSETCARD));
     dispatch(setIsShowModalMaterials(true));
-  };
-
-  const handleCloseModal = () => {
-    dispatch(setIsShowModalMaterials(false));
   };
 
   return (
@@ -90,19 +80,6 @@ export default function FolderDetailHeader({
           <HiOutlineDotsHorizontal />
         </Button>
       </div>
-      {/*
-       * Actions Folder Header
-       */}
-
-      {/*
-       * Modal Add Materials
-       */}
-      <ModalAddMaterials
-        isShowModal={materialsModal.isShowModalMaterials}
-        onClose={handleCloseModal}
-        currentItem={folderDetails}
-        refresh={refresh}
-      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { FC, useEffect } from "react";
+import { FC, useEffect, memo } from "react";
 
 import { CiFolderOn } from "react-icons/ci";
 import { PiCards } from "react-icons/pi";
@@ -23,11 +23,9 @@ import {
   TypeMaterialsSelection,
   useAddFlashSetToFolderMutation,
 } from "@/store";
-import {
-  AddFlashSetToFolderPayload,
-  useRemoveFlashSetFromFolderMutation,
-} from "@/store/apis/folderFlashSetApis";
 import { toast } from "react-toastify";
+import { useRemoveFlashSetFromFolderMutation } from "@/store/apis";
+import { AddFlashSetToFolderPayload } from "@/store/apis/folderApis";
 
 type FlashSetState = ThunkState<FlashSetSummaryDTO>;
 type FolderState = ThunkState<FolderSummaryDTO>;
@@ -45,7 +43,6 @@ type ModalAddMaterialsProps = {
   isShowModal: boolean;
   onClose: () => void;
   currentItem: FolderSummaryDTO;
-  refresh: () => void;
 };
 
 // Empty component
@@ -208,106 +205,101 @@ const DisplayContent: FC<DisplayContentProps> = ({
  * @param listMaterials (FlashSetSummaryDTO[] | FolderSummaryDTO[])
  * @param onClose () => void; Close the Modal
  */
-const ModalAddMaterials = ({
-  isShowModal,
-  onClose,
-  currentItem,
-  refresh,
-}: Readonly<ModalAddMaterialsProps>) => {
-  const dispatch = useDispatch<AppDispatch>();
+const ModalAddMaterials = memo(
+  ({ isShowModal, onClose, currentItem }: Readonly<ModalAddMaterialsProps>) => {
+    const dispatch = useDispatch<AppDispatch>();
 
-  const modalMaterialsOption = useSelector(
-    (rootState: RootState) => rootState.modalMaterialSlices
-  );
+    const modalMaterialsOption = useSelector(
+      (rootState: RootState) => rootState.modalMaterialSlices
+    );
 
-  const fetchFlashSetsState = useSelector(
-    (rootState: RootState) => rootState.flashSetSlice
-  );
-  const foldersState = useSelector(
-    (rootState: RootState) => rootState.folderSlice
-  );
-  const [addFlashSetToFolder] = useAddFlashSetToFolderMutation();
-  const [removeFlashSetFromFolder] = useRemoveFlashSetFromFolderMutation();
+    const fetchFlashSetsState = useSelector(
+      (rootState: RootState) => rootState.flashSetSlice
+    );
+    const foldersState = useSelector(
+      (rootState: RootState) => rootState.folderSlice
+    );
+    const [addFlashSetToFolder] = useAddFlashSetToFolderMutation();
+    const [removeFlashSetFromFolder] = useRemoveFlashSetFromFolderMutation();
 
-  const handleOnAddItem = async (
-    item: FlashSetSummaryDTO | FolderSummaryDTO
-  ) => {
-    const payload: AddFlashSetToFolderPayload = {
-      folderId: currentItem.id,
-      flashSetId: item.id,
+    const handleOnAddItem = async (
+      item: FlashSetSummaryDTO | FolderSummaryDTO
+    ) => {
+      const payload: AddFlashSetToFolderPayload = {
+        folderId: currentItem.id,
+        flashSetId: item.id,
+      };
+
+      await addFlashSetToFolder(payload)
+        .unwrap()
+        .then(() => {})
+        .catch((error) => {
+          const apiError = error as ApiErrorResponse;
+          toast.error(apiError.data.message);
+        });
     };
 
-    await addFlashSetToFolder(payload)
-      .unwrap()
-      .then(() => {
-        // refresh();
-      })
-      .catch((error) => {
-        const apiError = error as ApiErrorResponse;
-        toast.error(apiError.data.message);
-      });
-  };
+    const handleOnRemoveItem = async (
+      item: FlashSetSummaryDTO | FolderSummaryDTO
+    ) => {
+      const payload: AddFlashSetToFolderPayload = {
+        folderId: currentItem.id,
+        flashSetId: item.id,
+      };
 
-  const handleOnRemoveItem = async (
-    item: FlashSetSummaryDTO | FolderSummaryDTO
-  ) => {
-    const payload: AddFlashSetToFolderPayload = {
-      folderId: currentItem.id,
-      flashSetId: item.id,
+      await removeFlashSetFromFolder(payload)
+        .unwrap()
+        .then(() => {})
+        .catch((error) => {
+          const apiError = error as ApiErrorResponse;
+          toast.error(apiError.data.message);
+        });
     };
 
-    await removeFlashSetFromFolder(payload)
-      .unwrap()
-      .then(() => {
-        // refresh();
-      })
-      .catch((error) => {
-        const apiError = error as ApiErrorResponse;
-        toast.error(apiError.data.message);
-      });
-  };
+    /**
+     * Re-render when select another materials
+     */
+    useEffect(() => {
+      if (
+        modalMaterialsOption.materialTypeSelected ===
+        TypeMaterialsSelection.FLASHSETCARD
+      ) {
+        dispatch(fetchFlashSets());
+      }
+      if (
+        modalMaterialsOption.materialTypeSelected ===
+        TypeMaterialsSelection.FOLDER
+      ) {
+        dispatch(fetchFolders());
+      }
+    }, [dispatch, modalMaterialsOption]);
 
-  /**
-   * Re-render when select another materials
-   */
-  useEffect(() => {
-    if (
-      modalMaterialsOption.materialTypeSelected ===
-      TypeMaterialsSelection.FLASHSETCARD
-    ) {
-      dispatch(fetchFlashSets());
-    }
-    if (
-      modalMaterialsOption.materialTypeSelected ===
-      TypeMaterialsSelection.FOLDER
-    ) {
-      dispatch(fetchFolders());
-    }
-  }, [dispatch, modalMaterialsOption]);
+    return (
+      <Modal
+        onClose={onClose}
+        isOpen={isShowModal}
+        className="modal__folder-creation h-[400px] overflow-y-auto"
+        isShowCloseIcon={true}
+      >
+        <h1 className="text-[2.6rem] font-bold leading-6">
+          Add study materials
+        </h1>
 
-  return (
-    <Modal
-      onClose={onClose}
-      isOpen={isShowModal}
-      className="modal__folder-creation h-[400px] overflow-y-auto"
-      isShowCloseIcon={true}
-    >
-      <h1 className="text-[2.6rem] font-bold leading-6">Add study materials</h1>
+        <div className="mt-5">
+          <ModalMaterialsActions />
 
-      <div className="mt-5">
-        <ModalMaterialsActions />
-
-        <DisplayContent
-          currentItem={currentItem}
-          materialTypeSelected={modalMaterialsOption.materialTypeSelected}
-          fetchFoldersState={foldersState}
-          fetchFlashSetsState={fetchFlashSetsState}
-          onAddItem={handleOnAddItem}
-          onRemoveItem={handleOnRemoveItem}
-        />
-      </div>
-    </Modal>
-  );
-};
+          <DisplayContent
+            currentItem={currentItem}
+            materialTypeSelected={modalMaterialsOption.materialTypeSelected}
+            fetchFoldersState={foldersState}
+            fetchFlashSetsState={fetchFlashSetsState}
+            onAddItem={handleOnAddItem}
+            onRemoveItem={handleOnRemoveItem}
+          />
+        </div>
+      </Modal>
+    );
+  }
+);
 
 export default ModalAddMaterials;

@@ -1,11 +1,17 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithToken } from "./baseQueryWithToken";
 import { Folder, FolderCreateUpdateRequestDTO, FolderSummaryDTO } from "@/type";
+import { FolderFlashSet } from "@/type/folder_flashset/FolderFlashSetTypes";
+
+export interface AddFlashSetToFolderPayload {
+  folderId: string;
+  flashSetId: string;
+}
 
 export const folderApis = createApi({
-  reducerPath: "folders",
+  reducerPath: "folderApis",
   baseQuery: baseQueryWithToken,
-  tagTypes: ["Folders", "FolderFlashSets"],
+  tagTypes: ["Folders"],
   endpoints: (builder) => ({
     fetchFolderById: builder.query<
       FolderSummaryDTO, // Return types
@@ -17,9 +23,7 @@ export const folderApis = createApi({
           method: "GET",
         };
       },
-      providesTags: (result) => [
-        { type: "Folders", id: result ? result.id : "LIST" }, // Specific folder ID
-      ],
+      providesTags: () => ["Folders"],
     }),
     createFolder: builder.mutation<
       Folder, // Return types
@@ -33,7 +37,41 @@ export const folderApis = createApi({
         };
       },
     }),
+
+    // Mutation to add a Flash set to a Folder
+    addFlashSetToFolder: builder.mutation<
+      FolderFlashSet, // Return type
+      AddFlashSetToFolderPayload // Arg
+    >({
+      query: ({ folderId, flashSetId }) => ({
+        url: `folder_flashsets/${flashSetId}/update_material/${folderId}`,
+        method: "POST",
+      }),
+      invalidatesTags: () => {
+        console.log("Invalidating Folders tag");
+        return ["Folders"];
+      },
+    }),
+    // Mutation to remove FlashSet from a Folder
+    removeFlashSetFromFolder: builder.mutation<
+      FolderFlashSet, // Return type
+      AddFlashSetToFolderPayload // Arg
+    >({
+      query: ({ folderId, flashSetId }) => ({
+        url: `folder_flashsets/${flashSetId}/update_material/${folderId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: () => {
+        console.log("Invalidating Folders tag");
+        return ["Folders"];
+      },
+    }),
   }),
 });
 
-export const { useFetchFolderByIdQuery, useCreateFolderMutation } = folderApis;
+export const {
+  useFetchFolderByIdQuery,
+  useCreateFolderMutation,
+  useAddFlashSetToFolderMutation,
+  useRemoveFlashSetFromFolderMutation,
+} = folderApis;
