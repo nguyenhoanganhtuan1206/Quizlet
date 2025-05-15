@@ -240,7 +240,7 @@ const ModalAddMaterials = ({
     await addFlashSetToFolder(payload)
       .unwrap()
       .then(() => {
-        refresh();
+        // refresh();
       })
       .catch((error) => {
         const apiError = error as ApiErrorResponse;
@@ -259,7 +259,7 @@ const ModalAddMaterials = ({
     await removeFlashSetFromFolder(payload)
       .unwrap()
       .then(() => {
-        refresh();
+        // refresh();
       })
       .catch((error) => {
         const apiError = error as ApiErrorResponse;

@@ -22,8 +22,7 @@ export const folderFlashSetApi = createApi({
         method: "POST",
       }),
       invalidatesTags: (result) => [
-        { type: "FolderFlashSets", id: "LIST" },
-        { type: "Folders", id: result ? result.id : "LIST" }, // Invalidate specific folder
+        { type: "Folders", id: result ? result.folderId : "LIST" }, // Invalidate specific folder
       ],
     }),
     // Mutation to remove FlashSet from a Folder

@@ -15,7 +15,7 @@ export default function FolderDetailsPage() {
     isError,
     isLoading,
     isFetching,
-    refetch
+    refetch,
   } = useFetchFolderByIdQuery(folderId ?? "", {
     skip: !folderId, // Skip the query if folderId is undefined
   });

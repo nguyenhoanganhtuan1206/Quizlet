@@ -19,7 +19,6 @@ export const folderApis = createApi({
       },
       providesTags: (result) => [
         { type: "Folders", id: result ? result.id : "LIST" }, // Specific folder ID
-        { type: "Folders", id: "FolderFlashSets" }, // General list tag
       ],
     }),
     createFolder: builder.mutation<
