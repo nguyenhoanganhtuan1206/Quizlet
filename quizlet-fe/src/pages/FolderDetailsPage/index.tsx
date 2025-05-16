@@ -5,8 +5,8 @@ import { Skeleton } from "../../shared/components";
 import {
   FolderDetailHeader,
   FolderDetails,
-  ModalAddMaterials,
-} from "../../components/your_library";
+  ModalUpdateMaterials,
+} from "@/components/your_library";
 import { EmptyMaterials } from "@/components/your_library";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -92,7 +92,7 @@ export default function FolderDetailsPage() {
       {/*
        * Modal Add Materials
        */}
-      <ModalAddMaterials
+      <ModalUpdateMaterials
         isShowModal={isShowModalMaterials}
         onClose={handleCloseModal}
         currentItem={folderDetails}

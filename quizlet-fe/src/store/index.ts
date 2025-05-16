@@ -54,6 +54,8 @@ export {
   useCreateFolderMutation,
   useAddFlashSetToFolderMutation,
   useRemoveFlashSetFromFolderMutation,
+  useAddFolderChildToFolderMutation,
+  useRemoveFolderChildFromFolderMutation,
 } from "./apis";
 
 export {

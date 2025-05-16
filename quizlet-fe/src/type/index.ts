@@ -9,7 +9,8 @@ export type {
   FolderCreateUpdateRequestDTO,
   FolderSummaryDTO,
 } from "./folder/folderTypes";
-export type { FolderFlashSetItemDetailsResponse } from "./folder/folderFlashSetItemDetails";
+export type { FolderFlashSet } from "./folder_flashset/FolderFlashSetTypes";
+export type { FolderParents } from "./parent_foldes/folderParents";
 export type { FlashSet, FlashSetSummaryDTO } from "./flash_set/flashSetTypes";
 export type { InputProps } from "./form/Input";
 export type { ReactPropsChildren } from "./ReactPropsChildren";

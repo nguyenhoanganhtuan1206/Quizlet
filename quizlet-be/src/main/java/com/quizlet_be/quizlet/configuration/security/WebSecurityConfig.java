@@ -37,7 +37,8 @@ public class WebSecurityConfig {
             "/api/v1/users/**",
             "/api/v1/folders/**",
             "/api/v1/flashsets/**",
-            "/api/v1/folder_flashsets/**"
+            "/api/v1/folder_flashsets/**",
+            "/api/v1/folder_parents/**"
     };
 
     private static final String[] API_ADMIN_ALLOWED = {

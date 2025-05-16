@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { FC, useEffect, memo } from "react";
@@ -7,7 +8,7 @@ import { PiCards } from "react-icons/pi";
 import { LuFolderHeart } from "react-icons/lu";
 import { FaCheck, FaFolderOpen, FaPlus } from "react-icons/fa";
 
-import ModalMaterialsActions from "./modal_materials_selection";
+import ModalMaterialsActions from "./modal_update_materials_selection";
 import { CardItem, EmptyComponent, Modal, Skeleton } from "@/shared/components";
 import {
   ApiErrorResponse,
@@ -22,10 +23,14 @@ import {
   RootState,
   TypeMaterialsSelection,
   useAddFlashSetToFolderMutation,
+  useRemoveFlashSetFromFolderMutation,
 } from "@/store";
-import { toast } from "react-toastify";
-import { useRemoveFlashSetFromFolderMutation } from "@/store/apis";
-import { AddFlashSetToFolderPayload } from "@/store/apis/folderApis";
+import {
+  AddFlashSetToFolderPayload,
+  AddFolderChildToFolderParentPayload,
+  useAddFolderChildToFolderMutation,
+  useRemoveFolderChildFromFolderMutation,
+} from "@/store/apis/folderApis";
 
 type FlashSetState = ThunkState<FlashSetSummaryDTO>;
 type FolderState = ThunkState<FolderSummaryDTO>;
@@ -39,7 +44,7 @@ interface DisplayContentProps {
   onRemoveItem: (item: FolderSummaryDTO | FlashSetSummaryDTO) => void;
 }
 
-type ModalAddMaterialsProps = {
+type ModalUpdateMaterialsProps = {
   isShowModal: boolean;
   onClose: () => void;
   currentItem: FolderSummaryDTO;
@@ -205,8 +210,12 @@ const DisplayContent: FC<DisplayContentProps> = ({
  * @param listMaterials (FlashSetSummaryDTO[] | FolderSummaryDTO[])
  * @param onClose () => void; Close the Modal
  */
-const ModalAddMaterials = memo(
-  ({ isShowModal, onClose, currentItem }: Readonly<ModalAddMaterialsProps>) => {
+const ModalUpdateMaterials = memo(
+  ({
+    isShowModal,
+    onClose,
+    currentItem,
+  }: Readonly<ModalUpdateMaterialsProps>) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const modalMaterialsOption = useSelector(
@@ -221,39 +230,94 @@ const ModalAddMaterials = memo(
     );
     const [addFlashSetToFolder] = useAddFlashSetToFolderMutation();
     const [removeFlashSetFromFolder] = useRemoveFlashSetFromFolderMutation();
+    const [addFolderChildToFolder] = useAddFolderChildToFolderMutation();
+    const [removeFolderChildFromFolder] =
+      useRemoveFolderChildFromFolderMutation();
 
+    /**
+     * Add handler
+     */
     const handleOnAddItem = async (
       item: FlashSetSummaryDTO | FolderSummaryDTO
     ) => {
-      const payload: AddFlashSetToFolderPayload = {
-        folderId: currentItem.id,
-        flashSetId: item.id,
-      };
+      if (
+        modalMaterialsOption.materialTypeSelected ===
+        TypeMaterialsSelection.FLASHSETCARD
+      ) {
+        const payload: AddFlashSetToFolderPayload = {
+          folderId: currentItem.id,
+          flashSetId: item.id,
+        };
 
-      await addFlashSetToFolder(payload)
-        .unwrap()
-        .then(() => {})
-        .catch((error) => {
-          const apiError = error as ApiErrorResponse;
-          toast.error(apiError.data.message);
-        });
+        await addFlashSetToFolder(payload)
+          .unwrap()
+          .then(() => {})
+          .catch((error) => {
+            const apiError = error as ApiErrorResponse;
+            toast.error(apiError.data.message);
+          });
+      }
+
+      if (
+        modalMaterialsOption.materialTypeSelected ===
+        TypeMaterialsSelection.FOLDER
+      ) {
+        const payload: AddFolderChildToFolderParentPayload = {
+          parentFolderId: currentItem.id,
+          childFolderId: item.id,
+        };
+
+        await addFolderChildToFolder(payload)
+          .unwrap()
+          .then(() => {})
+          .catch((error) => {
+            const apiError = error as ApiErrorResponse;
+            toast.error(apiError.data.message);
+          });
+      }
     };
 
+    /**
+     * Remove handler
+     */
     const handleOnRemoveItem = async (
       item: FlashSetSummaryDTO | FolderSummaryDTO
     ) => {
-      const payload: AddFlashSetToFolderPayload = {
-        folderId: currentItem.id,
-        flashSetId: item.id,
-      };
+      if (
+        modalMaterialsOption.materialTypeSelected ===
+        TypeMaterialsSelection.FLASHSETCARD
+      ) {
+        const payload: AddFlashSetToFolderPayload = {
+          folderId: currentItem.id,
+          flashSetId: item.id,
+        };
 
-      await removeFlashSetFromFolder(payload)
-        .unwrap()
-        .then(() => {})
-        .catch((error) => {
-          const apiError = error as ApiErrorResponse;
-          toast.error(apiError.data.message);
-        });
+        await removeFlashSetFromFolder(payload)
+          .unwrap()
+          .then(() => {})
+          .catch((error) => {
+            const apiError = error as ApiErrorResponse;
+            toast.error(apiError.data.message);
+          });
+      }
+
+      if (
+        modalMaterialsOption.materialTypeSelected ===
+        TypeMaterialsSelection.FOLDER
+      ) {
+        const payload: AddFolderChildToFolderParentPayload = {
+          parentFolderId: currentItem.id,
+          childFolderId: item.id,
+        };
+
+        await removeFolderChildFromFolder(payload)
+          .unwrap()
+          .then(() => {})
+          .catch((error) => {
+            const apiError = error as ApiErrorResponse;
+            toast.error(apiError.data.message);
+          });
+      }
     };
 
     /**
@@ -302,4 +366,4 @@ const ModalAddMaterials = memo(
   }
 );
 
-export default ModalAddMaterials;
+export default ModalUpdateMaterials;

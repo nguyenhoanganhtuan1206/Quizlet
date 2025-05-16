@@ -26,8 +26,8 @@ public class FolderFlashSetController {
 
     @DeleteMapping("{flashSetId}/update_material/{folderId}")
     public FolderFlashSet deleteFlashSetFromFolder(
-            final @PathVariable UUID folderId,
-            final @PathVariable UUID flashSetId
+            final @PathVariable UUID flashSetId,
+            final @PathVariable UUID folderId
     ) {
         return folderFlashSetService.deleteMaterialFromFolder(folderId, flashSetId);
     }
