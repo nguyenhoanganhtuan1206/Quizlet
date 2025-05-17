@@ -38,4 +38,5 @@ export interface SelectProps<T extends FieldValues> {
   variant: InputVariant;
   isError?: boolean;
   className?: string;
+  placeholder?: string;
 }

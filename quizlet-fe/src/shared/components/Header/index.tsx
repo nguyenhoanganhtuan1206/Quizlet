@@ -89,6 +89,7 @@ function Header({ currentUser }: Readonly<HeaderProps>) {
               <FiPlus className="header__plus-icon" />
 
               <PopperWrapper
+                variant="primary"
                 className="header__plus-popper"
                 isActive={isDisplayMenu}
               >

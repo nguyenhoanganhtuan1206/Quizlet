@@ -65,7 +65,8 @@ const DisplayHeaderActions = ({
         <HiOutlineDotsHorizontal />
 
         <PopperWrapper
-          className="absolute top-[110%] right-0 w-[220px] bg-inherit py-[8px] border border-[var(--gray-300-gray-600)]"
+          variant="subPrimary"
+          className="absolute top-[110%] right-0 w-[220px] py-[8px] rounded-xl border border-[var(--gray-300-gray-600)]"
           isActive={isShowFolderActions}
         >
           <div

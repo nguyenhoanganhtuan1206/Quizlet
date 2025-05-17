@@ -6,7 +6,7 @@ import { Controller, FieldValues } from "react-hook-form";
 
 import { SelectOptionProps, SelectProps } from "@/type/form/Input";
 import SelectSearchItem from "./select_search_item";
-import SelectItem from "./select_item";
+import DropdownSelectionItem from "./dropdown_selection_item";
 
 export default function MultipleSelect<T extends FieldValues>({
   control,
@@ -14,6 +14,7 @@ export default function MultipleSelect<T extends FieldValues>({
   listOptions,
   variant,
   className,
+  placeholder,
 }: Readonly<SelectProps<T>>) {
   const [isShowListOptions, setIsShowListOptions] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -74,9 +75,10 @@ export default function MultipleSelect<T extends FieldValues>({
               isShowListOptions={isShowListOptions}
               setIsShowListOptions={setIsShowListOptions}
               handleRemoveItem={handleRemoveItem}
+              placeholder={placeholder}
             />
 
-            <SelectItem
+            <DropdownSelectionItem
               searchTerm={searchTerm}
               variant={variant}
               isShowListOptions={isShowListOptions}

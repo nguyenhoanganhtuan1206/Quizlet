@@ -35,7 +35,7 @@ export default function MaterialSelectionItem({
     <div
       onClick={() => handleOnSelectMaterialOption(type)}
       className={classNames(
-        "flex items-center px-[24px] py-[8px] hover:bg-[var(--color-text-blacklight)]",
+        "flex items-center px-[24px] py-[8px] hover:bg-[var(--gray-300-gray-800)]",
         isSelected ? "text-[var(--border-color)]" : ""
       )}
     >
