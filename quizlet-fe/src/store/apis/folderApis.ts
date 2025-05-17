@@ -1,5 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
+
 import { baseQueryWithToken } from "./baseQueryWithToken";
+
 import { Folder, FolderCreateUpdateRequestDTO, FolderSummaryDTO } from "@/type";
 import { FolderParents, FolderFlashSet } from "@/type/";
 
@@ -11,6 +13,10 @@ export interface AddFlashSetToFolderPayload {
 export interface AddFolderChildToFolderParentPayload {
   parentFolderId: string;
   childFolderId: string;
+}
+interface UpdateFolderPayload {
+  id: string;
+  folderCreateDTO: FolderCreateUpdateRequestDTO;
 }
 
 export const folderApis = createApi({
@@ -44,6 +50,35 @@ export const folderApis = createApi({
           method: "POST",
         };
       },
+    }),
+    updateFolder: builder.mutation<
+      Folder, // Return type
+      UpdateFolderPayload // Argument
+    >({
+      query: ({ id, folderCreateDTO }) => {
+        return {
+          url: `folders/${id}`,
+          body: folderCreateDTO,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: (result) => [
+        { type: "Folders", id: result ? result.id : "LIST" },
+      ],
+    }),
+    deleteFolder: builder.mutation<
+      Folder, // Return type
+      string
+    >({
+      query: (folderId) => {
+        return {
+          url: `folders/${folderId}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: (result) => [
+        { type: "Folders", id: result ? result.id : "LIST" },
+      ],
     }),
 
     // Mutation to add a Flash set to a Folder
@@ -79,7 +114,7 @@ export const folderApis = createApi({
       AddFolderChildToFolderParentPayload // Arg
     >({
       query: ({ parentFolderId, childFolderId }) => ({
-        url: `folder_flashsets/${childFolderId}/update_material/${parentFolderId}`,
+        url: `folder_parents/${childFolderId}/update_material/${parentFolderId}`,
         method: "POST",
       }),
       invalidatesTags: (result) => [
@@ -91,7 +126,7 @@ export const folderApis = createApi({
       AddFolderChildToFolderParentPayload // Arg
     >({
       query: ({ parentFolderId, childFolderId }) => ({
-        url: `folder_flashsets/${childFolderId}/update_material/${parentFolderId}`,
+        url: `folder_parents/${childFolderId}/update_material/${parentFolderId}`,
         method: "DELETE",
       }),
       invalidatesTags: (result) => [
@@ -105,6 +140,8 @@ export const {
   useFetchFolderByIdQuery,
   useCreateFolderMutation,
   useAddFlashSetToFolderMutation,
+  useUpdateFolderMutation,
+  useDeleteFolderMutation,
   useRemoveFlashSetFromFolderMutation,
   useAddFolderChildToFolderMutation,
   useRemoveFolderChildFromFolderMutation,

@@ -73,4 +73,11 @@ public class FolderController {
 
         return folderService.updateFolder(userId, folderId, folderUpdateDTO);
     }
+
+    @DeleteMapping("{folderId}")
+    public Folder deleteFolder(
+            final @PathVariable UUID folderId
+    ) {
+        return folderService.deleteFolder(folderId);
+    }
 }

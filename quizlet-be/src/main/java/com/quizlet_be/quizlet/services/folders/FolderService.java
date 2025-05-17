@@ -5,6 +5,7 @@ import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.error.BadRequestException;
 import com.quizlet_be.quizlet.error.ConflictException;
 import com.quizlet_be.quizlet.error.NotFoundException;
+import com.quizlet_be.quizlet.error.UnprocessableException;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetStore;
 import com.quizlet_be.quizlet.persistent.folder_flashset.FolderFlashSetStore;
 import com.quizlet_be.quizlet.persistent.folders.FolderStore;
@@ -23,8 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
+import static com.quizlet_be.quizlet.error.CommonError.*;
 import static com.quizlet_be.quizlet.mapper.folders.FolderSummaryDTOMapper.toFolderSummaryDTO;
 import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateDuplicatedChildFolder;
 import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateRestrictFolderAccess;
@@ -196,6 +196,27 @@ public class FolderService {
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} ", ex.getMessage());
             throw supplyBadRequestException("Unexpected error while updating the folder %s. Please try it again!", currentFolder.getName()).get();
+        }
+    }
+
+    /**
+     * Remove Folder
+     *
+     * @param @folder
+     * @return @{@link Folder}
+     * @throws NotFoundException
+     * @throws UnprocessableException
+     */
+    @Transactional
+    public Folder deleteFolder(final UUID folderId) {
+        final Folder folderDeletion = findById(folderId);
+
+        try {
+            folderStore.delete(folderDeletion);
+
+            return folderDeletion;
+        } catch (UnprocessableException ex) {
+            throw supplyUnprocessableException("Unexpected while deleting your Folder. Please try it again").get();
         }
     }
 

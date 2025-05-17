@@ -52,6 +52,8 @@ export {
   useRegisterMutation,
   useFetchFolderByIdQuery,
   useCreateFolderMutation,
+  useUpdateFolderMutation,
+  useDeleteFolderMutation,
   useAddFlashSetToFolderMutation,
   useRemoveFlashSetFromFolderMutation,
   useAddFolderChildToFolderMutation,

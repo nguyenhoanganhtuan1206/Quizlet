@@ -24,6 +24,7 @@ type FolderDetailsType = {
 interface FlashSetsListProps {
   flashSets: FlashSet[];
   currentUser: JwtPayload;
+  foldersSize: number;
 }
 
 interface FolderListProps {
@@ -36,12 +37,16 @@ interface FolderListProps {
 /**
  * FlashSet Cards List
  */
-const FlashSetsList: FC<FlashSetsListProps> = ({ currentUser, flashSets }) => {
+const FlashSetsList: FC<FlashSetsListProps> = ({
+  currentUser,
+  flashSets,
+  foldersSize,
+}) => {
   return (
     <>
       <h3
         className={classNames("text-white text-4xl font-bold pt-5 mb-3", {
-          "mt-10 border-t-gray-500 border-t-2": flashSets.length > 0,
+          "mt-10 border-t-gray-500 border-t-2": foldersSize > 0,
         })}
       >
         FlashSet List
@@ -155,6 +160,7 @@ export default function FolderDetails({ folderDetails }: FolderDetailsType) {
         <FlashSetsList
           currentUser={currentUser}
           flashSets={folderDetails.flashSets}
+          foldersSize={folderDetails.foldersChild.length}
         />
       )}
 

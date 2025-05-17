@@ -8,7 +8,7 @@ import { CiFolderOn } from "react-icons/ci";
 import { Folder } from "../../../../type";
 
 import { AssemblyCard, Skeleton } from "../../../../shared/components";
-import { AppDispatch, fetchParentFolders, RootState } from "../../../../store";
+import { AppDispatch, fetchFolders, RootState } from "../../../../store";
 import {
   addMorePage,
   BreadcrumbNavigationItem,
@@ -21,7 +21,7 @@ export default function FolderListSection() {
   );
 
   useEffect(() => {
-    dispatch(fetchParentFolders());
+    dispatch(fetchFolders());
   }, [dispatch]);
 
   const handleNavigateFolder = (folder: Folder) => {
@@ -41,7 +41,7 @@ export default function FolderListSection() {
     return (
       <Skeleton variant="section" className="w-full" times={1}>
         <Skeleton
-          textBars={data.length % 2 > 0 ? data.length % 2 : 3}
+          textBars={3}
           className="mt-5"
           variant="text"
           height="45px"

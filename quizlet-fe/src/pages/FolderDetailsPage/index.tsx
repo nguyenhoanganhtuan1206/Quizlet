@@ -17,9 +17,9 @@ import {
 } from "@/store";
 import { FolderSummaryDTO } from "@/type";
 
-const LoadingSkeleton = memo(() => {
+const LoadingSkeleton = memo(({ sectionSize }: { sectionSize: number }) => {
   return (
-    <Skeleton variant="section" className="w-full" times={2}>
+    <Skeleton variant="section" className="w-full" times={sectionSize}>
       <Skeleton
         textBars={3}
         className="mt-5"
@@ -76,7 +76,7 @@ export default function FolderDetailsPage() {
   }
 
   if (isLoading) {
-    return <LoadingSkeleton />;
+    return <LoadingSkeleton sectionSize={2} />;
   }
 
   if (!folderDetails) {
@@ -87,7 +87,7 @@ export default function FolderDetailsPage() {
     <>
       <FolderContent folderDetails={folderDetails} />
 
-      {isFetching && <LoadingSkeleton />}
+      {isFetching && <LoadingSkeleton sectionSize={1} />}
 
       {/*
        * Modal Add Materials

@@ -4,7 +4,9 @@ export {
   useFetchFolderByIdQuery,
   useCreateFolderMutation,
   useAddFlashSetToFolderMutation,
+  useUpdateFolderMutation,
+  useDeleteFolderMutation,
   useRemoveFlashSetFromFolderMutation,
   useAddFolderChildToFolderMutation,
-  useRemoveFolderChildFromFolderMutation
+  useRemoveFolderChildFromFolderMutation,
 } from "./folderApis";

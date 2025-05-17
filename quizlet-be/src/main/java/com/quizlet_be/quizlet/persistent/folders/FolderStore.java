@@ -37,6 +37,10 @@ public class FolderStore {
         return toFolder(folderRepository.save(toFolderEntity(folder)));
     }
 
+    public void delete(final Folder folder) {
+        folderRepository.delete(toFolderEntity(folder));
+    }
+
     public List<Folder> findByUserIdAndNotFolderId(final UUID userId, final UUID folderId) {
         return toFolders(folderRepository.findByUserIdAndNotFolderId(userId, folderId));
     }
