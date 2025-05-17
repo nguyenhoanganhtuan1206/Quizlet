@@ -148,15 +148,22 @@ public class FlashSetService {
         }
     }
 
+    /**
+     * Build FlashSet by @FlashSetCreationRequestDTO request DTO
+     *
+     * @param requestDTO
+     * @param userId
+     * @return @FlashSet
+     */
     private FlashSet buildFlashSetByRequestAndUserId(
-            final FlashSetCreationRequestDTO request,
+            final FlashSetCreationRequestDTO requestDTO,
             final UUID userId
     ) {
         return FlashSet.builder()
-                .name(request.getName())
-                .description(request.getDescription())
+                .name(requestDTO.getName())
+                .description(requestDTO.getDescription())
                 .createdAt(now())
-                .isDrafted(request.isDrafted())
+                .isDrafted(requestDTO.isDrafted())
                 .userId(userId)
                 .build();
     }
@@ -175,7 +182,7 @@ public class FlashSetService {
     }
 
     private FlashSetSummaryDTO mapToFlashSetSummaryDTO(final FlashSet flashSet) {
-        final long flashSetItemCount = flashSetItemStore.countByFlashSetId(flashSet.getId());
+        final List<FlashSetItem> flashSetItems = flashSetItemStore.findByFlashSetId(flashSet.getId());
 
         return FlashSetSummaryDTO.builder()
                 .id(flashSet.getId())
@@ -184,7 +191,7 @@ public class FlashSetService {
                 .createdAt(flashSet.getCreatedAt())
                 .updatedAt(flashSet.getUpdatedAt())
                 .isDrafted(flashSet.isDrafted())
-                .flashSetItemCount(flashSetItemCount)
+                .flashSetItems(flashSetItems)
                 .build();
     }
 

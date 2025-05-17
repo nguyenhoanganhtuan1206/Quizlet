@@ -24,7 +24,7 @@
 
   &:hover {
     cursor: pointer;
-    background-color: var(--color-text-blacklight);
+    background-color: var(--gray-300-gray-800);
     border-radius: 50%;
     transition: all 0.2s ease-in-out;
   }
@@ -34,7 +34,7 @@
 .header-search {
   display: flex;
   align-items: center;
-  background-color: var(--color-text-blacklight);
+  background-color: var(--gray-300-gray-800);
   border-radius: 5px;
   height: calc(var(--height-header) - 2rem);
   border: 2px solid none;
@@ -122,7 +122,7 @@
       border: none;
 
       &:hover {
-        background-color: var(--color-text-blacklight);
+        background-color: var(--gray-300-gray-800);
       }
     }
   }

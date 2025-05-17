@@ -7,12 +7,8 @@ import { CiFolderOn } from "react-icons/ci";
 
 import { Folder } from "../../../../type";
 
-import {
-  AssemblyCard,
-  ErrorComponent,
-  Skeleton,
-} from "../../../../shared/components";
-import { AppDispatch, fetchParentFolders, RootState } from "../../../../store";
+import { AssemblyCard, Skeleton } from "../../../../shared/components";
+import { AppDispatch, fetchFolders, RootState } from "../../../../store";
 import {
   addMorePage,
   BreadcrumbNavigationItem,
@@ -20,12 +16,12 @@ import {
 
 export default function FolderListSection() {
   const dispatch = useDispatch<AppDispatch>();
-  const { data, error, isLoading } = useSelector(
+  const { data, isLoading } = useSelector(
     (state: RootState) => state.folderSlice
   );
 
   useEffect(() => {
-    dispatch(fetchParentFolders());
+    dispatch(fetchFolders());
   }, [dispatch]);
 
   const handleNavigateFolder = (folder: Folder) => {
@@ -45,7 +41,7 @@ export default function FolderListSection() {
     return (
       <Skeleton variant="section" className="w-full" times={1}>
         <Skeleton
-          textBars={data.length % 2 > 0 ? data.length % 2 : 3}
+          textBars={3}
           className="mt-5"
           variant="text"
           height="45px"
@@ -55,16 +51,15 @@ export default function FolderListSection() {
     );
   }
 
-  if (error) {
-    return <ErrorComponent />;
-  }
-
   return (
     <ul className="mt-10">
       {data.length === 0 && <div>Folder still is empty. Let create it</div>}
 
       {data.length > 0 &&
         data.map((folder) => {
+          const numberOfFlashSets = folder.flashSets.length;
+          const numberOfFoldersChild = folder.foldersChild.length;
+
           return (
             <li key={folder.id} className="mt-5">
               <AssemblyCard
@@ -75,17 +70,15 @@ export default function FolderListSection() {
               >
                 <div className="flex items-center">
                   <span className="border-r-white border-r-2 pr-3">
-                    {folder.numberOfFlashSets !== 0 &&
-                    folder.numberOfFlashSets > 1
-                      ? `${folder.numberOfFlashSets} items`
-                      : `${folder.numberOfFlashSets} item`}
+                    {numberOfFlashSets !== 0 && numberOfFlashSets > 1
+                      ? `${numberOfFlashSets} items`
+                      : `${numberOfFlashSets} item`}
                   </span>
 
                   <span className="pl-3">
-                    {folder.numberOfChildrenFolders !== 0 &&
-                    folder.numberOfChildrenFolders > 1
-                      ? `${folder.numberOfChildrenFolders} folders`
-                      : `${folder.numberOfChildrenFolders} folder`}
+                    {numberOfFoldersChild !== 0 && numberOfFoldersChild > 1
+                      ? `${numberOfFoldersChild} folders`
+                      : `${numberOfFoldersChild} folder`}
                   </span>
                 </div>
 

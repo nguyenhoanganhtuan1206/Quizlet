@@ -1,15 +1,15 @@
 .navbar__link-item {
   width: 100%;
   cursor: pointer;
-  
+
   &.active {
     color: var(--ref-color-twilight300);
-    background-color: var(--color-text-blacklight);
+    background-color: var(--gray-300-gray-800);
   }
 
   &:hover {
     color: var(--ref-color-twilight300);
-    background-color: var(--color-text-blacklight);
+    background-color: var(--gray-300-gray-800);
   }
 
   &:not(:first-child) {

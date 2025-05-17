@@ -6,6 +6,9 @@ import { FolderSummaryDTO } from "../../type";
 
 import { pause } from "../../utils";
 
+/**
+ * Fetch all folders by UserID
+ */
 export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
   "folder/fetchFoldersByUserId",
   async (_, { rejectWithValue }) => {
@@ -24,6 +27,11 @@ export const fetchFolders = createAsyncThunk<FolderSummaryDTO[]>(
   }
 );
 
+/**
+ * Fetch folders by userId and Not Cunrrent FolderID
+ * @param userId
+ * @param folderId
+ */
 export const fetchFoldersSummaries = createAsyncThunk<
   FolderSummaryDTO[],
   string
@@ -36,7 +44,7 @@ export const fetchFoldersSummaries = createAsyncThunk<
         `folder/${folderId}/summaries`
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error(
         "Error while calling fetchParentFolders {folderThunk || fetchFoldersSummaries}:"
       );
@@ -45,6 +53,10 @@ export const fetchFoldersSummaries = createAsyncThunk<
   }
 );
 
+/**
+ * Fetch parents folder by UserID
+ * @param userId
+ */
 export const fetchParentFolders = createAsyncThunk<FolderSummaryDTO[]>(
   "folder/fetchParentFoldersByUserId",
   async (_, { rejectWithValue }) => {

@@ -17,7 +17,5 @@ public interface FlashSetItemRepository extends JpaRepository<FlashSetItemEntity
 
     Optional<FlashSetItemEntity> findByIdAndFlashSetId(final UUID id, final UUID flashSetId);
 
-    long countByFlashSetId(final UUID flashSetId);
-
     List<FlashSetItemEntity> findByFlashSetId(final UUID flashSetId);
 }

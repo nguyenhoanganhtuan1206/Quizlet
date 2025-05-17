@@ -12,7 +12,6 @@ export const fetchFlashSets = createAsyncThunk<FlashSetSummaryDTO[], void>(
       await pause(600);
 
       const response = await axiosInstance.get("flashsets");
-      console.log("response.data", response.data);
 
       return response.data;
     } catch (error) {

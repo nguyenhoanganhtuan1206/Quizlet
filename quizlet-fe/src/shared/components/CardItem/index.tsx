@@ -19,7 +19,7 @@ export default function CardItem({
   children,
 }: Readonly<CardItemProps>) {
   const finalClassNames = classNames(
-    "p-5 cursor-pointer rounded text-[var(--color-white-gray)] hover:bg-[var(--color-text-blacklight)]",
+    "p-5 cursor-pointer rounded text-[var(--gray-400-gray-600)] hover:bg-[var(--gray-300-gray-800)]",
     className
   );
 

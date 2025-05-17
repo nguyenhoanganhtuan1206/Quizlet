@@ -20,4 +20,6 @@ public class FolderCreateUpdateDTO {
     private String description;
 
     private List<UUID> folderChildIds;
+
+    private List<UUID> flashSetIds;
 }

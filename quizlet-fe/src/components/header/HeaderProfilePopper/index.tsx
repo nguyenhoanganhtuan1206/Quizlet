@@ -29,7 +29,11 @@ export default function HeaderProfilePopper({
 
   return (
     <>
-      <PopperWrapper className="profile__popper" isActive={isHidden}>
+      <PopperWrapper
+        variant="borderOnly"
+        className="profile__popper"
+        isActive={isHidden}
+      >
         <div className="profile__popper-header">
           {currentUser && (
             <>

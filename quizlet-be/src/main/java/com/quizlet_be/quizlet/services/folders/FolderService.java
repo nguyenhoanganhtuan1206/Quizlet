@@ -1,11 +1,11 @@
 package com.quizlet_be.quizlet.services.folders;
 
 import com.quizlet_be.quizlet.dto.folders.FolderCreateUpdateDTO;
-import com.quizlet_be.quizlet.dto.folders.FolderFlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.error.BadRequestException;
 import com.quizlet_be.quizlet.error.ConflictException;
 import com.quizlet_be.quizlet.error.NotFoundException;
+import com.quizlet_be.quizlet.error.UnprocessableException;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetStore;
 import com.quizlet_be.quizlet.persistent.folder_flashset.FolderFlashSetStore;
 import com.quizlet_be.quizlet.persistent.folders.FolderStore;
@@ -24,12 +24,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
-import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
+import static com.quizlet_be.quizlet.error.CommonError.*;
 import static com.quizlet_be.quizlet.mapper.folders.FolderSummaryDTOMapper.toFolderSummaryDTO;
 import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateDuplicatedChildFolder;
 import static com.quizlet_be.quizlet.services.folders.FolderValidation.validateRestrictFolderAccess;
 import static com.quizlet_be.quizlet.utils.SortUtilities.createSingleSort;
+import static java.lang.String.format;
 import static java.time.Instant.now;
 
 @Service
@@ -59,46 +59,17 @@ public class FolderService {
     }
 
     /**
-     * Find folders by ids and verify all the folder is not existing
-     *
-     * @param @{@link Set}<UUID> folderId
-     * @return @{@link List<Folder>}
-     * @throws @{@link NotFoundException}
-     */
-    public Set<Folder> findAllByIds(final List<UUID> folderIds) {
-        final Set<UUID> uniqueFolderIds = new HashSet<>(folderIds);
-
-        // Remove all folders duplicated
-        if (uniqueFolderIds.size() != folderIds.size()) {
-            LOGGER.warning("Duplicate folder IDs detected, deduplicated to: " + uniqueFolderIds);
-        }
-
-        // Fetch all the folders
-        return uniqueFolderIds.stream()
-                .map(this::findById)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-    }
-
-    /**
      * Retrieves detailed information about a folder, including its child folders and associated flash sets.
      *
      * @param folderId The ID of the folder to retrieve details for.
      * @return A DTO containing the folder details, summaries of child folders, and associated flash sets.
      * @throws NotFoundException If the folder with the specified ID does not exist.
      */
-    public FolderFlashSetDetailResponseDTO findFolderDetail(final UUID folderId) {
+    public FolderSummaryDTO findFolderDetail(final UUID folderId) {
         final Folder folder = findById(folderId);
 
         try {
-            final List<Folder> childrenFolders = findByParentId(folder.getId());
-            final List<FolderFlashSet> folderFlashSets = folderFlashSetStore.findByFolderId(folderId);
-
-            return FolderFlashSetDetailResponseDTO.builder()
-                    .folder(folder)
-                    .foldersSummaryChildren(mapFoldersToFolderSummaryDTOs(childrenFolders))
-                    .flashSets(findFlashSetsByFolderFlashSets(folderFlashSets))
-                    .build();
+            return mapFolderToFolderSummaryDTO(folder);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
             throw supplyBadRequestException("Unexpected while get the Folder").get();
@@ -208,25 +179,11 @@ public class FolderService {
 
         try {
             if (!folderUpdateDTO.getFolderChildIds().isEmpty()) {
-                final List<FolderParents> currentFolderParent = folderParentsStore.findByParentFolderId(folderId);
-                final List<UUID> existingChildrenId = currentFolderParent.stream()
-                        .map(FolderParents::getChildFolderId)
-                        .toList();
+                updateFoldersChildrenAddedToFolder(folderId, folderUpdateDTO);
+            }
 
-                // Get the children ID to add and remove
-                final Set<UUID> childrenToAdd = getDifferenceItemsInList(folderUpdateDTO.getFolderChildIds(), existingChildrenId);
-                final Set<UUID> childrenToRemove = getDifferenceItemsInList(existingChildrenId, folderUpdateDTO.getFolderChildIds());
-
-                // findById(newFolderChildId);
-                if (!childrenToAdd.isEmpty()) {
-                    childrenToAdd
-                            .forEach(newFolderChildId -> saveAndBuildToFolderParents(folderId, newFolderChildId));
-                }
-
-                if (!childrenToRemove.isEmpty()) {
-                    childrenToRemove
-                            .forEach(childId -> deleteByFolderIdAndChildId(folderId, childId));
-                }
+            if (!folderUpdateDTO.getFlashSetIds().isEmpty()) {
+                updateFlashSetsAddedToFolder(folderId, folderUpdateDTO);
             }
 
             currentFolder.setDescription(folderUpdateDTO.getDescription());
@@ -234,27 +191,32 @@ public class FolderService {
 
             return save(currentFolder);
         } catch (NotFoundException ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} " + ex.getMessage());
-            throw supplyNotFoundException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} ", ex.getMessage());
+            throw supplyNotFoundException("Unexpected error while updating the folder %s. Please try it again!", currentFolder.getName()).get();
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} " + ex.getMessage());
-            throw supplyBadRequestException("Unexpected error while updating the folder %s !! Please try it again!", currentFolder.getName()).get();
+            LOGGER.log(Level.SEVERE, "ERROR WHILE UPDATING FOLDER {FolderService || updateFolder} ", ex.getMessage());
+            throw supplyBadRequestException("Unexpected error while updating the folder %s. Please try it again!", currentFolder.getName()).get();
         }
     }
 
     /**
-     * Retrieve list parent folders
-     * filter all the child folder from the folderParent table.
+     * Remove Folder
      *
-     * @param @userId.
-     * @return A list of FolderSummaryDTOs with counts of child folders and flash sets.
+     * @param @folder
+     * @return @{@link Folder}
+     * @throws NotFoundException
+     * @throws UnprocessableException
      */
-    public List<FolderSummaryDTO> findParentFoldersByUserId(final UUID userId) {
+    @Transactional
+    public Folder deleteFolder(final UUID folderId) {
+        final Folder folderDeletion = findById(folderId);
+
         try {
-            return mapFoldersToFolderSummaryDTOs(folderStore.findParentFoldersByUserId(userId));
-        } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-            throw supplyBadRequestException("Something went wrong while calling folders!! Please try it again").get();
+            folderStore.delete(folderDeletion);
+
+            return folderDeletion;
+        } catch (UnprocessableException ex) {
+            throw supplyUnprocessableException("Unexpected while deleting your Folder. Please try it again").get();
         }
     }
 
@@ -323,13 +285,19 @@ public class FolderService {
      * @return A FolderSummaryDTO with flashsets and folder children counts.
      */
     private FolderSummaryDTO mapFolderToFolderSummaryDTO(final Folder folder) {
-        final long numberChildrenFolders = folderParentsStore.countByParentFolderId(folder.getId());
-        final long numberFlashSets = folderFlashSetStore.countByFolderId(folder.getId());
-
+        final List<UUID> childFolderIds = folderParentsStore.findChildIdsByParentFolderId(folder.getId());
+        final List<UUID> flashSetIds = folderFlashSetStore.findFlashSetIdsByFolderId(folder.getId());
         final FolderSummaryDTO folderSummary = toFolderSummaryDTO(folder);
 
-        folderSummary.setNumberOfChildrenFolders(numberChildrenFolders);
-        folderSummary.setNumberOfFlashSets(numberFlashSets);
+        final List<FlashSet> flashSets = flashSetIds.stream()
+                .map(this::findFlashSetById)
+                .toList();
+        final List<Folder> folders = childFolderIds.stream()
+                .map(this::findById)
+                .toList();
+
+        folderSummary.setFlashSets(flashSets);
+        folderSummary.setFoldersChild(folders);
         return folderSummary;
     }
 
@@ -352,6 +320,93 @@ public class FolderService {
             LOGGER.log(Level.SEVERE, "ERROR WHILE CREATING FOLDER PARENT: " + ex.getMessage(), ex);
             throw supplyBadRequestException("Unexpected while creating new Folder").get();
         }
+    }
+
+    /**
+     * Delete and Update @{@link FolderParents}
+     *
+     * @param folderId
+     * @param folderUpdateDTO
+     */
+    private void updateFoldersChildrenAddedToFolder(final UUID folderId, final FolderCreateUpdateDTO folderUpdateDTO) {
+        final List<FolderParents> currentFolderParent = folderParentsStore.findByParentFolderId(folderId);
+        final List<UUID> currentFolderChildIds = currentFolderParent.stream()
+                .map(FolderParents::getChildFolderId)
+                .toList();
+
+        // Get the children ID to add and remove
+        final Set<UUID> childrenToAdd = getDifferenceItemsInList(folderUpdateDTO.getFolderChildIds(), currentFolderChildIds);
+        final Set<UUID> childrenToRemove = getDifferenceItemsInList(currentFolderChildIds, folderUpdateDTO.getFolderChildIds());
+
+        if (!childrenToAdd.isEmpty()) {
+            childrenToAdd
+                    .forEach(newFolderChildId -> saveAndBuildToFolderParents(folderId, newFolderChildId));
+        }
+
+        if (!childrenToRemove.isEmpty()) {
+            childrenToRemove
+                    .forEach(childId -> deleteByFolderIdAndChildId(folderId, childId));
+        }
+    }
+
+    /**
+     * Delete and Update @{@link FolderFlashSet}
+     *
+     * @param folderId
+     * @param folderUpdateDTO
+     */
+    private void updateFlashSetsAddedToFolder(final UUID folderId, final FolderCreateUpdateDTO folderUpdateDTO) {
+        final List<FolderFlashSet> currentFolderFlashSets = folderFlashSetStore.findByFolderId(folderId);
+        final List<UUID> currentFlashSetIds = currentFolderFlashSets.stream()
+                .map(FolderFlashSet::getFlashSetId)
+                .toList();
+
+        // Get the children ID to add and remove
+        final Set<UUID> flashSetToAdd = getDifferenceItemsInList(folderUpdateDTO.getFlashSetIds(), currentFlashSetIds);
+        final Set<UUID> childrenToRemove = getDifferenceItemsInList(currentFlashSetIds, folderUpdateDTO.getFlashSetIds());
+
+        if (!flashSetToAdd.isEmpty()) {
+            flashSetToAdd
+                    .forEach(flashSetId -> saveAndBuildToFolderFlashSet(folderId, flashSetId));
+        }
+
+        if (!childrenToRemove.isEmpty()) {
+            childrenToRemove
+                    .forEach(childId -> deleteByFolderIdAndFlashSetId(folderId, childId));
+        }
+    }
+
+    /**
+     * Retrieve list parent folders
+     * filter all the child folder from the folderParent table.
+     *
+     * @param @userId.
+     * @return A list of FolderSummaryDTOs with counts of child folders and flash sets.
+     */
+    public List<FolderSummaryDTO> findParentFoldersByUserId(final UUID userId) {
+        try {
+            return mapFoldersToFolderSummaryDTOs(folderStore.findParentFoldersByUserId(userId));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+            throw supplyBadRequestException("Something went wrong while calling folders!! Please try it again").get();
+        }
+    }
+
+    /**
+     * Find @FlashSet by flashSetId
+     *
+     * @param flashSetId
+     * @return FlashSet
+     */
+    private FlashSet findFlashSetById(final UUID flashSetId) {
+        final Optional<FlashSet> flashSet = flashSetStore.findById(flashSetId);
+
+        if (flashSet.isEmpty()) {
+            LOGGER.log(Level.SEVERE, format("Flash set with ID %s {findFlashSetById | FolderService} not found", flashSetId));
+            throw supplyNotFoundException("The current Flash Set is not existed!").get();
+        }
+
+        return flashSet.get();
     }
 
     /**
@@ -383,15 +438,49 @@ public class FolderService {
     }
 
     /**
+     * Save and Build @{@link FolderFlashSet} by @folderId and @flashSetId
+     *
+     * @throws @{@link NotFoundException}
+     * @throws @{@link BadRequestException}
+     */
+    private void saveAndBuildToFolderFlashSet(final UUID folderId, final UUID flashSetId) {
+        try {
+            final FolderFlashSet folderFlashSet = FolderFlashSet.builder()
+                    .folderId(folderId)
+                    .flashSetId(findFlashSetById(flashSetId).getId())
+                    .build();
+            folderFlashSetStore.save(folderFlashSet);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "ERROR WHILE CREATING FOLDER PARENT: " + ex.getMessage(), ex);
+            throw supplyBadRequestException("Unexpected while creating new Folder").get();
+        }
+    }
+
+    /**
      * Delete @{@link FolderParents} by @folderId and @childId
      */
     private void deleteByFolderIdAndChildId(final UUID folderId, final UUID childId) {
         final Optional<FolderParents> folderParent = folderParentsStore.findByParentFolderIdAndChildFolderId(folderId, childId);
 
         if (folderParent.isEmpty()) {
+            LOGGER.log(Level.SEVERE, format("The Folder with ID %s and children folder %s not found", folderId, childId));
             throw supplyNotFoundException("The Folder with ID %s and children folder %s not found", folderId, childId).get();
         }
 
         folderParentsStore.delete(folderParent.get());
+    }
+
+    /**
+     * Delete @{@link FolderFlashSet} by @folderId and @folderId
+     */
+    private void deleteByFolderIdAndFlashSetId(final UUID folderId, final UUID flashSetId) {
+        final Optional<FolderFlashSet> folderParent = folderFlashSetStore.findByFolderIdAndFlashSetId(folderId, flashSetId);
+
+        if (folderParent.isEmpty()) {
+            LOGGER.log(Level.SEVERE, format("The Folder with ID %s and flash set ID %s not found", folderId, flashSetId));
+            throw supplyNotFoundException("The Folder with ID %s and flash set id %s not found", folderId, flashSetId).get();
+        }
+
+        folderFlashSetStore.delete(folderParent.get());
     }
 }

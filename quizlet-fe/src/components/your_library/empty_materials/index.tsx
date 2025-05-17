@@ -4,13 +4,19 @@ import { FaFolderOpen } from "react-icons/fa";
 import { LuFolderHeart } from "react-icons/lu";
 
 import { Button, EmptyComponent } from "@/shared/components";
-import { AppDispatch, setMaterialType, TypeMaterialsSelection } from "@/store";
+import {
+  AppDispatch,
+  setIsShowModalMaterials,
+  setMaterialType,
+  TypeMaterialsSelection,
+} from "@/store";
 
 export default function EmptyMaterials() {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleOpenModalMaterials = () => {
     dispatch(setMaterialType(TypeMaterialsSelection.FLASHSETCARD));
+    dispatch(setIsShowModalMaterials(true));
   };
 
   return (

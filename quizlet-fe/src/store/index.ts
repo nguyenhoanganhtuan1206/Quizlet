@@ -21,10 +21,10 @@ const store = configureStore({
     [libraryFiltersSlice.reducerPath]: libraryFiltersReducer,
     [flashSetSlice.reducerPath]: flashSetReducer,
     [folderSlice.reducerPath]: folderSlice.reducer,
-    [authApis.reducerPath]: authApis.reducer,
-    [folderApis.reducerPath]: folderApis.reducer,
     [navigateBreadCrumbSlice.reducerPath]: navigateBreadCrumbReducer,
     [materialsModalSlice.reducerPath]: materialsModalReducer,
+    [authApis.reducerPath]: authApis.reducer,
+    [folderApis.reducerPath]: folderApis.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
@@ -52,6 +52,12 @@ export {
   useRegisterMutation,
   useFetchFolderByIdQuery,
   useCreateFolderMutation,
+  useUpdateFolderMutation,
+  useDeleteFolderMutation,
+  useAddFlashSetToFolderMutation,
+  useRemoveFlashSetFromFolderMutation,
+  useAddFolderChildToFolderMutation,
+  useRemoveFolderChildFromFolderMutation,
 } from "./apis";
 
 export {

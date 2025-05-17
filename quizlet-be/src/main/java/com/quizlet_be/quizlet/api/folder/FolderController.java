@@ -1,7 +1,6 @@
 package com.quizlet_be.quizlet.api.folder;
 
 import com.quizlet_be.quizlet.dto.folders.FolderCreateUpdateDTO;
-import com.quizlet_be.quizlet.dto.folders.FolderFlashSetDetailResponseDTO;
 import com.quizlet_be.quizlet.dto.folders.FolderSummaryDTO;
 import com.quizlet_be.quizlet.services.folders.Folder;
 import com.quizlet_be.quizlet.services.folders.FolderService;
@@ -34,7 +33,7 @@ public class FolderController {
     }
 
     @GetMapping("{folderId}")
-    public FolderFlashSetDetailResponseDTO findByFolderId(final @PathVariable(name = "folderId") UUID folderId) {
+    public FolderSummaryDTO findByFolderId(final @PathVariable(name = "folderId") UUID folderId) {
         return folderService.findFolderDetail(folderId);
     }
 
@@ -73,5 +72,12 @@ public class FolderController {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
 
         return folderService.updateFolder(userId, folderId, folderUpdateDTO);
+    }
+
+    @DeleteMapping("{folderId}")
+    public Folder deleteFolder(
+            final @PathVariable UUID folderId
+    ) {
+        return folderService.deleteFolder(folderId);
     }
 }

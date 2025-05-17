@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { folderSchema } from "@/schemas";
-import { FolderCreationRequestDTO } from "@/type";
+import { FolderCreateUpdateRequestDTO } from "@/type";
 import {
   Button,
   ErrorMessage,
@@ -20,6 +20,7 @@ import {
 import { SelectOptionProps } from "@/type/form/Input";
 import {
   AppDispatch,
+  fetchFlashSets,
   fetchFolders,
   RootState,
   useCreateFolderMutation,
@@ -39,12 +40,16 @@ export default function ModalFolderCreation({
   const fetchFoldersState = useSelector(
     (rootState: RootState) => rootState.folderSlice
   );
+  const fetchFlashSetsState = useSelector(
+    (rootState: RootState) => rootState.flashSetSlice
+  );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [createFolder, { isLoading }] = useCreateFolderMutation();
 
   useEffect(() => {
     if (isShowModal) {
+      dispatch(fetchFlashSets());
       dispatch(fetchFolders());
     }
   }, [isShowModal, dispatch]);
@@ -57,14 +62,22 @@ export default function ModalFolderCreation({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FolderCreationRequestDTO>({
+  } = useForm<FolderCreateUpdateRequestDTO>({
     resolver: zodResolver(folderSchema),
     defaultValues: {
       name: "",
       description: "",
       folderChildIds: [],
+      flashSetIds: [],
     },
   });
+
+  const initialFlashSetOptions: SelectOptionProps[] =
+    fetchFlashSetsState.data.map((flashset) => ({
+      title: flashset.name,
+      value: flashset.id,
+    }));
+  console.log("initialFlashSetOptions", initialFlashSetOptions);
 
   const initialFolderOptions: SelectOptionProps[] = fetchFoldersState.data.map(
     (folder): SelectOptionProps => ({
@@ -75,9 +88,9 @@ export default function ModalFolderCreation({
 
   /**
    * Handle submit create new Folder
-   * @param data @FolderCreationRequestDTO
+   * @param data @FolderCreateUpdateRequestDTO
    */
-  const handleOnSubmit = (data: FolderCreationRequestDTO) => {
+  const handleOnSubmit = (data: FolderCreateUpdateRequestDTO) => {
     createFolder(data)
       .unwrap()
       .then((data) => {
@@ -155,9 +168,19 @@ export default function ModalFolderCreation({
           <MultipleSelect
             className="mt-3"
             control={control}
+            name="flashSetIds"
+            listOptions={initialFlashSetOptions}
+            variant="mode-black"
+            placeholder="Select FlashSet Card"
+          />
+
+          <MultipleSelect
+            className="mt-3"
+            control={control}
             name="folderChildIds"
             listOptions={initialFolderOptions}
             variant="mode-black"
+            placeholder="Select Folder"
           />
 
           <div className="flex justify-end mt-12">

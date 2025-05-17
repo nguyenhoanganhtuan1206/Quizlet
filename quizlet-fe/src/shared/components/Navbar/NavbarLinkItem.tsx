@@ -18,7 +18,7 @@ const NavbarLinkItem = ({
   children,
 }: NavbarLinkItemProps) => {
   const finalClassName = classNames(
-    "navbar__link-item flex items-center rounded-xl px-4 py-1 text-white text-[1.3rem] font-bold h-[40px] w-[200px] text-[var(--color-white-gray)]",
+    "navbar__link-item flex items-center rounded-xl px-4 py-1 text-white text-[1.3rem] font-bold h-[40px] w-[200px] text-[var(--gray-400-gray-600)]",
     className
   );
 

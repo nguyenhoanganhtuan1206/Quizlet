@@ -1,7 +1,5 @@
-@use '../../../sass/base/utilities' as *;
+@use "../../../sass/base/utilities" as *;
 
 .btn-loading {
-  margin-left: 1.2rem;
-
   @include loading-spinner-animation($timeSpeed: 1s);
 }

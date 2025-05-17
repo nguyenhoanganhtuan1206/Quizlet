@@ -6,7 +6,7 @@ $bottomPosition: 8%;
 .auth__right {
   &-title_top {
     position: absolute;
-    color: var(--color-text-blacklight);
+    color: var(--gray-300-gray-800);
     font-size: 4.6rem;
     font-weight: bold;
     line-height: 5rem;
@@ -37,7 +37,7 @@ $bottomPosition: 8%;
   color: var(--gray-300-gray-600);
   cursor: pointer;
   &.active {
-    color: var(--color-text-blacklight);
+    color: var(--gray-300-gray-800);
     @include underline-animation(
       100%,
       0,

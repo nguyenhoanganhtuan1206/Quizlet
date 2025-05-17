@@ -1,28 +1,34 @@
-import './index.scss';
-import classNames from 'classnames';
+import classNames from "classnames";
 
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
+
+type PopperWrapperVariant = "primary" | "borderOnly" | "subPrimary";
 
 type PopperWrapperProps = {
   className?: string;
-  style?: React.CSSProperties;
+  variant: PopperWrapperVariant;
   isActive?: boolean;
   children: ReactNode;
 };
 
 export default function PopperWrapper({
   className,
-  style,
+  variant,
   isActive,
   children,
 }: Readonly<PopperWrapperProps>) {
-  const popperWrapper = classNames(className, 'popper-wrapper', {
-    'popper-wrapper--hidden': !isActive,
-  });
-
-  return (
-    <div className={popperWrapper} style={style}>
-      {children}
-    </div>
+  const popperWrapperClassNames = classNames(
+    "flex flex-col justify-center border shadow-md rounded duration-300 z-[100]",
+    {
+      hidden: !isActive,
+      "bg-[var(--color-primary)] text-white": variant === "primary",
+      "bg-[var(--color-primary-sub)] border-[var(--gray-400-gray-600)]":
+        variant === "subPrimary",
+      "text-white bg-transparent border-[var(--gray-400-gray-600)]":
+        variant === "borderOnly",
+    },
+    className
   );
+
+  return <div className={popperWrapperClassNames}>{children}</div>;
 }

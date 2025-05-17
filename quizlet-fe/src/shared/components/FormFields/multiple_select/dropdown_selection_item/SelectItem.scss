@@ -1,6 +1,7 @@
 @use "../../../../sass/base/animations" as *;
 
 .select-item__wrapper {
+  z-index: 1000;
   @include fadeIn($fadeMiddle: 0.7, $duration: 0.3s, $from: -50px);
 }
 
@@ -40,8 +41,5 @@
   &.form--mode-black {
     color: white;
     border: 1px solid var(--ref-color-twilight300);
-  }
-
-  &.form--mode-border-only {
   }
 }

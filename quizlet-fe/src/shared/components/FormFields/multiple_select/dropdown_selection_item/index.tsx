@@ -1,11 +1,11 @@
-import { useMemo } from "react";
 import "../../FormFields.scss";
 import "./SelectItem.scss";
+import { useMemo } from "react";
 
 import { InputVariant, SelectOptionProps } from "@/type/form/Input";
 import classNames from "classnames";
 
-interface SelectItemProps {
+interface DropdownSelectionItemProps {
   listOptions: SelectOptionProps[];
   variant?: InputVariant;
   searchTerm?: string;
@@ -14,16 +14,16 @@ interface SelectItemProps {
   handleSelectOption: (value: string | number) => void;
 }
 
-export default function SelectItem({
+export default function DropdownSelectionItem({
   variant,
   listOptions,
   searchTerm,
   isShowListOptions,
   valueSelected,
   handleSelectOption,
-}: Readonly<SelectItemProps>) {
+}: Readonly<DropdownSelectionItemProps>) {
   const selectItemWrapperClassNames = classNames(
-    "select-item__wrapper absolute top-[105%] h-[250px] max-h-[450px] left-0 flex flex-wrap w-full border-gray-300 rounded-[6px] overflow-y-auto",
+    "select-item__wrapper absolute top-[105%] min-h-[150px] max-h-[450px] left-0 flex flex-wrap w-full border-gray-300 rounded-[6px] overflow-y-auto",
     isShowListOptions ? "flex" : "hidden",
     {
       "form--mode-black": variant === "mode-black",

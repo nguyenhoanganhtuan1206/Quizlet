@@ -9,6 +9,7 @@ import { InputVariant, SelectOptionProps } from "@/type/form/Input";
 interface SelectSearchItemProps {
   variant: InputVariant;
   selectedOptions: SelectOptionProps[];
+  placeholder?: string;
   isShowListOptions: boolean;
   setIsShowListOptions: (isShow: boolean) => void;
   searchTerm: string;
@@ -19,6 +20,7 @@ interface SelectSearchItemProps {
 export default function SelectSearchItem({
   variant,
   selectedOptions,
+  placeholder,
   isShowListOptions,
   setIsShowListOptions,
   searchTerm,
@@ -29,7 +31,7 @@ export default function SelectSearchItem({
     Define classNames
   */
   const selectSearchItemWrapperClassNames = classNames(
-    "flex flex-wrap min-h-[40px] bg-[var(--color-primary-sub)] rounded-[5px] duration-500 overflow-hidden",
+    "flex flex-wrap items-center min-h-[40px] bg-[var(--color-primary-sub)] rounded-[5px] duration-500 overflow-hidden",
     {
       "form--mode-black": variant === "mode-black",
       "form--mode-border-only": variant === "border-only",
@@ -37,7 +39,7 @@ export default function SelectSearchItem({
   );
 
   const inputSearchItemClassNames = classNames(
-    "flex flex-1 h-full text-[1.4rem] placeholder-[font-weight:600] px-5 py-6 bg-transparent outline-none cursor-pointer"
+    "flex flex-1 h-full text-[1.4rem] placeholder-[font-weight:600] px-3 py-4 bg-transparent outline-none cursor-pointer"
   );
 
   const listSelectedValuesClassNames = classNames(
@@ -86,7 +88,13 @@ export default function SelectSearchItem({
             setIsShowListOptions(true);
           }
         }}
-        placeholder={selectedOptions.length === 0 ? "Select your options" : ""}
+        placeholder={
+          selectedOptions.length === 0
+            ? placeholder
+              ? placeholder
+              : "Select your options"
+            : ""
+        }
       />
     </div>
   );

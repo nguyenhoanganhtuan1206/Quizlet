@@ -1,10 +1,12 @@
 package com.quizlet_be.quizlet.dto.flashsets;
 
+import com.quizlet_be.quizlet.services.flashsetitem.FlashSetItem;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -24,5 +26,5 @@ public class FlashSetSummaryDTO {
 
     private boolean isDrafted;
 
-    private long flashSetItemCount;
+    private List<FlashSetItem> flashSetItems;
 }
