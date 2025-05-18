@@ -30,7 +30,7 @@ export default function HeaderProfilePopper({
   return (
     <>
       <PopperWrapper
-        variant="borderOnly"
+        variant="subPrimary"
         className="profile__popper"
         isActive={isHidden}
       >
