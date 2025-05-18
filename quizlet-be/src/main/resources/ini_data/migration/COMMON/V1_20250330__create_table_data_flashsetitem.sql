@@ -8,6 +8,7 @@ CREATE TABLE flashsetitems (
     order_position INT          NOT NULL                     ,
     created_at  TIMESTAMP       NOT NULL        DEFAULT NOW(),
     updated_at  TIMESTAMP,
+    is_marked    BOOLEAN         DEFAULT         FALSE,
     flashset_id UUID            NOT NULL,
     CONSTRAINT  fk_flashset
         FOREIGN KEY (flashset_id)
@@ -31,5 +32,4 @@ INSERT INTO flashsetitems (id, answer, question, order_position, created_at, fla
     ('000e6a75-d9ad-4aea-9c27-d2381eb534ea', '1776', 'When was the US Declaration signed?', 1 , NOW(),
         'b5b21889-efa1-41ba-997d-6f17210af2a7'),
     ('e5ad3d89-02b4-46fc-aea7-c5fdbc909c9f', '1492', 'When did Columbus reach America?', 2 , NOW(),
-        'b5b21889-efa1-41ba-997d-6f17210af2a7')
-        ;
+        'b5b21889-efa1-41ba-997d-6f17210af2a7');

@@ -3,6 +3,7 @@ package com.quizlet_be.quizlet.services.flashsetitem;
 import com.quizlet_be.quizlet.dto.flashsetItems.FlashSetItemCreationUpdateDTO;
 import com.quizlet_be.quizlet.error.ConflictException;
 import com.quizlet_be.quizlet.error.NotFoundException;
+import com.quizlet_be.quizlet.error.UnprocessableException;
 import com.quizlet_be.quizlet.persistent.flashset.FlashSetStore;
 import com.quizlet_be.quizlet.persistent.flashsetitem.FlashSetItemStore;
 import com.quizlet_be.quizlet.services.flashset.FlashSet;
@@ -125,9 +126,14 @@ public class FlashSetItemService {
      * @throws com.quizlet_be.quizlet.error.NotFoundException return {@link <FlashSetItem>}
      */
     public FlashSetItem findById(final UUID id) {
-        logger.log(Level.SEVERE, format("Flash Set Item with ID %s is not existed!", id));
-        return flashSetItemStore.findById(id)
-                .orElseThrow(supplyFlashSetItemNotFoundException("ID", id));
+        try {
+            logger.log(Level.SEVERE, format("Flash Set Item with ID %s is not existed. {findById | FlashSetItemService}", id));
+            return flashSetItemStore.findById(id)
+                    .orElseThrow(supplyFlashSetItemNotFoundException());
+        } catch (UnprocessableException ex) {
+            logger.log(Level.SEVERE, "Error in {findById, FlashSetItemService}: ", ex.getMessage());
+            throw supplyUnprocessableException("Unexpected while fetching FlashSet Card Item. Please try it again").get();
+        }
     }
 
     /**

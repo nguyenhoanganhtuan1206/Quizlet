@@ -10,3 +10,9 @@ export {
   useAddFolderChildToFolderMutation,
   useRemoveFolderChildFromFolderMutation,
 } from "./folderApis";
+
+export {
+  flashSetItemApis,
+  useCreateFlashSetItemMutation,
+  useFetchFlashSetItemByIdQuery,
+} from "./flashSetItemApis";

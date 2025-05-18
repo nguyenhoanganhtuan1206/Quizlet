@@ -6,7 +6,13 @@ import { MdOutlineSaveAlt } from "react-icons/md";
 import { CiFolderOn } from "react-icons/ci";
 import { HiDotsHorizontal } from "react-icons/hi";
 
-export default function FlashCardHeader() {
+type FlashCardHeaderProps = {
+  name: string;
+};
+
+export default function FlashCardHeader({
+  name,
+}: Readonly<FlashCardHeaderProps>) {
   return (
     <div className="flashcard__header-container">
       <div className="flex items-center justify-between">
@@ -30,7 +36,7 @@ export default function FlashCardHeader() {
       </div>
 
       {/*Name of the flashset */}
-      <h1 className="text-[2.6rem] text-white font-bold my-5">(13)</h1>
+      <h1 className="text-[2.6rem] text-white font-bold my-5">{name}</h1>
       {/*Name of the flashset */}
     </div>
   );

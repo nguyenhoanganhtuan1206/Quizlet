@@ -54,7 +54,7 @@ function App() {
               element: <YourLibraryPage />,
             },
             {
-              path: "/flashcard",
+              path: "/flashcard/:flashCardId",
               element: <FlashCardPage />,
             },
             {

@@ -10,7 +10,7 @@ import static com.quizlet_be.quizlet.error.CommonError.supplyNotFoundException;
 @UtilityClass
 public class FlashSetItemError {
 
-    public static Supplier<NotFoundException> supplyFlashSetItemNotFoundException(final String field, final Object value) {
-        return supplyNotFoundException("The Flash Set with %s is %s not found", field, value);
+    public static Supplier<NotFoundException> supplyFlashSetItemNotFoundException() {
+        return supplyNotFoundException("Your FlashSet Card is not existing. Please access to another one.");
     }
 }
