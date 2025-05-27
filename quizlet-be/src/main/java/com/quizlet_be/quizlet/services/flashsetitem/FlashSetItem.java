@@ -19,6 +19,8 @@ public class FlashSetItem {
 
     private int orderPosition;
 
+    private boolean isMarked;
+
     private Instant createdAt;
 
     private Instant updatedAt;

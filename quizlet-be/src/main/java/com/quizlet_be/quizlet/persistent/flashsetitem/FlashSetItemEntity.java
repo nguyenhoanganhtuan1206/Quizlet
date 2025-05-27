@@ -27,6 +27,9 @@ public class FlashSetItemEntity {
 
     private int orderPosition;
 
+    @Column(name = "is_marked")
+    private boolean isMarked;
+
     private Instant createdAt;
 
     private Instant updatedAt;

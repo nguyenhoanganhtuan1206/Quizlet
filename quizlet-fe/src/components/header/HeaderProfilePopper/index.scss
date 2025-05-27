@@ -30,10 +30,10 @@ $maxHeight: 31.25rem;
     color: var(--gray-400-gray-600);
     justify-content: start;
     border: unset;
+    transition: 0ms ease;
 
     &:hover {
       background-color: var(--gray-300-gray-600);
-      transition: 0ms ease;
     }
   }
 }

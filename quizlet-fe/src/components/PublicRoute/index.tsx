@@ -1,11 +1,5 @@
 import { Outlet } from "react-router-dom";
 
-type PublicRouteProps = {
-  restricted?: boolean;
-};
-
-export default function PublicRoute({
-  restricted,
-}: Readonly<PublicRouteProps>) {
+export default function PublicRoute() {
   return <Outlet />;
 }

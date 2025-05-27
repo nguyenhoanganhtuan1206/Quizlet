@@ -1,4 +1,4 @@
-import { FlashSetItem } from "../flash_set_item/flashSetItemType";
+import { FlashSetItem } from "../flash_set_item/flashSetItemTypes";
 
 export interface FlashSet {
   id: string;

@@ -18,8 +18,13 @@ public class FlashSetItemController {
 
     private final FlashSetItemService flashSetItemService;
 
-    @PostMapping("flashset/{flashSetId}")
-    public FlashSetItem save(
+    @GetMapping("{flashSetId}")
+    public FlashSetItem findById(final @PathVariable UUID flashSetId) {
+        return flashSetItemService.findById(flashSetId);
+    }
+
+    @PostMapping("{flashSetId}/flashset")
+    public FlashSetItem createNewFlashSetItem(
             final @Valid @RequestBody FlashSetItemCreationUpdateDTO flashSetItemCreationDTO,
             final @PathVariable UUID flashSetId
     ) {

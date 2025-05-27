@@ -1,10 +1,44 @@
 import { toast } from "react-toastify";
 
-import RecentCardItem from "../RecentCardItem";
 import { Skeleton } from "../../../shared/components";
 import { AppDispatch, fetchFlashSets, RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import RecentCardItem from "../RecentCardItem";
+
+const LoadingSkeleton = () => {
+  return (
+    <div className="grid grid-cols-2 gap-10">
+      <div className="grid-cols-1">
+        <Skeleton variant="section" className="flex" times={1}>
+          <Skeleton variant="icon" className="h-[45px] w-[45px] mr-5" />
+          <Skeleton variant="text" textBars={2} />
+        </Skeleton>
+      </div>
+
+      <div className="grid-cols-1">
+        <Skeleton variant="section" className="flex" times={1}>
+          <Skeleton variant="icon" className="h-[45px] w-[45px] mr-5" />
+          <Skeleton variant="text" textBars={2} />
+        </Skeleton>
+      </div>
+
+      <div className="grid-cols-1">
+        <Skeleton variant="section" className="flex" times={1}>
+          <Skeleton variant="icon" className="h-[45px] w-[45px] mr-5" />
+          <Skeleton variant="text" textBars={2} />
+        </Skeleton>
+      </div>
+
+      <div className="grid-cols-1">
+        <Skeleton variant="section" className="flex" times={1}>
+          <Skeleton variant="icon" className="h-[45px] w-[45px] mr-5" />
+          <Skeleton variant="text" textBars={2} />
+        </Skeleton>
+      </div>
+    </div>
+  );
+};
 
 export default function RecentCardsList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,37 +51,7 @@ export default function RecentCardsList() {
   }, [dispatch]);
 
   if (isLoading) {
-    return (
-      <div className="grid grid-cols-2 gap-10">
-        <div className="grid-cols-1">
-          <Skeleton variant="section" times={1}>
-            <Skeleton variant="icon" />
-            <Skeleton variant="text" textBars={2} />
-          </Skeleton>
-        </div>
-
-        <div className="grid-cols-1">
-          <Skeleton variant="section" times={1}>
-            <Skeleton variant="icon" />
-            <Skeleton variant="text" textBars={2} />
-          </Skeleton>
-        </div>
-
-        <div className="grid-cols-1">
-          <Skeleton variant="section" times={1}>
-            <Skeleton variant="icon" />
-            <Skeleton variant="text" textBars={2} />
-          </Skeleton>
-        </div>
-
-        <div className="grid-cols-1">
-          <Skeleton variant="section" times={1}>
-            <Skeleton variant="icon" />
-            <Skeleton variant="text" textBars={2} />
-          </Skeleton>
-        </div>
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (error) {
@@ -61,6 +65,7 @@ export default function RecentCardsList() {
           return (
             <RecentCardItem
               key={flashset.id}
+              id={flashset.id}
               name={flashset.name}
               isActive={flashset.drafted}
             />

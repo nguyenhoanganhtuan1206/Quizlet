@@ -9,6 +9,10 @@ export type {
   FolderCreateUpdateRequestDTO,
   FolderSummaryDTO,
 } from "./folder/folderTypes";
+export type {
+  FlashSetItem,
+  FlashSetItemCreateDTO,
+} from "./flash_set_item/flashSetItemTypes";
 export type { FolderFlashSet } from "./folder_flashset/FolderFlashSetTypes";
 export type { FolderParents } from "./parent_foldes/folderParents";
 export type { FlashSet, FlashSetSummaryDTO } from "./flash_set/flashSetTypes";

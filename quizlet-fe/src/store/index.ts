@@ -13,7 +13,7 @@ import {
   materialsModalSlice,
   materialsModalReducer,
 } from "./slices/";
-import { authApis, folderApis } from "./apis";
+import { authApis, flashSetItemApis, folderApis } from "./apis";
 
 const store = configureStore({
   reducer: {
@@ -25,11 +25,13 @@ const store = configureStore({
     [materialsModalSlice.reducerPath]: materialsModalReducer,
     [authApis.reducerPath]: authApis.reducer,
     [folderApis.reducerPath]: folderApis.reducer,
+    [flashSetItemApis.reducerPath]: flashSetItemApis.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
       .concat(authApis.middleware)
-      .concat(folderApis.middleware);
+      .concat(folderApis.middleware)
+      .concat(flashSetItemApis.middleware);
   },
 });
 
@@ -58,6 +60,8 @@ export {
   useRemoveFlashSetFromFolderMutation,
   useAddFolderChildToFolderMutation,
   useRemoveFolderChildFromFolderMutation,
+  useCreateFlashSetItemMutation,
+  useFetchFlashSetItemByIdQuery,
 } from "./apis";
 
 export {

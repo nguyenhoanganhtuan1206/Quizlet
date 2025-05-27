@@ -9,9 +9,9 @@ export { default as PopularCardList } from "./home/PopularCardList";
 export { default as RecentCardsList } from "./home/RecentCardsList";
 export {
   FlashCardHeader,
-  FlashCardMiddle,
+  FlashCardList,
   FlashCardTerm,
-} from "./FlashCard/index";
+} from "./flash_card/index";
 export {
   YourLibraryFilterSection,
   BreadCrumbNavigation,

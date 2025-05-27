@@ -123,13 +123,7 @@ export default function ModalFolderCreation({
        */}
       {fetchFoldersState.isLoading && (
         <Skeleton variant="section" className="w-full flex flex-col" times={1}>
-          <Skeleton
-            textBars={3}
-            className="mt-5"
-            variant="text"
-            height="45px"
-            width="100%"
-          />
+          <Skeleton textBars={3} className="mt-5" variant="text" />
 
           <Skeleton
             className="mt-5 items-end"

@@ -94,12 +94,12 @@ export default function ModalMaterialsActions() {
           className="absolute top-[120%] right-0 w-[220px] py-3 rounded-2xl"
           isActive={isShowCreateNewMaterials}
         >
-          <div className="flex items-center justify-center px-2 py-2 hover:bg-[var(--gray-300-gray-800)]">
+          <div className="flex items-center justify-start px-5 py-4 hover:bg-[var(--gray-300-gray-800)]">
             <PiCards className="text-[2.2rem] translate-y-[-2px] mr-2" />
             <span className="text-[1.4rem]">Create FlashSet</span>
           </div>
 
-          <div className="flex items-center justify-center px-2 py-2 hover:bg-[var(--gray-300-gray-800)]">
+          <div className="flex items-center justify-start px-5 py-4 hover:bg-[var(--gray-300-gray-800)]">
             <CiFolderOn className="text-[2.2rem] translate-y-[-2px] mr-5" />
             <span className="text-[1.4rem]">Create Folder</span>
           </div>

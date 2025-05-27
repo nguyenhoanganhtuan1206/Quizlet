@@ -13,6 +13,7 @@ public class FlashSetItemMapper {
                 .answer(flashSetItemEntity.getAnswer())
                 .question(flashSetItemEntity.getQuestion())
                 .orderPosition(flashSetItemEntity.getOrderPosition())
+                .isMarked(flashSetItemEntity.isMarked())
                 .createdAt(flashSetItemEntity.getCreatedAt())
                 .updatedAt(flashSetItemEntity.getUpdatedAt())
                 .flashsetId(flashSetItemEntity.getFlashSetId())
