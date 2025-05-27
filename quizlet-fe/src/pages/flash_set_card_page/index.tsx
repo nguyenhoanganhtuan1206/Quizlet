@@ -3,7 +3,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { useFetchFlashSetItemByIdQuery } from "@/store";
 
 import { Skeleton } from "@/shared/components";
-import { FlashCardHeader, FlashCardList } from "@/components";
+import { FlashCardList } from "@/components";
 
 const LoadingSkeleton = () => {
   return (
@@ -61,12 +61,9 @@ const LoadingSkeleton = () => {
 export default function FlashCardPage() {
   const { flashCardId } = useParams<{ flashCardId: string }>();
 
-  const { isFetching, isLoading, isError } = useFetchFlashSetItemByIdQuery(
-    flashCardId ?? "",
-    {
-      skip: !flashCardId,
-    }
-  );
+  const { isLoading } = useFetchFlashSetItemByIdQuery(flashCardId ?? "", {
+    skip: !flashCardId,
+  });
 
   if (!flashCardId) {
     return <Navigate to="/not-found" replace />;
@@ -81,7 +78,7 @@ export default function FlashCardPage() {
       {/**
        * Header
        */}
-      <FlashCardHeader />
+      {/* <FlashCardHeader name={data.} /> */}
       {/**
        * Header
        */}

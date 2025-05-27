@@ -9,9 +9,7 @@ export default function Select<T extends FieldValues>({
   name,
   variant,
   className,
-  label,
-  options,
-  isMultiple,
+  listOptions,
 }: Readonly<SelectProps<T>>) {
   const selectInputClassNames = classNames(
     className,
@@ -29,16 +27,8 @@ export default function Select<T extends FieldValues>({
       render={({ field: { onChange } }) => {
         return (
           <div>
-            <label className="text-[1.4rem] text-gray-700 font-[500] cursor-pointer">
-              {label}
-            </label>
-
-            <select
-              onChange={onChange}
-              className={selectInputClassNames}
-              multiple={isMultiple}
-            >
-              {options.map((option) => {
+            <select onChange={onChange} className={selectInputClassNames}>
+              {listOptions.map((option) => {
                 return (
                   <option key={option.value} value={option.value}>
                     {option.title}

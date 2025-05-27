@@ -16,9 +16,6 @@ import {
 } from "./pages/";
 import { PrivateRoutes, PublicRoute } from "./components";
 
-/* Just using for DEV Test */
-import DevPage from "./pages/Dev/DevPage";
-
 function App() {
   const router = createBrowserRouter([
     /** Public Route */
@@ -28,10 +25,6 @@ function App() {
         {
           path: "auth",
           element: <AuthPage />,
-        },
-        {
-          path: "dev",
-          element: <DevPage />,
         },
       ],
     },
