@@ -13,7 +13,6 @@ export interface JwtPayload {
   role: string;
   iat: number;
   exp: number;
-  [key: string]: any; // Allow additional fields
 }
 
 export class AuthError extends Error {

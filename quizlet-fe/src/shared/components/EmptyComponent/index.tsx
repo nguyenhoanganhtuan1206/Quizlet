@@ -1,6 +1,5 @@
 import { ReactPropsChildren } from "@/type";
 import classNames from "classnames";
-import { FaFolderOpen } from "react-icons/fa6";
 
 type EmptyComponentProps = {
   className?: string;
