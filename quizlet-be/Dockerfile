@@ -1,8 +1,19 @@
-FROM gradle:7.2.0-jdk17 AS builder
+FROM eclipse-temurin:17-jdk-alpine as builder
+
 WORKDIR /app
 
-COPY build.gradle settings.gradle ./
-COPY gradle ./
+COPY gradlew .
+COPY gradle/ gradle/
+
+COPY build.gradle .
+COPY settings.gradle .
+
 COPY src ./src
 
-RUN gradle build --no-daemon
+RUN chmod +x gradlew
+
+# Build the project
+
+COPY .env .env
+
+CMD ["tail", "-f", "/dev/null"]
