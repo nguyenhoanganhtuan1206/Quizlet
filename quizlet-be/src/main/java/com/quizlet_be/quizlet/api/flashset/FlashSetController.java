@@ -25,10 +25,22 @@ public class FlashSetController {
     private final JwtTokenUtil jwtTokenUtil;
 
     @GetMapping
-    public List<FlashSetSummaryDTO> findAllByUserId(final @RequestHeader(value = "Authorization") String authorizationHeader) {
+    public List<FlashSetSummaryDTO> findAllByUserId(
+            final @RequestHeader(value = "Authorization") String authorizationHeader
+    ) {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
 
         return flashSetService.findByUserId(userId);
+    }
+
+    @GetMapping("{flashSetId}/other-flashsets")
+    public List<FlashSetSummaryDTO> findByUserIdAndNotFLashSetId(
+            final @RequestHeader(value = "Authorization") String authorizationHeader,
+            final UUID flashSetId
+    ) {
+        final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
+
+        return flashSetService.findByUserIdAndNotFLashSetId(userId, flashSetId);
     }
 
     @PostMapping

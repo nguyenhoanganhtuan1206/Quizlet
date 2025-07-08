@@ -37,13 +37,13 @@ public class FolderController {
         return folderService.findFolderDetail(folderId);
     }
 
-    @GetMapping("{folderId}/summaries")
-    public List<FolderSummaryDTO> findSummariesByFolderId(
+    @GetMapping("{folderId}/other-folders")
+    public List<FolderSummaryDTO> findByUserIdAndNotCurrentFolderId(
             final @PathVariable UUID folderId,
             final @RequestHeader(value = "Authorization") String authorizationHeader
     ) {
         final UUID userId = jwtTokenUtil.getCurrentUserId(authorizationHeader);
-        return folderService.findByUserIdAndFolderId(userId, folderId);
+        return folderService.findByUserIdAndNotFolderId(userId, folderId);
     }
 
     @GetMapping("parent")

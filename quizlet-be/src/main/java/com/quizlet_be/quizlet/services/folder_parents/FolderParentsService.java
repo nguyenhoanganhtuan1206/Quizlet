@@ -39,9 +39,21 @@ public class FolderParentsService {
         return folderParentsStore.save(folderParents);
     }
 
+    /**
+     * Add Folder children to the parent folder
+     *
+     * @params folderParentId
+     * @params folderChildId
+     */
     public FolderParents addFolderChildToFolder(final UUID folderParentId, final UUID folderChildId) {
         validateFolderAvailable(folderParentId, folderChildId);
-        final Optional<FolderParents> folderParents = folderParentsStore.findByParentFolderIdAndChildFolderId(folderParentId, folderChildId);
+        Optional<FolderParents> folderParents;
+
+        try {
+            folderParents = folderParentsStore.findByParentFolderIdAndChildFolderId(folderParentId, folderChildId);
+        } catch (Exception ex) {
+            throw supplyUnprocessableException("Something went wrong while you adding more folder. Please try it again.").get();
+        }
 
         if (folderParents.isPresent()) {
             throw supplyConflictException("You have already added this Folder children within the Folder.").get();

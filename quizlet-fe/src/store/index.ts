@@ -53,6 +53,7 @@ export {
   useLoginMutation,
   useRegisterMutation,
   useFetchFolderByIdQuery,
+  useFetchByUserIdAndNotFolderIdQuery,
   useCreateFolderMutation,
   useUpdateFolderMutation,
   useDeleteFolderMutation,

@@ -1,0 +1,28 @@
+name: "Flyway Migration"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  flwayMigration:
+    runs-on: [quizlet_be_runner]
+    defaults:
+      run:
+        working-directory: quizlet-be
+    steps:
+      - name: Install Flyway
+        run: |
+          wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.17.0/flyway-commandline-10.17.0-linux-x64.tar.gz | tar xz
+          sudo mv flyway-10.17.0 /opt/flyway
+          sudo ln -s /opt/flyway/flyway /usr/local/bin/flyway
+
+      - name: Run Flyway Migrations
+        env:
+          FLYWAY_URL: jdbc:postgresql://localhost:5432/mydb
+          FLYWAY_USER: postgres
+          FLYWAY_PASSWORD: postgres
+          FLYWAY_LOCATIONS: filesystem:src/main/resources/ini_data/migration/COMMON
+        run: |
+          flyway migrate
