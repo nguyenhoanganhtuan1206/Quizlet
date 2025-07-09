@@ -2,6 +2,7 @@ export { authApis, useLoginMutation, useRegisterMutation } from "./authApis";
 export {
   folderApis,
   useFetchFolderByIdQuery,
+  useFetchByUserIdAndNotFolderIdQuery,
   useCreateFolderMutation,
   useAddFlashSetToFolderMutation,
   useUpdateFolderMutation,

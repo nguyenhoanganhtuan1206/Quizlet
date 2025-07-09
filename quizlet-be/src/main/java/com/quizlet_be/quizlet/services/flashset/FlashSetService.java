@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.quizlet_be.quizlet.error.CommonError.supplyBadRequestException;
+import static com.quizlet_be.quizlet.error.CommonError.supplyUnprocessableException;
 import static com.quizlet_be.quizlet.services.flashset.FlashSetError.supplyFlashSetNotFoundException;
 import static com.quizlet_be.quizlet.services.flashsetitem.FlashSetItemValidation.*;
 import static java.time.Instant.now;
@@ -41,18 +42,54 @@ public class FlashSetService {
 
     private final Logger logger = Logger.getLogger(FlashSetService.class.getName());
 
+    /**
+     * Find @{@link FlashSet}
+     *
+     * @params flashSetId
+     */
     public FlashSet findById(final UUID flashSetId) {
         return flashSetStore.findById(flashSetId)
                 .orElseThrow(supplyFlashSetNotFoundException("ID", flashSetId));
     }
 
+    /**
+     * List FlashSet by user Id
+     *
+     * @return FlashSetSummaryDTO
+     * @params userId
+     */
     public List<FlashSetSummaryDTO> findByUserId(final UUID userId) {
-        final List<FlashSet> flashSets = flashSetStore.findByUserId(userId);
+        try {
+            final List<FlashSet> flashSets = flashSetStore.findByUserId(userId);
 
-        return flashSets
-                .stream()
-                .map(this::mapToFlashSetSummaryDTO)
-                .toList();
+            return flashSets
+                    .stream()
+                    .map(this::mapToFlashSetSummaryDTO)
+                    .toList();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Error {findByUserId | FlashSetService}", ex.getMessage());
+            throw supplyUnprocessableException("Unexpected while fetch FlashSet Cards. Please try it again.").get();
+        }
+    }
+
+    /**
+     * List FlashSet by userId not including current FolderId
+     *
+     * @return FlashSetSummaryDTO
+     * @params flashSetIds
+     */
+    public List<FlashSetSummaryDTO> findByUserIdAndNotFLashSetId(final UUID userId, final UUID folderId) {
+        try {
+            final List<FlashSet> flashSets = flashSetStore.findByUserIdAndNotFLashSetId(userId, folderId);
+
+            return flashSets
+                    .stream()
+                    .map(this::mapToFlashSetSummaryDTO)
+                    .toList();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Error {findByUserIdAndNotFLashSetId | FlashSetService}", ex.getMessage());
+            throw supplyUnprocessableException("Unexpected while fetch FlashSet Cards. Please try it again.").get();
+        }
     }
 
     /**

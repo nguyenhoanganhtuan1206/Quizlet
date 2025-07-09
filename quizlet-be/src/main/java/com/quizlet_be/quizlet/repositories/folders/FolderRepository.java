@@ -20,7 +20,7 @@ public interface FolderRepository extends JpaRepository<FolderEntity, UUID> {
     /**
      * Find all Folders with userId but not including folderId
      */
-    @Query(value = "SELECT f FROM FolderEntity f WHERE f.userId = :userId AND f.id != :folderId ORDER BY f.createdAt")
+    @Query(value = "SELECT f FROM folders f WHERE f.user_id = :userId AND f.id != :folderId ORDER BY f.created_at", nativeQuery = true)
     List<FolderEntity> findByUserIdAndNotFolderId(@Param("userId") UUID userId, @Param("folderId") UUID folderId);
 
     /**

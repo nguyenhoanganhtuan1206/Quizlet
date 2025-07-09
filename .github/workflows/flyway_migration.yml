@@ -1,0 +1,34 @@
+name: "Flyway Migration"
+
+on:
+  push:
+    branches:
+      - master
+      - feature/pipeline-flyway-migration
+
+jobs:
+  flwayMigration:
+    runs-on: [quizlet_be_runner]
+    env:
+      FLYWAY_URL: jdbc:postgresql://192.168.0.111:5433/quizlet_db
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: postgres
+      FLYWAY_LOCATIONS: filesystem:src/main/resources/ini_data/migration/COMMON
+    defaults:
+      run:
+        working-directory: quizlet-be
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run Flyway Info
+        run: |
+          flyway info
+
+      - name: Run Flyway validate
+        run: |
+          flyway validate
+
+      # - name: Run Flyway Migrate
+      #   run: |
+      #     flyway migrate

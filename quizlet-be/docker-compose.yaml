@@ -1,15 +1,34 @@
 services:
-  db:
-    container_name: quizlet_db
+  quizlet_be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quizlet_app-be
+    ports:
+      - 8082:8080
+    env_file:
+      - .env
+    depends_on:
+      - quizlet_db
+    networks:
+      - quizlet_net
+  quizlet_db:
+    container_name: quizlet_app-db
     image: postgres:17
     restart: always
     env_file:
       - .env
     ports:
-      - 5433:5432
+      - $POSTGRES_PORT:5432
     volumes:
       - quizlet_db:/var/lib/postgresql/data
+    networks:
+      - quizlet_net
 
 volumes:
   quizlet_db:
     driver: local
+
+networks:
+  quizlet_net:
+    driver: bridge

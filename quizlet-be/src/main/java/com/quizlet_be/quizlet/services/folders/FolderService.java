@@ -113,7 +113,7 @@ public class FolderService {
      * @param folderId
      * @return @{@link FolderSummaryDTO}
      */
-    public List<FolderSummaryDTO> findByUserIdAndFolderId(final UUID userId, final UUID folderId) {
+    public List<FolderSummaryDTO> findByUserIdAndNotFolderId(final UUID userId, final UUID folderId) {
         final List<Folder> folders = folderStore.findByUserIdAndNotFolderId(userId, folderId);
 
         return folders

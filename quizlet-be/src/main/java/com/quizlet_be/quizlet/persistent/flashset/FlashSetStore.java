@@ -20,20 +20,44 @@ public class FlashSetStore {
 
     private final FlashSetRepository flashSetRepository;
 
+    public FlashSet save(final FlashSet flashSet) {
+        return toFlashSet(flashSetRepository.save(toFlashSetEntity(flashSet)));
+    }
+
+    /**
+     * Find @{@link FlashSet}
+     *
+     * @params flashSetId
+     */
     public Optional<FlashSet> findById(final UUID flashSetId) {
         return flashSetRepository.findById(flashSetId)
                 .map(FlashSetMapper::toFlashSet);
     }
 
-    public FlashSet save(final FlashSet flashSet) {
-        return toFlashSet(flashSetRepository.save(toFlashSetEntity(flashSet)));
-    }
-
+    /**
+     * List FlashSet by user Id
+     *
+     * @params userId
+     */
     public List<FlashSet> findByUserId(final UUID userId) {
         return toFlashSets(flashSetRepository.findByUserId(userId));
     }
 
+    /**
+     * List FlashSet by list of IDs
+     *
+     * @params flashSetIds
+     */
     public List<FlashSet> findAllById(final List<UUID> flashSetIds) {
         return toFlashSets(flashSetRepository.findAllById(flashSetIds));
+    }
+
+    /**
+     * List FlashSet by userId not including current FolderId
+     *
+     * @params flashSetIds
+     */
+    public List<FlashSet> findByUserIdAndNotFLashSetId(final UUID userId, final UUID folderId) {
+        return toFlashSets(flashSetRepository.findByUserIdAndNotFLashSetId(userId, folderId));
     }
 }

@@ -39,6 +39,20 @@ export const folderApis = createApi({
         { type: "Folders", id: results ? results.id : "LIST" },
       ],
     }),
+
+    fetchByUserIdAndNotFolderId: builder.query<
+      FolderSummaryDTO[], // Return types
+      string // Arg
+    >({
+      query: (folderId) => {
+        return {
+          url: `folders/${folderId}/summaries`,
+          method: "GET",
+        };
+      },
+    }),
+
+    // Create a new Folder
     createFolder: builder.mutation<
       Folder, // Return types
       FolderCreateUpdateRequestDTO // Argument
@@ -51,6 +65,8 @@ export const folderApis = createApi({
         };
       },
     }),
+
+    // Update Folder
     updateFolder: builder.mutation<
       Folder, // Return type
       UpdateFolderPayload // Argument
@@ -138,6 +154,7 @@ export const folderApis = createApi({
 
 export const {
   useFetchFolderByIdQuery,
+  useFetchByUserIdAndNotFolderIdQuery,
   useCreateFolderMutation,
   useAddFlashSetToFolderMutation,
   useUpdateFolderMutation,
