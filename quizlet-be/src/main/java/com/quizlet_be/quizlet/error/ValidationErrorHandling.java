@@ -1,5 +1,6 @@
 package com.quizlet_be.quizlet.error;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 import static java.time.Instant.now;
 
+@Hidden
 @ControllerAdvice
 public class ValidationErrorHandling {
 
