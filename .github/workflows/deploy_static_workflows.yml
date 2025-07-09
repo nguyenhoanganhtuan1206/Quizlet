@@ -6,11 +6,6 @@ on:
     branches:
       - main
       - master
-      - feature/pipeline-flyway-migration
-  # pull_request:
-  #   branches:
-  #     - main
-  #     - master
 
 permissions:
   contents: read
@@ -23,8 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
+  deployGithubPage:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -40,7 +34,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
           path: "./dist"
       - name: Deploy to GitHub Pages
         id: deployment
