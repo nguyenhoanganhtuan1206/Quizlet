@@ -14,6 +14,6 @@ public interface FlashSetRepository extends JpaRepository<FlashSetEntity, UUID> 
 
     List<FlashSetEntity> findByUserId(UUID userId);
 
-    @Query(value = "SELECT f FROM flashsets WHERE f.user_id = :userId AND f.id != :flashSetId ORDER BY f.created_at")
+    @Query(value = "SELECT f FROM flashsets WHERE f.user_id = :userId AND f.id != :flashSetId ORDER BY f.created_at", nativeQuery = true)
     List<FlashSetEntity> findByUserIdAndNotFLashSetId(@Param("userId") UUID userId, @Param("flashSetId") UUID flashSetId);
 }
