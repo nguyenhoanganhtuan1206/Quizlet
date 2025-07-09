@@ -8,12 +8,14 @@ COPY gradle/ gradle/
 COPY build.gradle .
 COPY settings.gradle .
 
-COPY src ./src
+# Copy source code
+#COPY src ./src
 
+COPY .env ./.env
 RUN chmod +x gradlew
 
 # Build the project
+RUN ./gradlew clean build
 
-COPY .env .env
-
+#CMD ["java", "-jar", "./build/libs/quizlet_be-0.0.1-SNAPSHOT.jar"]
 CMD ["tail", "-f", "/dev/null"]

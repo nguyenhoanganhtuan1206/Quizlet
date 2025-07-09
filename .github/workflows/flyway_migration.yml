@@ -8,9 +8,9 @@ on:
 
 jobs:
   flwayMigration:
-    runs-on: [ubuntu-latest]
+    runs-on: [quizlet_be_runner]
     env:
-      FLYWAY_URL: jdbc:postgresql://localhost:5432/mydb
+      FLYWAY_URL: jdbc:postgresql://192.168.0.111:5433/quizlet_db
       FLYWAY_USER: postgres
       FLYWAY_PASSWORD: postgres
       FLYWAY_LOCATIONS: filesystem:src/main/resources/ini_data/migration/COMMON
@@ -21,47 +21,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Flyway
+      - name: Run Flyway Info
         run: |
-          sudo apt update
-          sudo apt install snapd
-          sudo snap install flyway
-          flyway -v
+          flyway info
 
-      # - name: Run Flyway
-      #   run: |
-      #     docker run --rm \
-      #       --name quizlet_flyway-db \
-      #       --network quizlet-be_default \
-      #       -e FLYWAY_PASSWORD=postgres \
-      #       -e FLYWAY_URL=jdbc:postgresql://quizlet_db:5432/quizlet_db \
-      #       -e FLYWAY_USER=postgres \
-      #       -e FLYWAY_SCHEMAS=public \
-      #       -v $(pwd):/flyway/sql \
-      #     flyway/flyway:latest
+      - name: Run Flyway validate
+        run: |
+          flyway validate
 
-      # - name: Run Flyway Info
+      # - name: Run Flyway Migrate
       #   run: |
-      #     dokcer exec -it quizlet_flyway-db bash
-      #     docker run --rm \
-      #       --network quizlet-be_default \
-      #       -e FLYWAY_PASSWORD=postgres \
-      #       -e FLYWAY_URL=jdbc:postgresql://quizlet_db:5432/quizlet_db \
-      #       -e FLYWAY_USER=postgres \
-      #       -e FLYWAY_SCHEMAS=public \
-      #       -v $(pwd):/flyway/sql \
-      #     flyway/flyway:latest info
-
-      # - name: Run Flyway validate
-      #   run: |
-
-      # - name: Run Flyway Migrations
-      #   run: |
-      #     docker run --rm \
-      #       --network quizlet-be_default \
-      #       -e FLYWAY_PASSWORD=postgres \
-      #       -e FLYWAY_URL=jdbc:postgresql://quizlet_db:5432/quizlet_db \
-      #       -e FLYWAY_USER=postgres \
-      #       -e FLYWAY_SCHEMAS=public \
-      #       -v $(pwd):/flyway/sql \
-      #     flyway/flyway:latest migrate
+      #     flyway migrate
