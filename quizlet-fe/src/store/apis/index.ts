@@ -1,4 +1,10 @@
-export { authApis, useLoginMutation, useRegisterMutation } from "./authApis";
+export {
+  authApis,
+  useLoginByCredentialsMutation,
+  useLoginByFacebookMutation,
+  useLoginByGoogleMutation,
+  useRegisterMutation,
+} from "./authApis";
 export {
   folderApis,
   useFetchFolderByIdQuery,

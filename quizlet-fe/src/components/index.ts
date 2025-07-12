@@ -1,7 +1,7 @@
 export { default as HeaderProfilePopper } from "./header/HeaderProfilePopper";
 export { default as ModalFolderCreation } from "./header/ModalFolderCreation";
-export { default as Login } from "./auth/Login";
-export { default as Register } from "./auth/Register";
+export { default as Login } from "./auth/login";
+export { default as Register } from "./auth/register";
 export { default as AssemblyAvatar } from "./AssemblyAvatar";
 export { default as PrivateRoutes } from "./PrivateRoutes";
 export { default as PublicRoute } from "./PublicRoute";

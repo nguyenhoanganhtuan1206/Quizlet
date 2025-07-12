@@ -50,7 +50,9 @@ export {
   TypeMaterialsSelection,
 } from "./slices";
 export {
-  useLoginMutation,
+  useLoginByCredentialsMutation,
+  useLoginByFacebookMutation,
+  useLoginByGoogleMutation,
   useRegisterMutation,
   useFetchFolderByIdQuery,
   useFetchByUserIdAndNotFolderIdQuery,

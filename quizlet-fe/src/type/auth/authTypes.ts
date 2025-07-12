@@ -21,3 +21,11 @@ export class AuthError extends Error {
     this.name = "AuthError";
   }
 }
+
+export interface FacebookAuthRequestDTO {
+  userId: string;
+  accessToken: string;
+  email?: string;
+  name?: string;
+  profilePictureUrl?: string;
+}

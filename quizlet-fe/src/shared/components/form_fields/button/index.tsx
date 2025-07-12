@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import "./index.scss";
 
-import { ReactPropsChildren } from "../../../../type/";
+import { ReactPropsChildren } from "../../../../type";
 
 type ButtonType = "submit" | "button" | "reset";
 
@@ -39,7 +39,7 @@ export default function Button({
   onBlur,
 }: Readonly<ButtonProps>) {
   const buttonClassnames = classnames(
-    "flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border border-gray-400 cursor-pointer transition-all duration-300",
+    "flex items-center justify-center font-semibold rounded text-[1.4rem] cursor-auto p-4 border cursor-pointer transition-all duration-300",
     className,
     {
       "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-sub)] hover:text-white border-[var(--ref-color-twilight100)]":
