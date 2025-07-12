@@ -3,14 +3,15 @@ import { createRoot } from "react-dom/client";
 
 import "./index.scss";
 
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "react-redux";
 import App from "./App.tsx";
+import axiosInstance from "./hooks/useAxios.ts";
 import store, {
   doRefreshToken,
   logout,
   setCredentials,
 } from "./store/index.ts";
-import axiosInstance from "./hooks/useAxios.ts";
 
 axiosInstance.interceptors.response.use(
   (response) => response,
@@ -54,8 +55,10 @@ axiosInstance.interceptors.response.use(
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <StrictMode>
-      <App />
-    </StrictMode>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <StrictMode>
+        <App />
+      </StrictMode>
+    </GoogleOAuthProvider>
   </Provider>
 );

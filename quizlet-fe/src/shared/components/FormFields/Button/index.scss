@@ -1,5 +1,0 @@
-@use "../../../sass/base/utilities" as *;
-
-.btn-loading {
-  @include loading-spinner-animation($timeSpeed: 1s);
-}

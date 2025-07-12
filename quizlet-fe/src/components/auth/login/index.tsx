@@ -10,7 +10,7 @@ import {
   FormLoginValues,
   loginSchemas,
 } from "../../../schemas/auth/authSchemas";
-import { setCredentials, useLoginMutation } from "../../../store";
+import { setCredentials, useLoginByCredentialsMutation } from "../../../store";
 
 import {
   AlertMessage,
@@ -19,8 +19,8 @@ import {
   FormLabel,
 } from "../../../shared/components";
 
-import { ApiErrorResponse } from "../../../type/";
-import ButtonLoginSocial from "../ButtonLoginSocial";
+import { ApiErrorResponse } from "../../../type";
+import ButtonLoginSocial from "../button_login_social";
 
 export default function Login() {
   const { control, formState, handleSubmit } = useForm<FormLoginValues>({
@@ -33,7 +33,7 @@ export default function Login() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginByCredentialsMutation();
 
   const onSubmit: SubmitHandler<FormLoginValues> = async (data) => {
     await login(data)
@@ -62,6 +62,7 @@ export default function Login() {
       <div className="my-10 flex justify-center login_break-line before:bg-gray-300">
         <p>or email</p>
       </div>
+
       <>
         <FormLabel
           className="text-[1.4rem] text-[#586380] font-semibold"

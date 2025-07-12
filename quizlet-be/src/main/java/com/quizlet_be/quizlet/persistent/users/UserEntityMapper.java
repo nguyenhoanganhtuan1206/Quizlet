@@ -14,10 +14,14 @@ public class UserEntityMapper {
                 .fullName(userEntity.getFullName())
                 .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
+                .userGoogleId(userEntity.getUserGoogleId())
+                .userFacebookId(userEntity.getUserFacebookId())
                 .createdAt(userEntity.getCreatedAt())
+                .lastLoginAt(userEntity.getLastLoginAt())
                 .accountDisabled(userEntity.isAccountDisabled())
                 .lastSendResetPasswordAt(userEntity.getLastSendResetPasswordAt())
                 .codeResetPassword(userEntity.getCodeResetPassword())
+                .profilePictureUrl(userEntity.getProfilePictureUrl())
                 .roleId(userEntity.getRoleId())
                 .build();
     }
@@ -33,11 +37,15 @@ public class UserEntityMapper {
                 .id(user.getId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
+                .userFacebookId(user.getUserFacebookId())
+                .userGoogleId(user.getUserGoogleId())
                 .password(user.getPassword())
                 .createdAt(user.getCreatedAt())
+                .lastLoginAt(user.getLastLoginAt())
                 .accountDisabled(user.isAccountDisabled())
                 .lastSendResetPasswordAt(user.getLastSendResetPasswordAt())
                 .codeResetPassword(user.getCodeResetPassword())
+                .profilePictureUrl(user.getProfilePictureUrl())
                 .roleId(user.getRoleId())
                 .build();
     }

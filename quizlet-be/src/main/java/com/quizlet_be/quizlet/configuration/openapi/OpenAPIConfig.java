@@ -1,4 +1,4 @@
-package com.quizlet_be.quizlet.configuration;
+package com.quizlet_be.quizlet.configuration.openapi;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

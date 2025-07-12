@@ -23,5 +23,5 @@ public class UserSignUpDTO {
     @Size(min = 5, max = 30, message = "Password must be at between 6 to 30 characters")
     private String password;
 
-    private String image;
+    private String profilePictureUrl;
 }

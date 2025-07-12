@@ -7,11 +7,11 @@ import {
   registerSchemas,
 } from "../../../schemas/auth/authSchemas";
 
-import ButtonLoginSocial from "../ButtonLoginSocial";
+import ButtonLoginSocial from "../button_login_social";
 import { AlertMessage, Button, Input } from "../../../shared/components";
 import { useRegisterMutation } from "../../../store";
 import { ApiErrorResponse } from "../../../type";
-import FormLabel from "@/shared/components/FormFields/form_label";
+import FormLabel from "@/shared/components/form_fields/form_label";
 
 function Register() {
   const { control, formState, handleSubmit } = useForm<FormRegisterValues>({
@@ -41,48 +41,52 @@ function Register() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <ButtonLoginSocial />
 
-      <FormLabel name="fullName">Full Name</FormLabel>
-      <Input
-        control={control}
-        name="fullName"
-        type="text"
-        placeholder="Your username"
-        outsideClassName="mt-5"
-      />
+      <div className="mt-5">
+        <FormLabel name="fullName">Full Name</FormLabel>
+        <Input
+          control={control}
+          name="fullName"
+          type="text"
+          placeholder="Your username"
+        />
+      </div>
 
-      <FormLabel name="confirmPassword">Email</FormLabel>
-      <Input
-        control={control}
-        name="email"
-        type="text"
-        placeholder="Your Email"
-        outsideClassName="mt-5"
-      />
+      <div className="mt-5">
+        <FormLabel name="confirmPassword">Email</FormLabel>
+        <Input
+          control={control}
+          name="email"
+          type="text"
+          placeholder="Your Email"
+        />
+      </div>
 
-      <FormLabel name="password">Password</FormLabel>
-      <Input
-        control={control}
-        name="password"
-        type="password"
-        placeholder="Your Password"
-        outsideClassName="mt-5"
-      />
+      <div className="mt-5">
+        <FormLabel name="password">Password</FormLabel>
+        <Input
+          control={control}
+          name="password"
+          type="password"
+          placeholder="Your Password"
+        />
+      </div>
 
-      <FormLabel name="confirmPassword">Confirm Password</FormLabel>
-      <Input
-        control={control}
-        name="confirmPassword"
-        type="password"
-        placeholder="Confirm Password"
-        outsideClassName="mt-5"
-      />
+      <div className="mt-5">
+        <FormLabel name="confirmPassword">Confirm Password</FormLabel>
+        <Input
+          control={control}
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+        />
+      </div>
 
       {/* Display Error */}
       {formState.errors.email ||
       formState.errors.password ||
       formState.errors.confirmPassword ||
       formState.errors.fullName ? (
-        <AlertMessage variant="error" className="mt-5">
+        <AlertMessage variant="error">
           <span>
             {formState.errors.fullName?.message ??
               formState.errors.email?.message ??
@@ -97,7 +101,7 @@ function Register() {
         isLoading={isLoading}
         variant="primary"
         type="submit"
-        className="mt-8"
+        className="mt-8 w-full"
       >
         Sign Up
       </Button>
