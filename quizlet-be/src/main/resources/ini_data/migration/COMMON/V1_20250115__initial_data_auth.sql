@@ -17,7 +17,7 @@ INSERT INTO users (
     password,
     account_disabled,
     full_name,
-    image,
+    profile_picture_url,
     role_id
 )
 VALUES

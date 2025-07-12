@@ -25,15 +25,21 @@ public class UserEntity {
 
     private String password;
 
+    private String userGoogleId;
+
+    private String userFacebookId;
+
     private String codeResetPassword;
 
     private Instant lastSendResetPasswordAt;
 
     private Instant createdAt;
 
+    private Instant lastLoginAt;
+
     private boolean accountDisabled;
 
-    private String image;
+    private String profilePictureUrl;
 
     private Integer roleId;
 }

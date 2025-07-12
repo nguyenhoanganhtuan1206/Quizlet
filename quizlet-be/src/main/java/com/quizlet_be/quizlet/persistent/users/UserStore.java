@@ -17,20 +17,61 @@ public class UserStore {
 
     private final UserRepository userRepository;
 
+    /**
+     * List all users
+     * */
     public List<User> findAll() {
         return toUsers(userRepository.findAll());
     }
 
+    /**
+     * Find user by Id
+     *
+     * @param userId
+     * @return User
+     * */
     public Optional<User> findById(final UUID userId) {
         return userRepository.findById(userId).map(UserEntityMapper::toUser);
     }
 
-    public void save(final User user) {
-        toUser(userRepository.save(toUserEntity(user)));
+    /**
+     * Save user
+     * @param user
+     * */
+    public User save(final User user) {
+        return toUser(userRepository.save(toUserEntity(user)));
     }
 
+    /**
+     * Find user by email
+     *
+     * @param email
+     * @return User
+     * */
     public Optional<User> findByEmail(final String email) {
         return userRepository.findByEmail(email)
+                .map(UserEntityMapper::toUser);
+    }
+
+    /**
+     * Find user by Google Id
+     *
+     * @param googleId
+     * @return User
+     * */
+    public Optional<User> findByUserGoogleId(final String googleId) {
+        return userRepository.findByUserGoogleId(googleId)
+                .map(UserEntityMapper::toUser);
+    }
+
+    /**
+     * Find user by Facebook Id
+     *
+     * @param facebookId
+     * @return User
+     * */
+    public Optional<User> findByUserFacebookId(final String facebookId) {
+        return userRepository.findByUserFacebookId(facebookId)
                 .map(UserEntityMapper::toUser);
     }
 }
